@@ -6,6 +6,7 @@ var morgan = require('morgan')
 var mongoose = require('mongoose')
 var config = require('./config')
 var bodyParser = require('body-parser')
+var path = require('path');
 
 /* 使用body parser 从post请求中获取信息，并处理成json*/
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -25,12 +26,14 @@ app.use(morgan('dev'))
 /* 连接数据库 */
 mongoose.connect(config.database)
 
+app.use(express.static(__dirname + '/public'));
+
 var apiRoutes = require('./app/routes/api')(app,express)
 
 app.use('/api',apiRoutes)
 
 app.get('*', function(req, res) {
-    res.send('Hello, world!')
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.listen(config.port)
