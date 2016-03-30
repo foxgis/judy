@@ -23,6 +23,13 @@
 <form action="http://localhost:11111/api/tileset" method="get">
   <input type="submit" value="提取瓦片文件">
 </form>
+
+<form action="http://localhost:11111/api/register" method="post">
+  <p><label for="username">username:</label><input type="text" id="username" name="username"></p>
+  <p><label for="name">name:</label><input type="text" id="name" name="name"></p>
+  <p><label for="password">password:</label><input type="password" id="password" name="password"></p>
+  <input type="submit" value="点击注册">
+</form>
 </body>
 <script>
 $.ajax({

@@ -1,5 +1,5 @@
 /* 启动文件 */
-
+require('dotenv').load()
 var express = require('express')
 var app = express()
 var morgan = require('morgan')
@@ -7,6 +7,9 @@ var mongoose = require('mongoose')
 var config = require('./config')
 var bodyParser = require('body-parser')
 var path = require('path');
+var passport = require('passport')
+
+require('./app/config/passport')
 
 /* 使用body parser 从post请求中获取信息，并处理成json*/
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -28,7 +31,9 @@ mongoose.connect(config.database)
 
 app.use(express.static(__dirname + '/public'));
 
-var apiRoutes = require('./app/routes/api')(app,express)
+var apiRoutes = require('./app/routes/index')
+
+app.use(passport.initialize())
 
 app.use('/api',apiRoutes)
 
