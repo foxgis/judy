@@ -29,7 +29,7 @@ app.use(morgan('dev'))
 /* 连接数据库 */
 mongoose.connect(config.database)
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'))
 
 var apiRoutes = require('./app/routes/index')
 

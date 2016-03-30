@@ -31,7 +31,7 @@ apiRouter.post('/login',AuthCtrl.login)
 
 
 /* 样式文件API，一期核心部分 */
-
+apiRouter.get('/style',StylesCtrl.viewStyleList)
 
 /* 上传数据API */
 
