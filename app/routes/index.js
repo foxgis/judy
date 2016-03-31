@@ -36,9 +36,10 @@ apiRouter.delete('/tileset/:username/:tilesetid',TilesetsCtrl.deleteTile)
 
 /* 样式文件API，一期核心部分,需要验证，添加Auth中间件 */
 apiRouter.get('/style',StylesCtrl.viewStyleList)
-apiRouter.post('/style',StylesCtrl.newStyle)
-apiRouter.put('/style',StylesCtrl.updateStyle)
-apiRouter.delete('/style',StylesCtrl.deleteStyle)
+apiRouter.post('/style/:username',StylesCtrl.viewUserStyleList)
+apiRouter.post('/style/:username',StylesCtrl.newStyle)
+apiRouter.put('/style/:username/:styleid',StylesCtrl.updateStyle)
+apiRouter.delete('/style/:username/:styleid',StylesCtrl.deleteStyle)
 
 /* 上传数据API,需要验证，添加Auth中间件 */
 

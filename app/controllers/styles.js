@@ -12,6 +12,12 @@ module.exports.viewStyleList = function(req, res) {
   })
 }
 
+module.exports.viewUserStyleList = function(req, res) {
+  sendJSONresponse(res,200,{
+    'message':'你正在查看用户style列表'
+  })
+}
+
 module.exports.newStyle = function(req, res) {
   sendJSONresponse(res,200,{
     'message':'你正在新建样式'

@@ -41,8 +41,8 @@ app.use('/api',apiRoutes)
 
 app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
-});
+})
 
 app.listen(config.port)
 
-console.log('访问 ' + config.port);
+console.log('访问' + config.port);
