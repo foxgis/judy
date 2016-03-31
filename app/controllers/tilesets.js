@@ -15,7 +15,8 @@ module.exports.viewTileList = function(req, res) {
 module.exports.viewUserTileList = function(req, res) {
   sendJSONresponse(res,200,{
     'message':'你正在查看用户Tile列表',
-    'username':req.params.username
+    'username':req.decoded.username,
+    _id:req.decoded._id
   })
 }
 

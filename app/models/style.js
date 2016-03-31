@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var bodyParser = require('body-parser')
+var crypto = require('crypto')
 
 var StyleSchema = new Schema({
   version: Number,  /* According to the spec, must be 8 */
@@ -41,5 +41,11 @@ var StyleSchema = new Schema({
   glyphs: String, /* link to the font */
   zoom: Number  /* current zoom level */
 })
+
+StyleSchema.methods.setUniqueID = function(username) {
+  var salt = crypto.randomBytes(16).toString('hex')
+  /* 26位的uniqueID */
+  this.id = crypto.pbkdf2Sync(username,salt,1000,64,'sha512').toString('hex').substring(0,26)
+}
 
 module.exports = mongoose.model('Style',StyleSchema)

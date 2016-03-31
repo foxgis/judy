@@ -28,15 +28,14 @@ UserSchema.methods.validPassword = function(password) {
 /* 用户验证过后生成token返回给客户端，以后客户端发送token进行访问 */
 UserSchema.methods.generateToken = function() {
 
-  /* 设置token的有效期 */
-  var expiry = new Date()
-  expiry.setDate(expiry.getDate() + 7)
-
+  /* 设置token的有效期这里设置了7天，前端需要每次都提交这个token值 */
   return jwt.sign({
     _id: this._id,
     name: this.name,
-    exp: parseInt(expiry.getTime() / 1000)
-  },process.env.JWT_SECRET)
+    username:this.username
+  },process.env.JWT_SECRET,{
+    expiresIn:'7d'
+  })
 }
 
 module.exports = mongoose.model('User',UserSchema)

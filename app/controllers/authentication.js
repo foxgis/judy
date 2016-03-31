@@ -1,6 +1,7 @@
 /* 用户认证部分 */
 var passport = require('passport')
 var mongoose = require('mongoose')
+var jwt = require('jsonwebtoken')
 var User = require('../models/user')
 
 var sendJSONresponse = function(res, status, content) {
@@ -25,11 +26,18 @@ module.exports.register = function(req, res) {
   user.save(function(err) {
     var token
     if (err) {
+      if(err.code === 11000 ) {
+        sendJSONresponse(res,404,{
+          success: false,
+          message: 'Oops,该用户名已经被注册,请更换用户名'
+        })
+      } else {
       sendJSONresponse(res, 404, err)
+      }
     } else {
       token = user.generateToken()
       sendJSONresponse(res, 200, {
-        "token" : token
+        token: token
       })
     }
   })
@@ -38,7 +46,7 @@ module.exports.register = function(req, res) {
 module.exports.login = function(req, res) {
   if(!req.body.username || !req.body.password) {
     sendJSONresponse(res, 400, {
-      "message": "请输入完整信息"
+      message: "请输入完整信息"
     })
     return
   }
@@ -54,7 +62,7 @@ passport.authenticate('local', function(err, user, info){
     if(user) {
       token = user.generateToken()
       sendJSONresponse(res, 200, {
-        "token" : token
+        token: token
       })
     } else {
       sendJSONresponse(res, 401, info)
@@ -62,3 +70,27 @@ passport.authenticate('local', function(err, user, info){
   })(req, res)
 }
 
+module.exports.verify = function(req,res,next) {
+  var access_token = req.body.access_token || req.query.access_token || req.headers['x-access-token']
+
+  if(access_token) {
+    jwt.verify(access_token,process.env.JWT_SECRET,function(err, decoded) {
+      if(err) {
+        res.status(403).send({
+          success:false,
+          message:'access_token无效'
+        })
+      } else {
+        req.decoded = decoded
+        console.log(req.decoded)
+
+        next()
+      }
+    })
+  } else {
+    res.status(403).send({
+      success:false,
+      message:'没有access_token'
+    })
+  }
+}
