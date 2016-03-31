@@ -5,28 +5,13 @@ var Schema = mongoose.Schema
 
 /* 用户schema，可扩展 */
 var UserSchema = new Schema({
-  email:String,
-  name:String,
-  username: {type:String,required:true,index:{unique:true}},
-  hash:String,
-  salt:String,
-  create_at:Date
+  username: {type: String, index: { unique: true }},
+  email:{type:String},
+  name:{type:String},
+  hash:{type:String},
+  salt:{type:String},
+  create_at:{type:Date, default:Date.now}
 })
-
-// /* 添加创建时间 */
-// UserSchema.pre('save', function(next) {
-
-//   var user = this
-//   user.create_at = new Date();
-
-// /* 为后期修改用户信息做扩展 */
-//   if(!user.isModified('password')) {
-//       return next();
-//     } else {
-//       user.setPassword(user.password)
-//       next()
-//     }
-// })
 
 /* 密码设置，只保存salt和hash */
 UserSchema.methods.setPassword = function(password) {

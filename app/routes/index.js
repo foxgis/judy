@@ -13,30 +13,37 @@ var auth = jwt({
   userProperty: 'payload'
 })
 
-/* API根引导*/
+/* API根引导 */
 apiRouter.get('/', function(req,res) {
-  res.json({status:200,
-  success:'ok',
-  style:'/style',
-  icons:'/icon',
-  tileset:'/tileset',
-  upload:'/upload'})
+  res.status(200).json({
+  style:'http://localhost:11111/api/style',
+  icons:'http://localhost:11111/api/icon',
+  tileset:'http://localhost:11111/api/tileset',
+  upload:'http://localhost:11111/api/upload'})
 })
 
 /* 用户注册登录API */
 apiRouter.post('/register', AuthCtrl.register)
 apiRouter.post('/login',AuthCtrl.login)
 
-/* 矢量瓦片操作API */
+/* 矢量瓦片操作API，公有数据不需要验证，用户瓦片需要验证，且只能新建和更新 */
+apiRouter.get('/tileset',TilesetsCtrl.viewTileList)
+apiRouter.get('/tileset/:username',TilesetsCtrl.viewUserTileList)
+apiRouter.get('/tileset/:username/:tilesetid',TilesetsCtrl.viewTile)
+apiRouter.post('/tileset:username/:tilesetid',TilesetsCtrl.newTile)
+apiRouter.delete('/tileset/:username/:tilesetid',TilesetsCtrl.deleteTile)
 
 
-/* 样式文件API，一期核心部分 */
+/* 样式文件API，一期核心部分,需要验证，添加Auth中间件 */
 apiRouter.get('/style',StylesCtrl.viewStyleList)
+apiRouter.post('/style',StylesCtrl.newStyle)
+apiRouter.put('/style',StylesCtrl.updateStyle)
+apiRouter.delete('/style',StylesCtrl.deleteStyle)
 
-/* 上传数据API */
+/* 上传数据API,需要验证，添加Auth中间件 */
 
 
-/* 符号API */
+/* 符号API,需要验证，添加Auth中间件 */
 
 
 module.exports = apiRouter
