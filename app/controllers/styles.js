@@ -25,6 +25,12 @@ module.exports.newStyle = function(req, res) {
   })
 }
 
+module.exports.viewStyle = function(req, res) {
+  sendJSONresponse(res,200,{
+    message:'你正在查看样式'
+  })
+}
+
 module.exports.updateStyle = function(req, res) {
   sendJSONresponse(res,200,{
     message:'你正在更新样式'
