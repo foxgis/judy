@@ -77,7 +77,7 @@ module.exports.verify = function(req,res,next) {
   if(access_token) {
     jwt.verify(access_token,process.env.JWT_SECRET,function(err, decoded) {
       if(err) {
-        res.status(403).send({
+        res.status(401).send({
           success:false,
           message:'access_token无效'
         })
@@ -88,7 +88,7 @@ module.exports.verify = function(req,res,next) {
       }
     })
   } else {
-    res.status(403).send({
+    res.status(401).send({
       success:false,
       message:'没有access_token'
     })

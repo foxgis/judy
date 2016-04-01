@@ -43,6 +43,23 @@ app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname + '/index.html'))
 })
 
+/* 404错误 */
+app.use(function(req, res, next) {
+    var err = new Error('Not Found')
+    err.status = 404
+    next(err)
+})
+
+/* Access token错误 */
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({
+      success:false,
+      message: err.name + ': ' + err.message})
+  }
+})
+
 app.listen(config.port)
 
 console.log('访问' + config.port)
