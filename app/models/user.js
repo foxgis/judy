@@ -16,19 +16,19 @@ var UserSchema = new Schema({
 /* 密码设置，只保存salt和hash */
 UserSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex')
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 1000,64,'sha512').toString('hex')
+  this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 64, 'sha512').toString('hex')
 }
 
 /* 通过hash验证用户 */
 UserSchema.methods.validPassword = function(password) {
-  var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64,'sha512').toString('hex')
+  var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 64, 'sha512').toString('hex')
   return this.hash === hash
 }
 
 /* 用户验证过后生成token返回给客户端，以后客户端发送token进行访问 */
 UserSchema.methods.generateToken = function() {
 
-  /* 设置token的有效期这里设置了7天，前端需要每次都提交这个token值 */
+  /* 设置token的有效期这里设置了7天，前端需要每次都提交这个token值,req.params,req.header['x-access-token'] */
   return jwt.sign({
     _id: this._id,
     name: this.name,

@@ -3,6 +3,7 @@ var passport = require('passport')
 var mongoose = require('mongoose')
 var jwt = require('jsonwebtoken')
 var User = require('../models/user')
+var expressjwt = require('express-jwt')
 
 var sendJSONresponse = function(res, status, content) {
   res.status(status)
@@ -83,7 +84,6 @@ module.exports.verify = function(req,res,next) {
       } else {
         req.decoded = decoded
         console.log(req.decoded)
-
         next()
       }
     })

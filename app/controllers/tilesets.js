@@ -8,15 +8,14 @@ var sendJSONresponse = function(res, status, content) {
 
 module.exports.viewTileList = function(req, res) {
   sendJSONresponse(res,200,{
-    'message':'你正在查看Tile列表'
+    'message':'你正在查看Tile列表',
+    'payload':req.payload
   })
 }
 
 module.exports.viewUserTileList = function(req, res) {
   sendJSONresponse(res,200,{
-    'message':'你正在查看用户Tile列表',
-    'username':req.decoded.username,
-    _id:req.decoded._id
+    'message':'你正在查看用户Tile列表'
   })
 }
 
