@@ -10,7 +10,6 @@ var config = require('./config')
 var bodyParser = require('body-parser')
 var path = require('path');
 var passport = require('passport')
-
 require('./app/config/passport')
 
 /* 使用body parser 从post请求中获取信息，并处理成json*/
