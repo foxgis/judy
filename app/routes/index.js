@@ -34,6 +34,9 @@ apiRouter.get('/', function(req,res) {
 apiRouter.post('/register', AuthCtrl.register)
 apiRouter.post('/login',AuthCtrl.login)
 
+/* upload */
+apiRouter.post('/upload',UploadsCtrl.uploadFile)
+
 /* 矢量瓦片操作API，公有数据不需要验证，用户瓦片需要验证，且只能新建和更新 */
 apiRouter.get('/tileset',auth,TilesetsCtrl.viewTileList)
 

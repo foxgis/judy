@@ -13,6 +13,7 @@ var passport = require('passport')
 require('./app/config/passport')
 
 /* 使用body parser 从post请求中获取信息，并处理成json*/
+// app.use(bodyParser({ keepExtensions: true, uploadDir: '/public/uploads' }));
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 

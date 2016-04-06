@@ -30,6 +30,12 @@
   <p><label for="password">password:</label><input type="password" id="password" name="password"></p>
   <input type="submit" value="点击注册">
 </form>
+
+<form action="http://localhost:11111/api/upload" method="post" enctype="multipart/form-data">
+  username:<input type="text" id="username" name="username">
+  文件<input type="file" name="inputFile">
+  <input type="submit" value="上传">
+</form>
 </body>
 <script>
 $.ajax({
