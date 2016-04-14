@@ -5,3 +5,17 @@
 
 FoxGIS Server
 
+### Requirements
+`mongodb`
+
+### Usage
+```bash
+git clone https://github.com/FoxGIS/judy.git
+cd judy
+npm install
+npm run start
+<!-- Server listening on http://localhost:3000 -->
+```
+
+### Docs
+https://github.com/FoxGIS/judy-api
