@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -14,6 +15,14 @@
     "jsonwebtoken": "^5.7.0",
     "method-override": "^2.3.5",
     "mongoose": "^4.4.12",
-    "morgan": "~1.6.1"
+    "mongoose-json-select": "^0.2.1",
+    "morgan": "~1.6.1",
+    "multer": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.4.5",
+    "supertest": "^1.2.0"
   }
 }

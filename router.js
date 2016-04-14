@@ -1,4 +1,5 @@
-var express = require('express');
+var express = require('express')
+var multer = require('multer')
 var auth = require('./controllers/auth')
 var users = require('./controllers/user')
 var uploads = require('./controllers/upload')
@@ -9,17 +10,21 @@ var sprites = require('./controllers/sprite')
 
 
 var router = express.Router();
+var upload = multer({
+  dest: 'uploads/',
+  limits: { fileSize: 200000000, files: 1 }
+})
 
 // 用户
 router.post('/users', users.create)
 router.get('/users/:username', auth, users.retrieve)
 router.patch('/users/:username', auth, users.update)
 router.post('/users/:username', users.login)
-router.get('/users/:username/token', auth, users.getToken)
+router.get('/users/:username/access_token', auth, users.updateAccessToken)
 
 // 上传文件
 router.get('/uploads/:username', auth, uploads.list)
-router.post('/uploads/:username', auth, uploads.create)
+router.post('/uploads/:username', upload.any(), auth, uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 
