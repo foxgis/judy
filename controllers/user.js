@@ -56,21 +56,26 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  User.findOneAndUpdate({ username: req.params.username }, req.body, {
-    fields: 'name email phone organization avatar groups'
-  }, function(err, user) {
+  User.findOne({ username: req.params.username }, function(err, user) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    User.findOne({ username: req.params.username }, function(err, user2) {
+    var fields = ['name', 'email', 'phone', 'organization', 'avatar', 'groups']
+    for (var i = 0; i < fields.length; i++) {
+      if (req.body[fields[i]]) {
+        user[fields[i]] = req.body[fields[i]]
+      }
+    }
+
+    user.save(function(err) {
       if (err) {
         res.status(500).json({ error: err })
         return
       }
 
-      res.status(200).json(user2.toJSON())
+      res.status(200).json(user.toJSON())
     })
   })
 }
@@ -120,7 +125,7 @@ module.exports.updateAccessToken = function(req, res) {
         return
       }
 
-      res.status(200).json(user.toJSON())
+      res.status(200).json({ access_token: user.access_token })
     })
   })
 }

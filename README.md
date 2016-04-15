@@ -10,6 +10,7 @@ FoxGIS Server
 
 ### Usage
 ```bash
+mongod
 git clone https://github.com/FoxGIS/judy.git
 cd judy
 npm install

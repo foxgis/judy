@@ -42,6 +42,26 @@ module.exports = function(req, res, next) {
         }
       }
 
+      if (resourceType === 'uploads') {
+
+      }
+
+      if (resourceType === 'styles') {
+
+      }
+
+      if (resourceType === 'tilesets') {
+
+      }
+
+      if (resourceType === 'fonts') {
+
+      }
+
+      if (resourceType === 'sprites') {
+
+      }
+
       next()
     })
   })
