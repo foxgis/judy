@@ -37,7 +37,7 @@ module.exports.create = function(req, res) {
         return
       }
 
-      res.status(200).json(newUser.toJSON())
+      res.status(200).json(newUser)
     })
   })
 }
@@ -75,7 +75,7 @@ module.exports.update = function(req, res) {
         return
       }
 
-      res.status(200).json(user.toJSON())
+      res.status(200).json(user)
     })
   })
 }
@@ -105,7 +105,7 @@ module.exports.login = function(req, res) {
         return
       }
 
-      res.status(200).json(user.toJSON())
+      res.status(200).json(user)
     })
   })
 }
@@ -125,7 +125,7 @@ module.exports.updateAccessToken = function(req, res) {
         return
       }
 
-      res.status(200).json({ access_token: user.access_token })
+      res.status(200).json(user)
     })
   })
 }
