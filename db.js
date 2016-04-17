@@ -22,8 +22,8 @@ mongoose.connection.on('disconnected', function() {
 
 process.on('SIGINT', function() {
   mongoose.connection.close(function () {
-    console.log('Mongoose default connection disconnected through app termination');
-    process.exit(0);
+    console.log('Mongoose default connection disconnected through app termination')
+    process.exit(0)
   })
 })
 

@@ -1,5 +1,3 @@
-var jwt = require('jsonwebtoken')
-var config = require('../config')
 var User = require('../models/user')
 
 

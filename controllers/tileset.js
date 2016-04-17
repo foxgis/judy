@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 module.exports.list = function(req, res) {
 
 }

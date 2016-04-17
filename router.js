@@ -9,7 +9,7 @@ var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
 
 
-var router = express.Router();
+var router = express.Router()
 var upload = multer({
   dest: 'uploads/',
   limits: { fileSize: 200000000, files: 1 }
@@ -50,4 +50,4 @@ router.get('/sprites/:username', auth, sprites.list)
 router.get('/sprites/:username/:sprite_id:scale(@[23]x)?.:format([\w\.]+)?', auth, sprites.retrieve)
 
 
-module.exports = router;
+module.exports = router

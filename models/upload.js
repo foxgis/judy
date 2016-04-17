@@ -1,4 +1,3 @@
-var path = require('path')
 var mongoose = require('mongoose')
 var select = require('mongoose-json-select')
 var shortid = require('shortid')

@@ -26,7 +26,7 @@ module.exports.create = function(req, res) {
       file_id: file._id,
       filename: file.filename,
       filesize: req.files[0].size,
-      owner: req.params.username,
+      owner: req.params.username
     })
 
     upload.save(function(err) {

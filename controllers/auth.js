@@ -42,6 +42,8 @@ module.exports = function(req, res, next) {
         }
       }
 
+      /* eslint-disable no-empty */
+
       if (resourceType === 'uploads') {
 
       }

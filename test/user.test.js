@@ -1,7 +1,7 @@
 var app = require('../app')
 var request = require('supertest')
 var User = require('../models/user')
-var should = require('chai').should()
+var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 
 describe('用户系统', function() {
