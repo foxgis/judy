@@ -4,6 +4,7 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 var cors = require('cors')
+var helmet = require('helmet')
 var router = require('./router')
 
 
@@ -12,7 +13,7 @@ require('./db')
 
 var app = express()
 
-app.disable('x-powered-by')
+app.use(helmet())
 app.use(cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())

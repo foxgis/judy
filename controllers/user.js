@@ -54,28 +54,29 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  User.findOne({ username: req.params.username }, function(err, user) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return
-    }
-
-    var fields = ['name', 'email', 'phone', 'organization', 'avatar', 'groups']
-    for (var i = 0; i < fields.length; i++) {
-      if (req.body[fields[i]]) {
-        user[fields[i]] = req.body[fields[i]]
-      }
-    }
-
-    user.save(function(err) {
+  User.findOneAndUpdate({ username: req.params.username },
+    req.body, '-_id -username -salt -hash -access_token -is_verified -create_at -__v',
+    function(err, user) {
       if (err) {
         res.status(500).json({ error: err })
         return
       }
 
-      res.status(200).json(user)
-    })
-  })
+      if (!user) {
+        res.sendStatus(404)
+        return
+      }
+
+      User.findOne({ username: req.params.username }, function(err, user) {
+        if (err) {
+          res.status(500).json({ error: err })
+          return
+        }
+
+        res.status(200).json(user.toJSON())
+      })
+    }
+  )
 }
 
 

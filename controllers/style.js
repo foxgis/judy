@@ -56,19 +56,37 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  Style.findOne({ owner: req.params.username, style_id: req.params.style_id }, function(err, style) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return
+  Style.findOneAndUpdate({ style_id: req.params.style_id, owner: req.params.username },
+    req.body, '-_id -style_id -owner -create_at -modify_at -__v',
+    function(err, style) {
+      if (err) {
+        res.status(500).json({ error: err })
+        return
+      }
+
+      if (!style) {
+        res.sendStatus(404)
+        return
+      }
+
+      Style.findOne({ owner: req.params.username, style_id: req.params.style_id }, function(err, style) {
+        if (err) {
+          res.status(500).json({ error: err })
+          return
+        }
+
+        style.modify_at = Date.now
+        style.save(function(err) {
+          if (err) {
+            res.status(500).json({ error: err })
+            return
+          }
+
+          res.status(200).json(style)
+        })
+      })
     }
-
-    if (!style) {
-      res.sendStatus(404)
-      return
-    }
-
-
-  })
+  )
 }
 
 
