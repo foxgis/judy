@@ -60,7 +60,7 @@ module.exports.retrieve = function(req, res) {
 
     var gfs = Grid(mongoose.connection.db, mongoose.mongo)
     var readStream = gfs.createReadStream({ _id: upload.file_id })
-    readStream.on('error', function (err) {
+    readStream.on('error', function(err) {
       res.status(500).json({ error: err })
       return
     })
@@ -72,29 +72,16 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.delete = function(req, res) {
-  Upload.findOne({
+  Upload.findOneAndUpdate({
     owner: req.params.username,
-    upload_id: req.params.upload_id
-  }, function(err, upload) {
+    upload_id: req.params.upload_id,
+    is_deleted: false
+  }, { is_deleted: true }, function(err) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    if (!upload) {
-      res.sendStatus(404)
-      return
-    }
-
-    upload.is_deleted = true
-
-    upload.save(function(err) {
-      if (err) {
-        res.status(500).json({ error: err })
-        return
-      }
-
-      res.sendStatus(204)
-    })
+    res.sendStatus(204)
   })
 }

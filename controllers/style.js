@@ -39,7 +39,10 @@ module.exports.create = function(req, res) {
 
 
 module.exports.retrieve = function(req, res) {
-  Style.findOne({ owner: req.params.username, style_id: req.params.style_id }, function(err, style) {
+  Style.findOne({
+    owner: req.params.username,
+    style_id: req.params.style_id
+  }, function(err, style) {
     if (err) {
       res.status(500).json({ error: err })
       return
@@ -75,15 +78,7 @@ module.exports.update = function(req, res) {
           return
         }
 
-        style.modify_at = Date.now
-        style.save(function(err) {
-          if (err) {
-            res.status(500).json({ error: err })
-            return
-          }
-
-          res.status(200).json(style)
-        })
+        res.status(200).json(style)
       })
     }
   )
@@ -91,24 +86,15 @@ module.exports.update = function(req, res) {
 
 
 module.exports.delete = function(req, res) {
-  Style.findOne({ owner: req.params.username, style_id: req.params.style_id }, function(err, style) {
+  Style.findOneAndRemove({
+    owner: req.params.username,
+    style_id: req.params.style_id
+  }, function(err) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    if (!style) {
-      res.sendStatus(404)
-      return
-    }
-
-    style.remove(function(err) {
-      if (err) {
-        res.status(500).json({ error: err })
-        return
-      }
-
-      res.sendStatus(204)
-    })
+    res.sendStatus(204)
   })
 }

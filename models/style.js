@@ -44,5 +44,11 @@ var StyleSchema = new mongoose.Schema({
 StyleSchema.plugin(select, '-_id -__v')
 
 
+StyleSchema.pre('save', function(next) {
+  this.modify_at = Date.now
+
+  next()
+})
+
 
 module.exports = mongoose.model('Style', StyleSchema)

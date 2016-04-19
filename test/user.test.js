@@ -12,7 +12,7 @@ describe('用户系统', function() {
     User.remove({ username: 'nick' }).exec()
   })
 
-  it('注册', function(done) {
+  it('注册-注册成功', function(done) {
     request(app)
       .post('/api/v1/users')
       .send({ username: 'nick', password: '123456' })
@@ -21,11 +21,24 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
-
         res.body.username.should.equal('nick')
         res.body.access_token.should.exist
-
         access_token = res.body.access_token
+        done()
+      })
+  })
+
+  it('注册-密码长度过短', function(done) {
+    request(app)
+      .post('/api/v1/users')
+      .send({ username: 'nick', password: '12345' })
+      .expect(400)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.error.should.equal('密码长度过短')
 
         done()
       })
