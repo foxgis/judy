@@ -21,9 +21,12 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.username.should.equal('nick')
         res.body.access_token.should.exist
+
         access_token = res.body.access_token
+
         done()
       })
   })
@@ -59,7 +62,7 @@ describe('用户系统', function() {
         done()
       })
   })
- 
+
   it('注册信息不完整-密码', function(done) {
     request(app)
       .post('/api/v1/users')
@@ -69,7 +72,9 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.error.should.equal('注册信息不完整')
+
         done()
       })
   })
@@ -83,7 +88,9 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.error.should.equal('密码长度过短')
+
         done()
       })
   })
@@ -99,6 +106,7 @@ describe('用户系统', function() {
         }
 
         res.body.error.should.equal('该用户名已经被注册')
+
         done()
       })
   })
@@ -153,7 +161,7 @@ describe('用户系统', function() {
         done()
       })
   })
-  
+
   it('登录信息不完整-密码', function(done) {
     request(app)
       .post('/api/v1/users/nick')
@@ -163,7 +171,9 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.error.should.equal('登录信息不完整')
+
         done()
       })
   })
@@ -177,11 +187,13 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.error.should.equal('登录信息不完整')
+
         done()
       })
   })
-	
+
   it('登录用户不存在', function(done) {
     request(app)
       .post('/api/v1/users/nick')
@@ -191,7 +203,9 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.error.should.equal('用户名或密码错误')
+
         done()
       })
   })
@@ -205,10 +219,13 @@ describe('用户系统', function() {
         if (err) {
           return done(err)
         }
+
         res.body.error.should.equal('用户名或密码错误')
+
         done()
       })
   })
+
   it('获取access_token', function(done) {
     request(app)
       .get('/api/v1/users/nick/access_token')
