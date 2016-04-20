@@ -1,0 +1,8 @@
+apps:
+  - script: ./bin/www
+    instances: 0
+    exec_mode: cluster
+    watch : ../
+    env:
+      NODE_ENV: production
+      PORT: 80
