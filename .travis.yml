@@ -1,9 +1,19 @@
 language: node_js
 node_js:
-  - "5"
+- '5'
 services:
-  - mongodb
+- mongodb
 script:
-  - npm run test
+- npm run test
 after_script:
-  - npm install coveralls && cat ./coverage/lcov.info | coveralls
+- npm install coveralls && cat ./coverage/lcov.info | coveralls
+deploy:
+  skip_cleanup: true
+before_install:
+- openssl aes-256-cbc -K $encrypted_02ebef9cfc9c_key -iv $encrypted_02ebef9cfc9c_iv
+  -in deploy-key.enc -out deploy-key -d
+after_success:
+  - eval "$(ssh-agent -s)"
+  - chmod 600 deploy_key.pem
+  - ssh-add deploy_key.pem
+  - scp ./ bygis@159.203.223.225:~/projects/judy2
