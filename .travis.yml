@@ -15,6 +15,6 @@ before_install:
 after_success:
   - chmod 600 deploy-key
   - mv deploy-key ~/.ssh/id_rsa
-  - eval "$(ssh-agent -s)"
-  - ssh-add ~/.ssh/id_rsa
+  # - eval "$(ssh-agent -s)"
+  # - ssh-add ~/.ssh/id_rsa
   - ssh bygis@159.203.223.225
