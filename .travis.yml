@@ -16,4 +16,4 @@ after_success:
   - eval "$(ssh-agent -s)"
   - chmod 600 deploy-key
   - ssh-add deploy-key
-  - scp ./ bygis@159.203.223.225:~/projects/judy2
+  - ssh bygis@159.203.223.225
