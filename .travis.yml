@@ -13,9 +13,8 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_02ebef9cfc9c_key -iv $encrypted_02ebef9cfc9c_iv
   -in deploy-key.enc -out deploy-key -d
 after_success:
-  - echo -e "Host 159.203.223.225\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - chmod 600 deploy-key
-  - mv deploy-key ~/.ssh/id_rsa
   - eval "$(ssh-agent -s)"
-  - ssh-add ~/.ssh/id_rsa
-  - ssh bygis@159.203.223.225
+  - ssh-add deploy-key
+  - echo -e "Host 159.203.223.225\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - scp ./ bygis@159.203.223.225:~/projects/judy2
