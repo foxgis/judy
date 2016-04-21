@@ -19,7 +19,8 @@ module.exports.list = function(req, res) {
 
 module.exports.create = function(req, res) {
   var errors = validate(req.body)
-  if (errors) {
+  if (errors.length > 0) {
+    console.log(errors)
     res.status(400).json(errors)
     return
   }

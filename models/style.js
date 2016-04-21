@@ -24,20 +24,7 @@ var StyleSchema = new mongoose.Schema({
     duration: Number,
     delay: Number
   },
-  layers: [{
-    id: String,
-    type: String,
-    metadata: mongoose.Schema.Types.Mixed,
-    ref: String,
-    source: String,
-    'source-layer': String,
-    minzoom: Number,
-    maxzoom: Number,
-    interactive: { type: Boolean, default: false },
-    filter: [String],
-    layout: mongoose.Schema.Types.Mixed,
-    paint: mongoose.Schema.Types.Mixed
-  }]
+  layers: [mongoose.Schema.Types.Mixed]
 })
 
 
