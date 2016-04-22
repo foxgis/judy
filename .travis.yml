@@ -16,6 +16,6 @@ after_success:
   - chmod 600 deploy-key
   - eval "$(ssh-agent -s)"
   - ssh-add deploy-key
-  - echo -e "Host 159.203.223.225\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - echo -e "Host bygis.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - rm -rf .git
-  - scp -r ./ bygis@159.203.223.225:~/projects/judy2
+  - ssh bygis@bygis.com 'cd projects/judy && git pull && npm install'
