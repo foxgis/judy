@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "lint": "eslint *.js models/** controllers/** test/**",
     "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha",
-    "deploy": "ssh bygis@192.9.105.123 'cd projects && ls -al'"
+    "deploy": "tar czf - * | ssh bygis@192.9.105.123 'tar xzf - -C projects/judy'"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
