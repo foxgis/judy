@@ -44,9 +44,9 @@ describe('文件系统',function(){
             return done(err)
           }
 
-          res.body.owner.should.equal('nick')
-          res.body.filename.should.equal('create.txt')
-          res.body.filesize.should.equal(4)
+          res.body.should.contain.all.keys({owner:'nick',filename:'create.txt',filesize:4})
+          res.body.should.contain.all.keys(['upload_id','upload_at'])
+          res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
 
           upload_id = res.body.upload_id
 
@@ -64,10 +64,9 @@ describe('文件系统',function(){
             return done(err)
           }
           
-          res.body[0].owner.should.equal('nick')
-          res.body[0].upload_id.should.equal(upload_id)
-          res.body[0].filesize.should.equal(4)
-          res.body[0].filename.should.equal('create.txt')
+          res.body[0].should.contain.all.keys({owner:'nick',filename:'create.txt',filesize:4,upload_id:upload_id})
+          res.body[0].should.contain.all.keys(['upload_at'])
+          res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
 
           done()
         })
