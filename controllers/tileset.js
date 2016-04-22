@@ -40,7 +40,7 @@ module.exports.retrieve = function(req, res) {
 
 module.exports.getTile = function(req, res) {
   var name = req.body.tileset_id
-  mongoose.connection.db.listCollections({name: name}).toArray(function(err, names) {
+  mongoose.connection.db.listCollections({ name: name }).toArray(function(err, names) {
     if (err) {
       res.status(500).json({ error: err })
       return

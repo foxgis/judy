@@ -1,9 +1,21 @@
 language: node_js
 node_js:
-  - "5"
+- '5'
 services:
-  - mongodb
+- mongodb
 script:
-  - npm run test
+- npm run test
 after_script:
-  - npm install coveralls && cat ./coverage/lcov.info | coveralls
+- npm install coveralls && cat ./coverage/lcov.info | coveralls
+deploy:
+  skip_cleanup: true
+before_install:
+- openssl aes-256-cbc -K $encrypted_02ebef9cfc9c_key -iv $encrypted_02ebef9cfc9c_iv
+  -in deploy-key.enc -out deploy-key -d
+after_success:
+  - chmod 600 deploy-key
+  - eval "$(ssh-agent -s)"
+  - ssh-add deploy-key
+  - echo -e "Host bygis.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - rm -rf .git
+  - ssh bygis@bygis.com 'cd projects/judy && git pull && npm install'
