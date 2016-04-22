@@ -67,17 +67,54 @@ describe('样式系统',function(){
           return done(err)
         }
 
-        res.body.owner.should.equal('nick')
-        res.body.version.should.equal(8)
-        res.body.name.should.equal('test')
-        res.body.center.should.eql([116.000000,40.000000])
-        res.body.sprite.should.equal('mapbox://sprites/mapbox/satellite-v8')
-        res.body.layers[0].id.should.equal('background')
+        res.body.should.contain.all.keys({
+          'owner':'nick',
+          'draft':true,
+
+          'version': 8,
+          'name': 'test',
+          'metadata': {
+            'mapbox:autocomposite': true
+          },
+          'center':[116.000000,40.000000],
+          'bearing': 0,
+          'pitch': 0,
+          'sources': {
+            mapbox: {
+              'url': 'mapbox://mapbox.mapbox-streets-v7',
+              'type': 'vector'
+            }
+          },
+          'sprite': 'mapbox://sprites/mapbox/satellite-v8',
+          'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+          'layers': [
+            {
+              'id': 'background',
+              'type': 'background',
+              'paint': {
+                'background-color': 'rgba(0,0,0,0)'
+              }
+            }
+          ]
+        })
+        res.body.should.contain.all.keys(['style_id','create_at','modify_at'])
+        res.body.should.not.contain.any.keys(['_id','__v'])
 
         style_id = res.body.style_id
 
         done()
       })
+  })
+  it('新建样式失败',function(){
+    request(app)
+      .post('/api/v1/styles/nick')
+      .set('x-access-token',access_token)
+      .send({
+        'version': 8,
+        'name': 'test',
+        'center':[116.000000,40.000000]
+      })
+      .expect(400)
   })
 
   describe('获取样式列表',function(){
@@ -91,9 +128,15 @@ describe('样式系统',function(){
             return done(err)
           }
           
-          res.body[0].owner.should.equal('nick')
-          res.body[0].version.should.equal(8)
-          res.body[0].name.should.equal('test')
+          res.body[0].should.contain.all.keys({
+            'style_id':style_id,
+            'owner':'nick',
+            'version':8,
+            'name':'test'
+          })
+          res.body[0].should.contain.all.keys(['create_at','modify_at'])
+          res.body[0].should.not.contain.any.keys(['draft','metadata','center','zoom','bearing'
+            ,'pitch','sources','sprite','glyphs','transition','layers','__v','_id'])
 
           done()
         })
@@ -108,12 +151,37 @@ describe('样式系统',function(){
             return done(err)
           }
           
-          res.body.owner.should.equal('nick')
-          res.body.version.should.equal(8)
-          res.body.name.should.equal('test')
-          res.body.center.should.eql([116.000000,40.000000])
-          res.body.sprite.should.equal('mapbox://sprites/mapbox/satellite-v8')
-          res.body.layers[0].id.should.equal('background')
+          res.body.should.contain.all.keys({
+            'owner':'nick',
+            'draft':true,
+
+            'version': 8,
+            'name': 'test',
+            'metadata': {
+              'mapbox:autocomposite': true
+            },
+            'center':[116.000000,40.000000],
+            'bearing': 0,
+            'pitch': 0,
+            'sources': {
+              mapbox: {
+                'url': 'mapbox://mapbox.mapbox-streets-v7',
+                'type': 'vector'
+              }
+            },
+            'sprite': 'mapbox://sprites/mapbox/satellite-v8',
+            'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+            'layers': [
+              {
+                'id': 'background',
+                'type': 'background',
+                'paint': {
+                  'background-color': 'rgba(0,0,0,0)'
+                }
+              }
+            ]
+          })
+          res.body.should.contain.all.keys(['style_id','create_at','modify_at'])
 
           done()
         })
@@ -147,6 +215,7 @@ describe('样式系统',function(){
               'type': 'vector'
             }
           },
+          'transition':{'duration':3587,'delay':'8'},
           'layers': [
             {
               'id': 'background',
@@ -163,13 +232,40 @@ describe('样式系统',function(){
             return done(err)
           }
 
-          res.body.zoom.should.equal(6)
-          res.body.owner.should.equal('nick')
-          res.body.version.should.equal(8)
-          res.body.name.should.equal('test')
-          res.body.center.should.eql([116.000001,40.000001])
-          res.body.sprite.should.equal('mapbox://sprites/mapbox/satellite-v8')
-          res.body.layers[0].id.should.equal('background')
+          res.body.should.contain.all.keys({
+            'owner':'nick',
+            'draft':true,
+ 
+            'version': 8,
+            'name': 'test',
+            'metadata': {
+              'mapbox:autocomposite': true
+            },
+            'center':[116.000001,40.000001],
+            'zoom':6,
+            'bearing': 0,
+            'pitch': 0,
+            'sources': {
+              mapbox: {
+                'url': 'mapbox://mapbox.mapbox-streets-v7',
+                'type': 'vector'
+              }
+            },
+            'sprite': 'mapbox://sprites/mapbox/satellite-v8',
+            'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
+            'transition':{'duration':3587,'delay':'8'},
+            'layers': [
+              {
+                'id': 'background',
+                'type': 'background',
+                'paint': {
+                  'background-color': 'rgba(0,0,0,0)'
+                }
+              }
+            ]
+          })
+          res.body.should.contain.all.keys(['style_id','create_at','modify_at'])
+          res.body.should.not.contain.any.keys(['_id','__v'])
 
           done()
         })
