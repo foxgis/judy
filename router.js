@@ -38,7 +38,7 @@ router.delete('/styles/:username/:style_id', auth, styles.delete)
 // 瓦片集
 router.get('/tilesets/:username', auth, tilesets.list)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
-router.get('/tilesets/:username/:tileset_id/:z(\d+)/:x(\d+)/:y(\d+):scale(@[23]x)?.:format([\w\.]+)', auth, tilesets.getTile)
+router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[23]x)?.:format([\\w\\.]+)', auth, tilesets.getTile)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
 
 // 字体
@@ -47,7 +47,7 @@ router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
-router.get('/sprites/:username/:sprite_id:scale(@[23]x)?.:format([\w\.]+)?', auth, sprites.retrieve)
+router.get('/sprites/:username/:sprite_id:scale(@[23]x)?.:format([\\w\\.]+)?', auth, sprites.retrieve)
 
 
 module.exports = router
