@@ -3,6 +3,20 @@ var config = require('../config')
 var User = require('../models/user')
 
 module.exports = function(req, res, next) {
+  if (req.body.username && req.body.username) {
+    return authPassword
+  }
+
+
+}
+
+
+var authPassword = function(req, res, next) {
+  next()
+}
+
+
+var authAccessToken = function(req, res, next) {
   var access_token = req.query.access_token || req.body.access_token || req.cookies.access_token || req.headers['x-access-token']
   if (!access_token) {
     res.status(400).json({ error: 'access_token缺失' })
@@ -29,42 +43,44 @@ module.exports = function(req, res, next) {
       }
 
       if (user.access_token !== access_token) {
-        res.status(401).json({error: 'access_token失效'})
+        res.status(401).json({ error: 'access_token失效' })
         return
-      }
-
-      // 资源权限认证
-      var resourceType = req.url.split('/')[1]
-      if (resourceType === 'users') {
-        if (decoded.username !== req.params.username) {
-          res.status(401).json({error: 'access_token与用户不匹配'})
-          return
-        }
-      }
-
-      /* eslint-disable no-empty */
-
-      if (resourceType === 'uploads') {
-
-      }
-
-      if (resourceType === 'styles') {
-
-      }
-
-      if (resourceType === 'tilesets') {
-
-      }
-
-      if (resourceType === 'fonts') {
-
-      }
-
-      if (resourceType === 'sprites') {
-
       }
 
       next()
     })
   })
+}
+
+
+var authResource = function(req, res, next) {
+  var resourceType = req.url.split('/')[1]
+  if (resourceType === 'users') {
+    if (decoded.username !== req.params.username) {
+      res.status(401).json({ error: 'access_token与用户不匹配' })
+      return
+    }
+  }
+
+  /* eslint-disable no-empty */
+
+  if (resourceType === 'uploads') {
+
+  }
+
+  if (resourceType === 'styles') {
+
+  }
+
+  if (resourceType === 'tilesets') {
+
+  }
+
+  if (resourceType === 'fonts') {
+
+  }
+
+  if (resourceType === 'sprites') {
+
+  }
 }
