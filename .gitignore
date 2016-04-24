@@ -37,3 +37,4 @@ public/uploads/*
 # Config file
 
 uploads/
+.vscode/

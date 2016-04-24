@@ -33,7 +33,6 @@ var authPassword = function(req, res, next) {
       return
     }
 
-
     req.user = user
     next()
   })
@@ -41,7 +40,8 @@ var authPassword = function(req, res, next) {
 
 
 var authAccessToken = function(req, res, next) {
-  var access_token = req.query.access_token || req.body.access_token || req.cookies.access_token || req.headers['x-access-token']
+  var access_token = req.query.access_token || req.body.access_token || 
+    req.cookies.access_token || req.headers['x-access-token']
   if (!access_token) {
     res.status(401).json({ error: 'access_token缺失' })
     return
