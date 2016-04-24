@@ -18,7 +18,6 @@ var UserSchema = new mongoose.Schema({
   organization: String,
   avatar: String,
 
-  groups: [String],
   is_verified: { type: Boolean, default: false },
   create_at: { type: Date, default: Date.now }
 })

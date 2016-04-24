@@ -4,7 +4,7 @@ var config = require('./config')
 
 mongoose.connect(config.db)
 
-
+/* eslint-disable no-console */
 mongoose.connection.on('connected', function() {
   console.log('Mongoose connected to ' + config.db)
 })

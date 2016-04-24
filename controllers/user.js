@@ -42,89 +42,35 @@ module.exports.create = function(req, res) {
 
 
 module.exports.retrieve = function(req, res) {
-  User.findOne({ username: req.params.username }, function(err, user) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return
-    }
-
-    res.status(200).json(user.toJSON())
-  })
+  res.status(200).json(req.user)
 }
 
 
 module.exports.update = function(req, res) {
-  User.findOneAndUpdate({ username: req.params.username },
-    req.body, '-_id -username -salt -hash -access_token -is_verified -create_at -__v',
-    function(err, user) {
-      if (err) {
-        res.status(500).json({ error: err })
-        return
-      }
-
-      if (!user) {
-        res.sendStatus(404)
-        return
-      }
-
-      User.findOne({ username: req.params.username }, function(err, user) {
-        if (err) {
-          res.status(500).json({ error: err })
-          return
-        }
-
-        res.status(200).json(user.toJSON())
-      })
-    }
-  )
-}
-
-
-module.exports.login = function(req, res) {
-  if (!req.body.username || !req.body.password) {
-    res.status(400).json({ error: '登录信息不完整' })
-    return
+  var fields = ['name', 'email', 'phone', 'organization', 'avatar']
+  for (var i = 0; i < fields.length; i++) {
+    req.user[fields[i]] = req.body[fields[i]] || req.user[fields[i]]
   }
 
-  User.findOne({ username: req.body.username }, function(err, user) {
+  req.user.save(function(err) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    if (!user || !user.validPassword(req.body.password)) {
-      res.status(401).json({ error: '用户名或密码错误' })
-      return
-    }
-
-    user.updateAccessToken()
-    user.save(function(err) {
-      if (err) {
-        res.status(500).json({ error: err })
-        return
-      }
-
-      res.status(200).json(user)
-    })
+    res.status(200).json(req.user)
   })
 }
 
 
-module.exports.updateAccessToken = function(req, res) {
-  User.findOne({ username: req.params.username }, function(err, user) {
+module.exports.login = function(req, res) {
+  req.user.updateAccessToken()
+  req.user.save(function(err) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    user.updateAccessToken()
-    user.save(function(err) {
-      if (err) {
-        res.status(500).json({ error: err })
-        return
-      }
-
-      res.status(200).json(user)
-    })
+    res.status(200).json(req.user)
   })
 }

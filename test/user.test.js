@@ -80,22 +80,6 @@ describe('用户系统', function() {
         })
     })
 
-    it('密码过短', function(done) {
-      request(app)
-        .post('/api/v1/users')
-        .send({ username: 'nick1', password: '1234' })
-        .expect(400)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('密码长度过短')
-
-          done()
-        })
-    })
-
     it('用户名已经被注册', function(done) {
       request(app)
         .post('/api/v1/users')
@@ -112,6 +96,7 @@ describe('用户系统', function() {
         })
     })
   })
+
 
   describe('获取用户信息', function() {
     it('获取成功', function(done) {
@@ -132,6 +117,7 @@ describe('用户系统', function() {
     })
   })
 
+
   describe('更新用户信息', function() {
     it('更新名称', function(done) {
       request(app)
@@ -151,8 +137,9 @@ describe('用户系统', function() {
     })
   })
 
+
   describe('登录', function() {
-    it('登录成功', function(done) {
+    it('密码登录成功', function(done) {
       request(app)
         .post('/api/v1/users/nick')
         .send({ username: 'nick', password: '123456' })
@@ -169,75 +156,23 @@ describe('用户系统', function() {
         })
     })
 
-    it('密码为空', function(done) {
-      request(app)
-        .post('/api/v1/users/nick')
-        .send({ username: 'nick', password: '' })
-        .expect(400)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('登录信息不完整')
-
-          done()
-        })
-    })
-
-    it('用户名为空', function(done) {
-      request(app)
-        .post('/api/v1/users/nick')
-        .send({ username: '', password: '123456' })
-        .expect(400)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('登录信息不完整')
-
-          done()
-        })
-    })
-
-    it('登录用户不存在', function(done) {
+    it('用户名错误', function() {
       request(app)
         .post('/api/v1/users/nick')
         .send({ username: 'nick1', password: '123456' })
         .expect(401)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('用户名或密码错误')
-
-          done()
-        })
     })
 
-    it('登录密码错误', function(done) {
+    it('密码错误', function() {
       request(app)
         .post('/api/v1/users/nick')
-        .send({ username: 'nick', password: '145600' })
+        .send({ username: 'nick', password: '12345' })
         .expect(401)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('用户名或密码错误')
-
-          done()
-        })
     })
-  })
 
-  describe('获取access_token', function() {
-    it('获取成功', function(done) {
+    it('access_token登录成功', function(done) {
       request(app)
-        .get('/api/v1/users/nick/access_token')
+        .post('/api/v1/users/nick')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -249,6 +184,13 @@ describe('用户系统', function() {
 
           done()
         })
+    })
+
+    it('access_token登录失败', function() {
+      request(app)
+        .get('/api/v1/users/nick/access_token')
+        .set('x-access-token', 'invalid-access-token')
+        .expect(401)
     })
   })
 })
