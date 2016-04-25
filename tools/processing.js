@@ -40,4 +40,5 @@ module.exports = function(req) {
   req.upload.complete = true
   req.upload.progress = 1
   req.upload.error = '文件格式不支持，未能进一步处理'
+  req.upload.save()
 }
