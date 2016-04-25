@@ -8,7 +8,6 @@ var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
 
-
 var router = express.Router()
 var upload = multer({
   dest: 'uploads/',
@@ -46,7 +45,7 @@ router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
-router.get('/sprites/:username/:sprite_id:scale(@[23]x)?.:format([\\w\\.]+)?', auth, sprites.retrieve)
+router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 
 
 module.exports = router

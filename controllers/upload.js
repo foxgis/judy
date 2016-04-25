@@ -21,7 +21,6 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  console.log(req.files[0])
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
   var writeStream = gfs.createWriteStream({ filename: req.files[0].originalname })
   fs.createReadStream(req.files[0].path).pipe(writeStream)

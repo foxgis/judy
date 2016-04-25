@@ -20,18 +20,17 @@ module.exports = function(req) {
   }
 
   if (ext === '.zip') {
-    var zip = new AdmZip(req.files[0])
-    var zipEntries = zip.getEntries()
-    var exts = zipEntries.map(function(entry) {
+    var zip = new AdmZip(req.files[0].path)
+    var exts = zip.getEntries().map(function(entry) {
       return path.extname(entry.entryName).toLowerCase()
     })
 
-    if (exts.includes('.shp') && exts.includes('.shx') && exts.includes('.dbf')) {
+    if ((exts.indexOf('.shp') >= 0) && (exts.indexOf('.shx') >= 0) && (exts.indexOf('.dbf') >= 0)){
       shapefile(req)
       return
     }
 
-    if (exts.includes('.png') && exts.includes('.json')) {
+    if ((exts.indexOf('.png') >= 0) && (exts.indexOf('.json') >= 0)) {
       sprite(req)
       return
     }
