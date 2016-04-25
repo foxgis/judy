@@ -2,10 +2,14 @@ var fs = require('fs')
 var Grid = require('gridfs-stream')
 var mongoose = require('../db')
 var Upload = require('../models/upload')
+var processing = require('../tools/process')
 
 
 module.exports.list = function(req, res) {
-  Upload.find({ owner: req.params.username, is_deleted: false }, function(err, uploads) {
+  Upload.find({
+    owner: req.params.username,
+    is_deleted: false
+  }, function(err, uploads) {
     if (err) {
       res.status(500).json({ error: err })
       return
@@ -17,6 +21,7 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
+  console.log(req.files[0])
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
   var writeStream = gfs.createWriteStream({ filename: req.files[0].originalname })
   fs.createReadStream(req.files[0].path).pipe(writeStream)
@@ -35,9 +40,10 @@ module.exports.create = function(req, res) {
         return
       }
 
-      fs.unlink(req.files[0].path)
-
       res.status(200).json(upload)
+
+      req.upload = upload
+      processing(req)
     })
   })
 }

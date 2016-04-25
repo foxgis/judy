@@ -10,7 +10,11 @@ var UploadSchema = new mongoose.Schema({
   filesize: Number,
   owner: String,
   is_deleted: { type: Boolean, default: false },
-  upload_at: { type: Date, default: Date.now }
+  upload_at: { type: Date, default: Date.now },
+
+  complete: { type: Boolean, default: false },
+  error: String,
+  progress: { type: Number, default: 0 }
 })
 
 
