@@ -2,7 +2,7 @@ var fs = require('fs')
 var Grid = require('gridfs-stream')
 var mongoose = require('../db')
 var Upload = require('../models/upload')
-var processing = require('../tools/process')
+var processing = require('../tools/processing')
 
 
 module.exports.list = function(req, res) {

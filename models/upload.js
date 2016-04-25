@@ -13,8 +13,8 @@ var UploadSchema = new mongoose.Schema({
   upload_at: { type: Date, default: Date.now },
 
   complete: { type: Boolean, default: false },
-  error: String,
-  progress: { type: Number, default: 0 }
+  progress: { type: Number, default: 0 },
+  error: String
 })
 
 
