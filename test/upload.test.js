@@ -37,7 +37,7 @@ describe('文件系统',function(){
     request(app)
         .post('/api/v1/uploads/nick')
         .set('x-access-token',access_token)
-        .attach('','test/data/create.txt')  //只能在judy下测试test文件夹。在test中测试，路径会报错。
+        .attach('','test/fixtures/create.txt')  //只能在judy下测试test文件夹。在test中测试，路径会报错。
         .expect(200)
         .end(function(err, res) {
           if (err) {
