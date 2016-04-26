@@ -6,7 +6,7 @@ var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 describe('文件系统',function(){
 
-  var access_token 
+  var access_token
   var upload_id
 
   after('清除用户文件信息', function() {
@@ -63,7 +63,7 @@ describe('文件系统',function(){
           if(err){
             return done(err)
           }
-          
+
           res.body[0].should.contain.all.keys({owner:'nick',filename:'create.txt',filesize:4,upload_id:upload_id})
           res.body[0].should.contain.all.keys(['upload_at'])
           res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
@@ -75,16 +75,15 @@ describe('文件系统',function(){
   describe('下载文件',function(){
     it('下载成功',function(done){
       request(app)
-        .get('/api/v1/uploads/nick/'+upload_id) 
+        .get('/api/v1/uploads/nick/'+upload_id)
         .set('x-access-token',access_token)
         .expect(200)
         .end(function(err,res){
           if(err){
             return done(err)
           }
-          
+
           res.should.be.an('object')
-          res.body.should.be.empty
 
           done()
         })
@@ -112,5 +111,5 @@ describe('文件系统',function(){
           done()
         })
     })
-  })  
+  })
 })
