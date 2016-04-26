@@ -4,7 +4,7 @@ var shortid = require('shortid')
 
 
 var UploadSchema = new mongoose.Schema({
-  upload_id: { type: String, default: shortid.generate(), index: true },
+  upload_id: { type: String, default: shortid.generate, index: true },
   file_id: mongoose.Schema.Types.ObjectId,
   filename: String,
   filesize: Number,
@@ -12,6 +12,7 @@ var UploadSchema = new mongoose.Schema({
   is_deleted: { type: Boolean, default: false },
   upload_at: { type: Date, default: Date.now },
 
+  tileset_id: String,
   complete: { type: Boolean, default: false },
   progress: { type: Number, default: 0 },
   error: String

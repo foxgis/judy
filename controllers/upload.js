@@ -21,7 +21,6 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  console.log(req.files[0])
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
   var writeStream = gfs.createWriteStream({ filename: req.files[0].originalname })
   fs.createReadStream(req.files[0].path).pipe(writeStream)
@@ -52,7 +51,29 @@ module.exports.create = function(req, res) {
 module.exports.retrieve = function(req, res) {
   Upload.findOne({
     owner: req.params.username,
-    upload_id: req.params.upload_id
+    upload_id: req.params.upload_id,
+    is_deleted: false
+  }, function(err, upload) {
+    if (err) {
+      res.status(500).json({ error: err })
+      return
+    }
+
+    if (!upload) {
+      res.sendStatus(404)
+      return
+    }
+
+    res.status(200).json(upload)
+  })
+}
+
+
+module.exports.download = function(req, res) {
+  Upload.findOne({
+    owner: req.params.username,
+    upload_id: req.params.upload_id,
+    is_deleted: false
   }, function(err, upload) {
     if (err) {
       res.status(500).json({ error: err })
@@ -71,7 +92,7 @@ module.exports.retrieve = function(req, res) {
       return
     })
 
-    res.attachment(upload.filename)
+    res.attachment(req.params.filename)
     readStream.pipe(res)
   })
 }
