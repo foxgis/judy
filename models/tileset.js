@@ -4,7 +4,7 @@ var shortid = require('shortid')
 
 
 var TilesetSchema = new mongoose.Schema({
-  tileset_id: { type: String, default: shortid.generate(), index: true },
+  tileset_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   scopes: [String],
   filesize: Number,

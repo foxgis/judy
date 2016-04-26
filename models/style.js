@@ -4,7 +4,7 @@ var shortid = require('shortid')
 
 
 var StyleSchema = new mongoose.Schema({
-  style_id: { type: String, default: shortid.generate(), index: true },
+  style_id: { type: String, default: shortid.generates, index: true },
   owner: String,
   create_at: { type: Date, default: Date.now },
   modify_at: { type: Date, default: Date.now },

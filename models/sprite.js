@@ -4,7 +4,7 @@ var shortid = require('shortid')
 
 
 var SpriteSchema = new mongoose.Schema({
-  sprite_id: { type: String, default: shortid.generate(), index: true },
+  sprite_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   create_at: { type: Date, default: Date.now },
 

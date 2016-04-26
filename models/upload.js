@@ -4,7 +4,7 @@ var shortid = require('shortid')
 
 
 var UploadSchema = new mongoose.Schema({
-  upload_id: { type: String, default: shortid.generate(), index: true },
+  upload_id: { type: String, default: shortid.generates, index: true },
   file_id: mongoose.Schema.Types.ObjectId,
   filename: String,
   filesize: Number,
