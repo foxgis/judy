@@ -70,7 +70,8 @@ module.exports.retrieve = function(req, res) {
       return
     })
 
-    res.attachment(upload.filename)
+    res.setHeader('Content-disposition', 'attachment; filename*=UTF-8\'\''+upload.filename)
+    res.writeHead(200,{'Content-Type':'application/octet-stream'})
     readStream.pipe(res)
   })
 }
