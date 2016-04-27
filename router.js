@@ -11,7 +11,7 @@ var sprites = require('./controllers/sprite')
 var router = express.Router()
 var upload = multer({
   dest: 'uploads/',
-  limits: { fileSize: 200000000, files: 1 }
+  limits: { fileSize: 400000000, files: 1 }
 })
 
 // 用户
@@ -24,6 +24,7 @@ router.post('/users/:username', auth, users.login)
 router.get('/uploads/:username', auth, uploads.list)
 router.post('/uploads/:username', upload.any(), auth, uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
+router.get('/uploads/:username/:upload_id/:filename', auth, uploads.download)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 
 // 样式

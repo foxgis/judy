@@ -12,6 +12,7 @@ var UploadSchema = new mongoose.Schema({
   is_deleted: { type: Boolean, default: false },
   upload_at: { type: Date, default: Date.now },
 
+  tileset_id: String,
   complete: { type: Boolean, default: false },
   progress: { type: Number, default: 0 },
   error: String

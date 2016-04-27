@@ -6,13 +6,15 @@ var shortid = require('shortid')
 var TilesetSchema = new mongoose.Schema({
   tileset_id: { type: String, default: shortid.generate, index: true },
   owner: String,
-  scopes: [String],
+  upload_id: String,
   filesize: Number,
   format: String,
+  scopes: { type: [String], default: ['private'] },
   create_at: { type: Date, default: Date.now },
   is_deleted: { type: Boolean, default: false },
 
-  tilejson: String,
+  // tilejson spec
+  tilejson: { type: String, default: '2.1.0' },
   name: String,
   description: String,
   version: { type: String, default: '1.0.0' },
@@ -26,18 +28,19 @@ var TilesetSchema = new mongoose.Schema({
   bounds: { type: [Number], default: [-180, -90, 180, 90] },
   center: [Number],
 
-  vector_layers: [{
-    id: String,
-    description: String,
-    minzoom: Number,
-    maxzoom: Number,
-    fields: [{
-      name: String,
-      type: String,
-      description: String,
-      values: [mongoose.Schema.Types.Mixed]
-    }]
-  }]
+  vector_layers: [mongoose.Schema.Types.Mixed]
+  // vector_layers: [{
+  //   id: String,
+  //   description: String,
+  //   minzoom: Number,
+  //   maxzoom: Number,
+  //   fields: [{
+  //     name: String,
+  //     type: String,
+  //     description: String,
+  //     values: [mongoose.Schema.Types.Mixed]
+  //   }]
+  // }]
 })
 
 

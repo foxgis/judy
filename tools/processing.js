@@ -11,33 +11,31 @@ module.exports = function(req) {
 
   if (ext === '.json' || ext === '.geojson') {
     json(req)
-    return
-  }
 
-  if (ext === '.mbtiles') {
+  } else if (ext === '.mbtiles') {
     mbtiles(req)
-    return
-  }
 
-  if (ext === '.zip') {
+  } else if (ext === '.zip') {
     var zip = new AdmZip(req.files[0].path)
-    var exts = zip.getEntries().map(function(entry) {
+    var zipEntries = zip.getEntries()
+    var exts = zipEntries.map(function(entry) {
       return path.extname(entry.entryName).toLowerCase()
     })
 
-    if ((exts.indexOf('.shp') >= 0) && (exts.indexOf('.shx') >= 0) && (exts.indexOf('.dbf') >= 0)){
+    if (exts.indexOf('.shp') > -1 && exts.indexOf('.shx') > -1 &&
+      exts.indexOf('.dbf') > -1) {
       shapefile(req)
-      return
     }
 
-    if ((exts.indexOf('.png') >= 0) && (exts.indexOf('.json') >= 0)) {
+    if (exts.indexOf('.png') > -1 && exts.indexOf('.json') > -1) {
       sprite(req)
-      return
     }
+
+  } else {
+    req.upload.error = '文件格式不支持，未能进一步处理'
   }
 
   req.upload.complete = true
   req.upload.progress = 1
-  req.upload.error = '文件格式不支持，未能进一步处理'
   req.upload.save()
 }
