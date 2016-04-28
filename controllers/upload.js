@@ -92,12 +92,10 @@ module.exports.download = function(req, res) {
       return
     })
 
-<<<<<<< HEAD
+
     res.setHeader('Content-disposition', 'attachment; filename*=UTF-8\'\''+upload.filename)
     res.writeHead(200,{'Content-Type':'application/octet-stream'})
-=======
-    res.attachment(req.params.filename)
->>>>>>> 6c07808160800750257486f872d313fcabe7baff
+
     readStream.pipe(res)
   })
 }

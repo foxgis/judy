@@ -51,8 +51,8 @@ describe('符号库系统',function(){
   })
 
 
-  describe('获取符号库',function(){
-    it('获取用户符号库列表',function(done){
+  describe('获取用户符号库列表',function(){
+    it('获取成功',function(done){
       request(app)
         .get('/api/v1/sprites/nick')
         .set('x-access-token',access_token)
@@ -72,7 +72,9 @@ describe('符号库系统',function(){
           done()
         })
     })
-    it('获取符号库',function(done){
+  })
+  describe('下载符号库',function(){
+    it('未指定格式',function(done){
       request(app)
         .get('/api/v1/sprites/nick/'+sprite_id)
         .set('x-access-token',access_token)
@@ -82,8 +84,67 @@ describe('符号库系统',function(){
             return done(err)
           }
 
-          res.body.should.contain.all.keys({owner:'nick',sprite_id:sprite_id})
-          res.body.should.contain.all.keys(['create_at','image','json','name'])
+          res.should.exist
+
+          done()
+        })
+    })
+    it('下载2倍json',function(done){
+      request(app)
+        .get('/api/v1/sprites/nick/'+sprite_id+'2x.json')
+        .set('x-access-token',access_token)
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
+
+          res.should.exist
+
+          done()
+        })
+    })
+    it('下载1倍json',function(done){
+      request(app)
+        .get('/api/v1/sprites/nick/'+sprite_id+'2x.json')
+        .set('x-access-token',access_token)
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
+
+          res.should.exist
+
+          done()
+        })
+    })
+    it('下载2倍图片',function(done){
+      request(app)
+        .get('/api/v1/sprites/nick/'+sprite_id+'2x.png')
+        .set('x-access-token',access_token)
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
+
+          res.should.exist
+
+          done()
+        })
+    })
+    it('下载1倍图片',function(done){
+      request(app)
+        .get('/api/v1/sprites/nick/'+sprite_id+'2x.png')
+        .set('x-access-token',access_token)
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
+
+          res.should.exist
 
           done()
         })
