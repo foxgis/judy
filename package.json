@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "lint": "eslint *.js models/** controllers/** test/*",
     "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha",
-    "deploy": "ssh bygis@192.9.105.123 '~/projects/judy/build.sh'"
+    "deploy": "ssh bygis@192.9.105.123 'cd projects/judy && ./build.sh'"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
