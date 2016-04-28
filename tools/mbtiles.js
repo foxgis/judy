@@ -33,7 +33,6 @@ module.exports = function(req) {
       tileset.vector_layers = JSON.parse(row.value).vector_layers
     }
   }, function() {
-    tileset.upload_id = req.upload.upload_id
     tileset.save()
     req.upload.tileset_id = tileset.tileset_id
     req.upload.save()
