@@ -1,6 +1,6 @@
 var path = require('path')
 var AdmZip = require('adm-zip')
-var json = require('./json')
+var geojson = require('./geojson')
 var mbtiles = require('./mbtiles')
 var shapefile = require('./shapefile')
 var sprite = require('./sprite')
@@ -10,7 +10,7 @@ module.exports = function(req) {
   var ext = path.extname(req.files[0].originalname).toLowerCase()
 
   if (ext === '.json' || ext === '.geojson') {
-    json(req)
+    geojson(req)
 
   } else if (ext === '.mbtiles') {
     mbtiles(req)

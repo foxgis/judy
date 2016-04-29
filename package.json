@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "lint": "eslint *.js models/** controllers/** test/*",
     "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha",
-    "deploy": "tar czf - * | ssh bygis@192.9.105.123 'tar xzf - -C projects/judy'"
+    "deploy": "ssh bygis@192.9.105.123 'cd projects/judy && ./build.sh'"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
@@ -24,6 +24,7 @@
     "mongoose-json-select": "^0.2.1",
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
+    "sharp": "^0.14.1",
     "shortid": "^2.2.6",
     "sqlite3": "^3.1.3"
   },

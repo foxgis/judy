@@ -39,7 +39,7 @@ module.exports.retrieve = function(req, res) {
 
     var scale = req.params.scale
     var format = req.params.format
-
+    
     if(format === 'json' || format === undefined){
       if(scale === '@2x'){
         res = sprite.json
@@ -53,14 +53,12 @@ module.exports.retrieve = function(req, res) {
           } 
         }
       }
-    }
-    if(format === 'png'){
+    }else if(format === 'png'){
       if(scale === '@2x'){
         res = sprite.image
-      }else{
-        if(scale === undefined){
-          var image = sharp(sprite.image)
-          image
+      }else if(scale === undefined){
+        var image = sharp(sprite.image)
+        image
             .metadata
             .then(function(metadata){
               return image
@@ -71,7 +69,6 @@ module.exports.retrieve = function(req, res) {
             .then(function(data){
               res = data
             })
-        }
       }
     }
   })

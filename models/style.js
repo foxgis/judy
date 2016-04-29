@@ -30,7 +30,7 @@ var StyleSchema = new mongoose.Schema({
 
 StyleSchema.plugin(select, '-_id -__v')
 
-
+// BUG
 StyleSchema.pre('save', function(next) {
   this.modify_at = Date.now
 
