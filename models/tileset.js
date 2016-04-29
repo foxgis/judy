@@ -9,7 +9,6 @@ var TilesetSchema = new mongoose.Schema({
   filesize: Number,
   format: String,
   scopes: { type: [String], default: ['private'] },
-  create_at: { type: Date, default: Date.now },
   is_deleted: { type: Boolean, default: false },
 
   // tilejson spec
@@ -40,10 +39,10 @@ var TilesetSchema = new mongoose.Schema({
   //     values: [mongoose.Schema.Types.Mixed]
   //   }]
   // }]
-})
+}, { timestamps: true })
 
 
-TilesetSchema.plugin(select, '-_id -__v')
+TilesetSchema.plugin(select, '-_id -is_deleted -__v')
 
 
 module.exports = mongoose.model('Tileset', TilesetSchema)

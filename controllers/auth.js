@@ -40,7 +40,7 @@ var authPassword = function(req, res, next) {
 
 
 var authAccessToken = function(req, res, next) {
-  var access_token = req.query.access_token || req.body.access_token || 
+  var access_token = req.query.access_token || req.body.access_token ||
     req.cookies.access_token || req.headers['x-access-token']
   if (!access_token) {
     res.status(401).json({ error: 'access_token缺失' })
@@ -79,29 +79,37 @@ var authResource = function(req, res, next) {
       res.sendStatus(401)
       return
     }
+
+    next()
+    return
   }
 
   /* eslint-disable no-empty */
 
   if (resourceType === 'uploads') {
-
+    next()
+    return
   }
 
   if (resourceType === 'styles') {
-
+    next()
+    return
   }
 
   if (resourceType === 'tilesets') {
-
+    next()
+    return
   }
 
   if (resourceType === 'fonts') {
-
+    next()
+    return
   }
 
   if (resourceType === 'sprites') {
-
+    next()
+    return
   }
 
-  next()
+  res.sendStatus(404)
 }

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+var _ = require('underscore')
 var Tileset = require('../models/tileset')
 var TileSchema = require('../models/tile')
 
@@ -7,7 +8,7 @@ module.exports.list = function(req, res) {
   Tileset.find({
     owner: req.params.username,
     is_deleted: false
-  }, function(err, tilesets) {
+  }, '-vector_layers', function(err, tilesets) {
     if (err) {
       res.status(500).json({ error: err })
       return
@@ -88,12 +89,30 @@ module.exports.getTile = function(req, res) {
 }
 
 
+module.exports.update = function(req, res) {
+  var filter = ['tileset_id', 'owner', 'is_deleted', 'createdAt', 'updatedAt']
+
+  Tileset.findOneAndUpdate({
+    tileset_id: req.params.tileset_id,
+    owner: req.params.username,
+    is_deleted: false
+  }, _.omit(req.body, filter), function(err, tileset) {
+    if (err) {
+      res.status(500).json({ error: err })
+      return
+    }
+
+    res.status(200).json(tileset)
+  })
+}
+
+
 module.exports.delete = function(req, res) {
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username,
     is_deleted: false
-  }, function(err) {
+  }, { is_deleted: true }, function(err) {
     if (err) {
       res.status(500).json({ error: err })
       return

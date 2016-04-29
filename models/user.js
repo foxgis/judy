@@ -15,15 +15,14 @@ var UserSchema = new mongoose.Schema({
   name: String,
   email: String,
   phone: String,
+  location: String,
   organization: String,
   avatar: String,
 
-  is_verified: { type: Boolean, default: false },
-  create_at: { type: Date, default: Date.now }
-})
+  is_verified: { type: Boolean, default: false }
+}, { timestamps: true })
 
 
-// user.toJSON()时默认排除掉敏感字段
 UserSchema.plugin(select, '-_id -salt -hash -__v')
 
 

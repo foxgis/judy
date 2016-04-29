@@ -10,16 +10,17 @@ var UploadSchema = new mongoose.Schema({
   filesize: Number,
   owner: String,
   is_deleted: { type: Boolean, default: false },
-  upload_at: { type: Date, default: Date.now },
 
   tileset_id: String,
-  complete: { type: Boolean, default: false },
+  font_id: String,
+  sprite_id: String,
+
+  is_complete: { type: Boolean, default: false },
   progress: { type: Number, default: 0 },
   error: String
-})
+}, { timestamps: true })
 
 
-// upload.toJSON()时默认排除掉敏感字段
 UploadSchema.plugin(select, '-_id -file_id -is_deleted -__v')
 
 

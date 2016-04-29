@@ -1,3 +1,4 @@
+var _ = require('underscore')
 var User = require('../models/user')
 
 
@@ -42,35 +43,58 @@ module.exports.create = function(req, res) {
 
 
 module.exports.retrieve = function(req, res) {
-  res.status(200).json(req.user)
-}
-
-
-module.exports.update = function(req, res) {
-  var fields = ['name', 'email', 'phone', 'organization', 'avatar']
-  for (var i = 0; i < fields.length; i++) {
-    req.user[fields[i]] = req.body[fields[i]] || req.user[fields[i]]
-  }
-
-  req.user.save(function(err) {
+  User.findOne({ username: req.params.username }, function(err, user) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    res.status(200).json(req.user)
+    if (!user) {
+      res.sendStatus(404)
+      return
+    }
+
+    res.status(200).json(user)
   })
 }
 
 
+module.exports.update = function(req, res) {
+  var filter = ['name', 'email', 'phone', 'location', 'organization', 'avatar']
+
+  User.findOneAndUpdate({ username: req.params.username },
+    _.pick(req.body, filter),
+    function(err, user) {
+      if (err) {
+        res.status(500).json({ error: err })
+        return
+      }
+
+      res.status(200).json(user)
+    })
+}
+
+
 module.exports.login = function(req, res) {
-  req.user.updateAccessToken()
-  req.user.save(function(err) {
+  User.findOne({ username: req.params.username }, function(err, user) {
     if (err) {
       res.status(500).json({ error: err })
       return
     }
 
-    res.status(200).json(req.user)
+    if (!user) {
+      res.sendStatus(404)
+      return
+    }
+
+    user.updateAccessToken()
+    user.save(function(err) {
+      if (err) {
+        res.status(500).json({ error: err })
+        return
+      }
+
+      res.status(200).json(user)
+    })
   })
 }

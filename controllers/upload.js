@@ -25,6 +25,11 @@ module.exports.create = function(req, res) {
   var writeStream = gfs.createWriteStream({ filename: req.files[0].originalname })
   fs.createReadStream(req.files[0].path).pipe(writeStream)
 
+  writeStream.on('error', function(err) {
+    res.status(500).json({ error: err })
+    return
+  })
+
   writeStream.on('close', function(file) {
     var upload = new Upload({
       file_id: file._id,
