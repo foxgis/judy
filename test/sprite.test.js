@@ -6,8 +6,7 @@ var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 
 describe('符号库系统',function(){
-  var access_token
-  var sprite_id  
+  var access_token 
 
   after('清除用户以及用户样式表信息',function(){
     User.remove({username:'nick'}).exec()
@@ -66,24 +65,6 @@ describe('符号库系统',function(){
           res.body[0].should.contain.all.keys(['create_at','sprite_id','name'])
           res.body[1].should.contain.all.keys({owner:'nick'})
           res.body[1].should.contain.all.keys(['create_at','sprite_id','name'])
-
-          sprite_id = res.body[0].sprite_id
-
-          done()
-        })
-    })
-    it('获取符号库',function(done){
-      request(app)
-        .get('/api/v1/sprites/nick/'+sprite_id)
-        .set('x-access-token',access_token)
-        .expect(200)
-        .end(function(err,res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.contain.all.keys({owner:'nick',sprite_id:sprite_id})
-          res.body.should.contain.all.keys(['create_at','image','json','name'])
 
           done()
         })

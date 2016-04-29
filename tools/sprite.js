@@ -25,7 +25,8 @@ module.exports = function(req){
           name:json_name
         })
         var json = zip.readFile(entry)
-        sprite.json = json.toString()
+        sprite.json = json
+        // sprite.json = JSON.parse(json.toString().trim())
         sprite.image = Image[Name.indexOf(json_name)]
 
         sprite.save()
