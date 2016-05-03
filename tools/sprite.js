@@ -19,19 +19,17 @@ module.exports = function(req){
     var extname = path.extname(entry.entryName)
     if(extname === '.json'){
       var json_name = entry.entryName.replace(extname,'')
-      if(Name.indexOf(json_name) >= 0){
+      if(Name.indexOf(json_name) > -1){
         var sprite = new Sprite({
           owner:req.params.username,
           name:json_name
         })
         var json = zip.readFile(entry)
-        sprite.json = JSON.parse(json.toString())
+        sprite.json = json.toString()
+        // sprite.json = JSON.parse(json.toString())
         sprite.image = Image[Name.indexOf(json_name)]
 
         sprite.save()
-
-        Name.splice(Name.indexOf(json_name),1)
-        Image.splice(Name.indexOf(json_name),1)
       }
     }
   })

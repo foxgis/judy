@@ -9,7 +9,7 @@ var SpriteSchema = new mongoose.Schema({
   create_at: { type: Date, default: Date.now },
 
   name: String,
-  image: mongoose.Schema.Types.Mixed,
+  image: Buffer,
   json: mongoose.Schema.Types.Mixed
 })
 
