@@ -36,9 +36,10 @@ module.exports.retrieve = function(req, res) {
 
     if(!req.params.format || req.params.format === 'json'){
       sprite.json = JSON.parse(sprite.json)
+      
       if(req.params.scale === '@2x'){
         res.status(200).json(sprite.json)
-      }else{
+      }else if(!req.params.scale){
         for(var key in sprite.json){
           sprite.json[key].x = sprite.json[key].x/2
           sprite.json[key].y = sprite.json[key].y/2
@@ -48,13 +49,11 @@ module.exports.retrieve = function(req, res) {
         }
         res.status(200).json(sprite.json)
       }
-    }
-    
-    if(req.params.format === 'png'){
+    }else if(req.params.format === 'png'){
       if(req.params.scale === '@2x'){
         res.type('png')
         res.status(200).send(sprite.image)
-      }else{
+      }else if(!req.params.scale){
         Image.open(sprite.image,'png',function(err,image){
           image.batch().scale(0.5).toBuffer('png',function(err,buffer){
             res.type('png')
