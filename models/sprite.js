@@ -7,6 +7,7 @@ var SpriteSchema = new mongoose.Schema({
   sprite_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   create_at: { type: Date, default: Date.now },
+  is_deleted: { type: Boolean, default: false },
 
   name: String,
   image: Buffer,
@@ -14,7 +15,7 @@ var SpriteSchema = new mongoose.Schema({
 })
 
 
-SpriteSchema.plugin(select, '-_id -__v')
+SpriteSchema.plugin(select, '-_id -__v -is_deleted')
 
 
 

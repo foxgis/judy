@@ -3,8 +3,10 @@ var Image = require('lwip')
 
 
 module.exports.list = function(req, res) {
-  Sprite.find({ owner: req.params.username },
-    'sprite_id owner create_at name',
+  Sprite.find({ 
+    owner: req.params.username,
+    is_deleted: false
+  },'sprite_id owner create_at name',
     function(err,sprites){
       if(err){
         res.status(500).json({ error: err })
@@ -19,7 +21,8 @@ module.exports.list = function(req, res) {
 module.exports.retrieve = function(req, res) {
   Sprite.findOne({
     owner: req.params.username,
-    sprite_id: req.params.sprite_id
+    sprite_id: req.params.sprite_id,
+    is_deleted: false
   }, function(err, sprite) {
     if (err) {
       res.status(500).json({ error: err })
@@ -46,6 +49,7 @@ module.exports.retrieve = function(req, res) {
         res.status(200).json(sprite.json)
       }
     }
+    
     if(req.params.format === 'png'){
       if(req.params.scale === '@2x'){
         res.type('png')
@@ -63,10 +67,11 @@ module.exports.retrieve = function(req, res) {
 }
 
 module.exports.delete = function(req, res){
-  Sprite.findOneAndRemove({
+  Sprite.findOneAndUpdate({
     owner: req.params.username,
-    sprite_id: req.params.sprite_id
-  }, function(err) { 
+    sprite_id: req.params.sprite_id,
+    is_deleted: false
+  }, { is_deleted: true }, function(err) { 
     if (err) {
       res.status(500).json({ error: err })
       return

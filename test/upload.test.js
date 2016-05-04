@@ -37,7 +37,7 @@ describe('文件系统',function(){
     request(app)
         .post('/api/v1/uploads/nick')
         .set('x-access-token',access_token)
-        .attach('','test/fixtures/create.txt')  //只能在judy下测试test文件夹。在test中测试，路径会报错。
+        .attach('','test/fixtures/create.txt')  //只能在judy下测试test文件夹。否则路径会报错。
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -53,8 +53,9 @@ describe('文件系统',function(){
           done()
         })
   })
-  describe('获取文件列表',function(){
-    it('获取成功',function(done){
+
+  describe('获取用户文件列表',function(){
+    it('获取用户文件列表',function(done){
       request(app)
         .get('/api/v1/uploads/nick')
         .set('x-access-token',access_token)
@@ -64,16 +65,18 @@ describe('文件系统',function(){
             return done(err)
           }
 
-          res.body[0].should.contain.all.keys({owner:'nick',filename:'create.txt',filesize:4,upload_id:upload_id})
+          res.body[0].should.contain.all.keys({owner:'nick',filename:'create.txt'
+            ,filesize:4,upload_id:upload_id})
           res.body[0].should.contain.all.keys(['upload_at'])
-          res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
+          res.body[0].should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
 
           done()
         })
     })
   })
-  describe('下载文件',function(){
-    it('下载成功',function(done){
+
+  describe('获取文件信息',function(){
+    it('获取成功',function(done){
       request(app)
         .get('/api/v1/uploads/nick/'+upload_id)
         .set('x-access-token',access_token)
@@ -83,18 +86,49 @@ describe('文件系统',function(){
             return done(err)
           }
 
-          res.should.be.an('object')
+          res.body.should.contain.all.keys({owner:'nick',filename:'create.txt'
+            ,filesize:4,upload_id:upload_id})
+          res.body.should.contain.all.keys(['upload_at'])
+          res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
 
           done()
         })
     })
-    it('下载文件不存在',function(){
+
+    it('文件不存在',function(){
       request(app)
         .get('/api/v1/uploads/nick/test')
         .set('x-access-token',access_token)
         .expect(404)
     })
   })
+
+  describe('下载文件',function(){
+    it('下载成功',function(done){
+      request(app)
+        .get('/api/v1/uploads/nick/'+upload_id+'/create.txt')
+        .set('x-access-token',access_token)
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
+
+          res.should.exist
+
+          done()
+        })
+    })
+
+    it('文件不存在',function(){
+      request(app)
+        .get('/api/v1/uploads/nick/'+upload_id+'/test.txt')
+        .set('x-access-token',access_token)
+        .expect(404)
+    })
+  })
+
+
   describe('删除文件',function(){
     it('删除成功',function(done){
       request(app)
