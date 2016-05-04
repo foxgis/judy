@@ -190,7 +190,7 @@ describe('符号库系统',function(){
             return done(err)
           }
 
-          res.should.expect
+          res.should.exist
 
           done()
         })
