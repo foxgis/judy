@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+var mbtiles = require('../tools/mbtiles')
+var commander = require('commander')
+
+
+commander
+  .option('-u, --username <value>', 'username of owner')
+  .option('-f, --filename <value>', 'filename of mbtiles')
+  .parse(process.argv)
+
+mbtiles(commander.owner, commander.filename, function(err, tileset_id) {
+  if(err) {
+    console.log(err)
+    process.exit(1)
+  }
+
+  console.log('mbtiles imported as tileset_id: ' + tileset_id)
+  process.exit(0)
+})
