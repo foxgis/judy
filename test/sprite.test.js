@@ -65,12 +65,9 @@ describe('符号库系统',function(){
             return done(err)
           }
 
-          res.body[0].should.contain.all.keys({owner:'nick'})
-          res.body[0].should.contain.all.keys(['create_at','sprite_id','name'])
-          res.body[1].should.contain.all.keys({owner:'nick'})
-          res.body[1].should.contain.all.keys(['create_at','sprite_id','name'])
+          res.body[0].should.contain.all.keys(['owner','create_at','sprite_id','name'])
 
-          sprite_id = res.body[1].sprite_id
+          sprite_id = res.body[0].sprite_id
 
           done()
         })

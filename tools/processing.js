@@ -27,7 +27,7 @@ module.exports = function(req) {
       shapefile(req)
     }
 
-    if (exts.indexOf('.png') > -1 && exts.indexOf('.json') > -1) {
+    if (exts.length === 2 && exts.indexOf('.png') > -1 && exts.indexOf('.json') > -1) {
       sprite(req)
     }
 
