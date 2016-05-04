@@ -4,17 +4,12 @@ var User = require('../models/user')
 var Upload = require('../models/upload')
 var should = require('chai').should() // eslint-disable-line no-unused-vars
 
-describe('文件系统',function(){
+describe('文件上传模块', function() {
 
   var access_token
   var upload_id
 
-  after('清除用户文件信息', function() {
-    User.remove({ username: 'nick' }).exec()
-    Upload.remove({owner:'nick'}).exec()
-  })
-
-  it('注册', function(done) {
+  before('注册用户', function(done) {
     request(app)
       .post('/api/v1/users')
       .send({ username: 'nick', password: '123456' })
@@ -24,85 +19,105 @@ describe('文件系统',function(){
           return done(err)
         }
 
-        res.body.username.should.equal('nick')
-        res.body.access_token.should.exist
-
         access_token = res.body.access_token
 
         done()
       })
   })
 
-  it('上传文件', function(done) {
-    request(app)
+  after('清理', function() {
+    User.remove({ username: 'nick' }).exec()
+    Upload.remove({ owner: 'nick' }).exec()
+  })
+
+  describe('上传文件', function() {
+    it('上传成功', function(done) {
+      request(app)
         .post('/api/v1/uploads/nick')
-        .set('x-access-token',access_token)
-        .attach('','test/fixtures/create.txt')  //只能在judy下测试test文件夹。在test中测试，路径会报错。
+        .set('x-access-token', access_token)
+        .attach('aa', 'test/fixtures/create.txt')
         .expect(200)
         .end(function(err, res) {
           if (err) {
             return done(err)
           }
 
-          res.body.should.contain.all.keys({owner:'nick',filename:'create.txt',filesize:4})
-          res.body.should.contain.all.keys(['upload_id','upload_at'])
-          res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
+          res.body.owner.should.equal('nick')
+          res.body.filename.should.equal('create.txt')
+          res.body.upload_id.should.exist
+          should.not.exist(res.body.file_id)
+          should.not.exist(res.body.is_deleted)
 
           upload_id = res.body.upload_id
 
           done()
         })
+    })
   })
-  describe('获取文件列表',function(){
-    it('获取成功',function(done){
+
+  describe('获取文件列表', function() {
+    it('获取成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick')
-        .set('x-access-token',access_token)
+        .set('x-access-token', access_token)
         .expect(200)
-        .end(function(err,res){
-          if(err){
+        .end(function(err, res) {
+          if (err) {
             return done(err)
           }
 
-          res.body[0].should.contain.all.keys({owner:'nick',filename:'create.txt',filesize:4,upload_id:upload_id})
-          res.body[0].should.contain.all.keys(['upload_at'])
-          res.body.should.not.contain.any.keys(['_id','file_id','is_deleted','__v'])
+          res.body.forEach(function(upload) {
+            upload.owner.should.equal('nick')
+          })
 
           done()
         })
     })
   })
-  describe('下载文件',function(){
-    it('下载成功',function(done){
+
+  describe('获取上传文件状态', function() {
+    it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/'+upload_id)
-        .set('x-access-token',access_token)
+        .get('/api/v1/uploads/nick/' + upload_id)
+        .set('x-access-token', access_token)
         .expect(200)
-        .end(function(err,res){
-          if(err){
+        .end(function(err, res) {
+          if (err) {
             return done(err)
           }
 
-          res.should.be.an('object')
+          res.body.complete.should.exist
+          res.body.progress.should.exist
 
           done()
         })
     })
-    it('下载文件不存在',function(){
+  })
+
+  describe('下载文件', function() {
+    it('下载成功', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/test')
-        .set('x-access-token',access_token)
-        .expect(404)
+        .get('/api/v1/uploads/nick/' + upload_id + '/raw')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err) {
+          if (err) {
+            return done(err)
+          }
+
+          done()
+        })
     })
   })
-  describe('删除文件',function(){
-    it('删除成功',function(done){
+
+  describe('删除文件', function() {
+    it('删除成功', function(done) {
       request(app)
-        .delete('/api/v1/uploads/nick/'+upload_id)
-        .set('x-access-token',access_token)
+        .delete('/api/v1/uploads/nick/' + upload_id)
+        .set('x-access-token', access_token)
         .expect(204)
-        .end(function(err,res){
-          if(err){
+        .end(function(err, res) {
+          if (err) {
             return done(err)
           }
 

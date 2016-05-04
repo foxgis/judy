@@ -6,8 +6,6 @@ var shortid = require('shortid')
 var StyleSchema = new mongoose.Schema({
   style_id: { type: String, default: shortid.generate, index: true },
   owner: String,
-  create_at: { type: Date, default: Date.now },
-  modify_at: { type: Date, default: Date.now },
   draft: { type: Boolean, default: true },
 
   version: { type: Number, default: 8 },
@@ -25,17 +23,10 @@ var StyleSchema = new mongoose.Schema({
     delay: Number
   },
   layers: [mongoose.Schema.Types.Mixed]
-})
+}, { timestamps: true })
 
 
 StyleSchema.plugin(select, '-_id -__v')
-
-// BUG
-StyleSchema.pre('save', function(next) {
-  this.modify_at = Date.now
-
-  next()
-})
 
 
 module.exports = mongoose.model('Style', StyleSchema)

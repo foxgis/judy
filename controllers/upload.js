@@ -1,8 +1,8 @@
 var fs = require('fs')
+var mongoose = require('mongoose')
 var Grid = require('gridfs-stream')
-var mongoose = require('../db')
 var Upload = require('../models/upload')
-var processing = require('../tools/processing')
+// var processing = require('../tools/processing')
 
 
 module.exports.list = function(req, res) {
@@ -46,8 +46,8 @@ module.exports.create = function(req, res) {
 
       res.status(200).json(upload)
 
-      req.upload = upload
-      processing(req)
+      // req.upload = upload
+      // processing(req)
     })
   })
 }
@@ -98,9 +98,9 @@ module.exports.download = function(req, res) {
     })
 
 
-    res.setHeader('Content-disposition', 'attachment; filename*=UTF-8\'\''+upload.filename)
-    res.writeHead(200,{'Content-Type':'application/octet-stream'})
-
+    res.setHeader('Content-disposition',
+      'attachment; filename*=UTF-8\'\'' + upload.filename)
+    res.writeHead(200, { 'Content-Type': 'application/octet-stream' })
     readStream.pipe(res)
   })
 }

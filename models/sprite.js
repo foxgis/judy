@@ -6,16 +6,15 @@ var shortid = require('shortid')
 var SpriteSchema = new mongoose.Schema({
   sprite_id: { type: String, default: shortid.generate, index: true },
   owner: String,
-  create_at: { type: Date, default: Date.now },
+  is_deleted: { type: Boolean, default: false},
 
   name: String,
-  image: mongoose.Schema.Types.Mixed,
+  image: Buffer,
   json: mongoose.Schema.Types.Mixed
-})
+}, { timestamps: true })
 
 
 SpriteSchema.plugin(select, '-_id -__v')
-
 
 
 module.exports = mongoose.model('Sprite', SpriteSchema)

@@ -1,31 +1,27 @@
+var ImageJS = require('imagejs')
 var Sprite = require('../models/sprite')
-var this_sprite = require('../tools/sprite')
-var sharp = require('sharp')
-
-module.exports.create = function(req,res){
-  var sprite = this_sprite
-  res.status(200).json(sprite)
-}
 
 
 module.exports.list = function(req, res) {
-  Sprite.find({ owner: req.params.username },
-    'sprite_id owner create_at name',
-    function(err,sprites){
-      if(err){
-        res.status(500).json({ error: err })
-        return
-      }
-      res.status(200).json(sprites)
+  Sprite.find({
+    owner: req.params.username,
+    is_deleted: false
+  }, function(err, sprites) {
+    if (err) {
+      res.status(500).json({ error: err })
+      return
     }
-  )
+
+    res.status(200).json(sprites)
+  })
 }
 
 
 module.exports.retrieve = function(req, res) {
   Sprite.findOne({
+    sprite_id: req.params.sprite_id,
     owner: req.params.username,
-    sprite_id: req.params.sprite_id
+    is_deleted: false
   }, function(err, sprite) {
     if (err) {
       res.status(500).json({ error: err })
@@ -37,39 +33,39 @@ module.exports.retrieve = function(req, res) {
       return
     }
 
-    var scale = req.params.scale
-    var format = req.params.format
-    
-    if(format === 'json' || format === undefined){
-      if(scale === '@2x'){
-        res = sprite.json
-      }else{
-        if(scale === undefined){
-          for(var key in sprite.json){
-            for(var k in sprite.json[key]){
-              sprite.json[key][k] = sprite.json[key][k]/2
-              res = sprite.json
-            }
-          } 
+    if (!req.params.format || req.params.format === 'json') {
+      if (!req.params.scale) {
+        for (var icon in sprite.json) {
+          icon.width /= 2
+          icon.height /= 2
+          icon.x /= 2
+          icon.y /= 2
+          icon.pixelRatio /= 2
         }
       }
-    }else if(format === 'png'){
-      if(scale === '@2x'){
-        res = sprite.image
-      }else if(scale === undefined){
-        var image = sharp(sprite.image)
-        image
-            .metadata
-            .then(function(metadata){
-              return image
-                .resize(Math.round(metadata.width/2),Math.round(metadata.height/2))
-                .png
-                .toBuffer
-            })
-            .then(function(data){
-              res = data
-            })
-      }
+
+      res.status(200).json(sprite.json)
+      return
     }
+
+    if (req.params.format === 'png') {
+      if (!req.params.scale) {
+        var bitmap = new ImageJS.Bitmap()
+        bitmap.read(sprite.image, { type: ImageJS.ImageType.PNG })
+          .then(function() {
+            var image = bitmap.resize({
+              width: bitmap.width / 2,
+              height: bitmap.height / 2,
+              algorithm: 'nearestNeighbor'
+            })
+
+            res.status(200).send(image)
+          })
+      }
+
+      res.status(200).send(sprite.image)
+    }
+
+    res.sendStatus(404)
   })
 }

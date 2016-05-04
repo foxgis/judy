@@ -63,7 +63,7 @@ module.exports.update = function(req, res) {
   var filter = ['name', 'email', 'phone', 'location', 'organization', 'avatar']
 
   User.findOneAndUpdate({ username: req.params.username },
-    _.pick(req.body, filter),
+    _.pick(req.body, filter), { new: true },
     function(err, user) {
       if (err) {
         res.status(500).json({ error: err })

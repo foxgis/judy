@@ -15,7 +15,7 @@ var UploadSchema = new mongoose.Schema({
   font_id: String,
   sprite_id: String,
 
-  is_complete: { type: Boolean, default: false },
+  complete: { type: Boolean, default: false },
   progress: { type: Number, default: 0 },
   error: String
 }, { timestamps: true })

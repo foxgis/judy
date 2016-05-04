@@ -25,7 +25,7 @@ router.post('/users/:username', auth, users.login)
 router.get('/uploads/:username', auth, uploads.list)
 router.post('/uploads/:username', upload.any(), auth, uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
-router.get('/uploads/:username/:upload_id/:filename', auth, uploads.download)
+router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 
 // 样式

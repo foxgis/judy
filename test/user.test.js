@@ -4,7 +4,7 @@ var User = require('../models/user')
 var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 
-describe('用户系统', function() {
+describe('用户管理模块', function() {
 
   var access_token
 

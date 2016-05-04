@@ -13,7 +13,13 @@ module.exports = function(req) {
     geojson(req)
 
   } else if (ext === '.mbtiles') {
-    mbtiles(req)
+    mbtiles(req.params.username, req.files[0].path, function(err, tileset_id) {
+      if (err) {
+        req.upload.error = err
+      } else {
+        req.upload.tileset_id = tileset_id
+      }
+    })
 
   } else if (ext === '.zip') {
     var zip = new AdmZip(req.files[0].path)
