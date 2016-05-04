@@ -55,7 +55,7 @@ describe('文件系统',function(){
   })
 
   describe('获取用户文件列表',function(){
-    it('获取用户文件列表',function(done){
+    it('获取成功',function(done){
       request(app)
         .get('/api/v1/uploads/nick')
         .set('x-access-token',access_token)

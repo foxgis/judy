@@ -173,6 +173,13 @@ describe('符号库系统',function(){
           done()
         })
     })
+
+    it('下载失败',function(){
+      request(app)
+        .get('/api/v1/sprites/nick/test')
+        .set('x-access-token',access_token)
+        .expect(404)
+    })
   })
 
   describe('删除符号库',function(){

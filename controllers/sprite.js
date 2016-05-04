@@ -66,6 +66,7 @@ module.exports.retrieve = function(req, res) {
   })
 }
 
+
 module.exports.delete = function(req, res){
   Sprite.findOneAndUpdate({
     owner: req.params.username,
