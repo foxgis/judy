@@ -64,32 +64,7 @@ describe('样式管理模块', function() {
             return done(err)
           }
 
-          res.body.should.contain.all.keys({
-            'version': 8,
-            'name': 'test',
-            'metadata': {
-              'mapbox:autocomposite': true
-            },
-            'center': [116.000000, 40.000000],
-            'bearing': 0,
-            'pitch': 0,
-            'sources': {
-              'mapbox': {
-                'url': 'mapbox://mapbox.mapbox-streets-v7',
-                'type': 'vector'
-              }
-            },
-            'sprite': 'mapbox://sprites/mapbox/satellite-v8',
-            'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
-            'layers': [{
-              'id': 'background',
-              'type': 'background',
-              'paint': {
-                'background-color': 'rgba(0,0,0,0)'
-              }
-            }]
-          })
-
+          res.body.version.should.equal(8)
           res.body.owner.should.equal('nick')
           res.body.style_id.should.exist
 
@@ -123,6 +98,7 @@ describe('样式管理模块', function() {
             return done(err)
           }
 
+          res.body[0].version.should.equal(8)
           res.body[0].style_id.should.equal(style_id)
           res.body[0].owner.should.equal('nick')
 
@@ -142,32 +118,7 @@ describe('样式管理模块', function() {
             return done(err)
           }
 
-          res.body.should.contain.all.keys({
-            'version': 8,
-            'name': 'test',
-            'metadata': {
-              'mapbox:autocomposite': true
-            },
-            'center': [116.000000, 40.000000],
-            'bearing': 0,
-            'pitch': 0,
-            'sources': {
-              'mapbox': {
-                'url': 'mapbox://mapbox.mapbox-streets-v7',
-                'type': 'vector'
-              }
-            },
-            'sprite': 'mapbox://sprites/mapbox/satellite-v8',
-            'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
-            'layers': [{
-              'id': 'background',
-              'type': 'background',
-              'paint': {
-                'background-color': 'rgba(0,0,0,0)'
-              }
-            }]
-          })
-
+          res.body.version.should.equal(8)
           res.body.style_id.should.equal(style_id)
           res.body.owner.should.equal('nick')
 
