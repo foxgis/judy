@@ -2,7 +2,7 @@ var fs = require('fs')
 var mongoose = require('mongoose')
 var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
-// var processing = require('../tools/processing')
+var processing = require('../tools/processing')
 
 
 module.exports.list = function(req, res) {
@@ -46,8 +46,8 @@ module.exports.create = function(req, res) {
 
       res.status(200).json(upload)
 
-      // req.upload = upload
-      // processing(req)
+      req.upload = upload
+      processing(req)
     })
   })
 }

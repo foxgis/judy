@@ -1,15 +1,15 @@
 var ImageJS = require('imagejs')
 var Sprite = require('../models/sprite')
+var stream = require('stream')
 
 
 module.exports.list = function(req, res) {
   Sprite.find({
     owner: req.params.username,
     is_deleted: false
-  }, function(err, sprites) {
+  }, '-image -json', function(err, sprites) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     res.status(200).json(sprites)
@@ -24,34 +24,33 @@ module.exports.retrieve = function(req, res) {
     is_deleted: false
   }, function(err, sprite) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     if (!sprite) {
-      res.sendStatus(404)
-      return
+      return res.sendStatus(404)
     }
 
     if (!req.params.format || req.params.format === 'json') {
       if (!req.params.scale) {
         for (var icon in sprite.json) {
-          icon.width /= 2
-          icon.height /= 2
-          icon.x /= 2
-          icon.y /= 2
-          icon.pixelRatio /= 2
+          sprite.json[icon].width /= 2
+          sprite.json[icon].height /= 2
+          sprite.json[icon].x /= 2
+          sprite.json[icon].y /= 2
+          sprite.json[icon].pixelRatio /= 2
         }
       }
 
-      res.status(200).json(sprite.json)
-      return
+      return res.status(200).json(sprite.json)
     }
 
     if (req.params.format === 'png') {
       if (!req.params.scale) {
         var bitmap = new ImageJS.Bitmap()
-        bitmap.read(sprite.image, { type: ImageJS.ImageType.PNG })
+        var bufferStream = new stream.PassThrough()
+        bufferStream.end(sprite.image)
+        bitmap.read(bufferStream, { type: ImageJS.ImageType.PNG })
           .then(function() {
             var image = bitmap.resize({
               width: bitmap.width / 2,
@@ -59,13 +58,31 @@ module.exports.retrieve = function(req, res) {
               algorithm: 'nearestNeighbor'
             })
 
-            res.status(200).send(image)
+            // BUG
+            console.log(image.width)
+            // return res.send(image)
           })
       }
 
-      res.status(200).send(sprite.image)
+      return res.send(sprite.image)
     }
 
     res.sendStatus(404)
+  })
+}
+
+
+module.exports.delete = function(req, res) {
+  Sprite.findOneAndUpdate({
+    owner: req.params.username,
+    sprite_id: req.params.sprite_id,
+    is_deleted: false
+  }, { is_deleted: true }, function(err) {
+    if (err) {
+      res.status(500).json({ error: err })
+      return
+    }
+
+    res.sendStatus(204)
   })
 }

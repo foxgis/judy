@@ -2,38 +2,28 @@ var path = require('path')
 var AdmZip = require('adm-zip')
 var Sprite = require('../models/sprite')
 
-module.exports = function(req){
-  var Name = []
-  var Image = []
-  var zip = new AdmZip(req.files[0].path)
-  zip.getEntries().forEach(function(entry){
-    var extname = path.extname(entry.entryName)
-    if(extname === '.png'){
-      var png_name = entry.entryName.replace(extname,'')
-      Name.push(png_name)
+module.exports = function(owner, filename, callback) {
+  var zip = new AdmZip(filename)
+  var sprite = new Sprite({
+    owner: owner,
+    name: path.basename(filename)
+  })
 
-      Image.push(zip.readFile(entry))
+  zip.getEntries().forEach(function(entry) {
+    var extname = path.extname(entry.entryName)
+    if (extname === '.json') {
+      var json = zip.readFile(entry)
+      sprite.json = JSON.parse(json)
+    } else if (extname === '.png') {
+      sprite.image = zip.readFile(entry)
     }
   })
-  zip.getEntries().forEach(function(entry){
-    var extname = path.extname(entry.entryName)
-    if(extname === '.json'){
-      var json_name = entry.entryName.replace(extname,'')
-      if(Name.indexOf(json_name) >= 0){
-        var sprite = new Sprite({
-          owner:req.params.username,
-          name:json_name
-        })
-        var json = zip.readFile(entry)
-        sprite.json = json
-        // sprite.json = JSON.parse(json.toString().trim())
-        sprite.image = Image[Name.indexOf(json_name)]
 
-        sprite.save()
-
-        Name.splice(Name.indexOf(json_name),1)
-        Image.splice(Name.indexOf(json_name),1)
-      }
+  sprite.save(function(err) {
+    if (err) {
+      return callback(err)
     }
+
+    callback(null, sprite.sprite_id)
   })
 }

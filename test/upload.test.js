@@ -4,7 +4,7 @@ var User = require('../models/user')
 var Upload = require('../models/upload')
 var should = require('chai').should() // eslint-disable-line no-unused-vars
 
-describe('文件上传模块', function() {
+describe('上传模块', function() {
 
   var access_token
   var upload_id
@@ -35,7 +35,7 @@ describe('文件上传模块', function() {
       request(app)
         .post('/api/v1/uploads/nick')
         .set('x-access-token', access_token)
-        .attach('aa', 'test/fixtures/create.txt')
+        .attach('aa', './test/fixtures/create.txt')
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -55,7 +55,7 @@ describe('文件上传模块', function() {
     })
   })
 
-  describe('获取文件列表', function() {
+  describe('获取上传列表', function() {
     it('获取成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick')
@@ -75,7 +75,7 @@ describe('文件上传模块', function() {
     })
   })
 
-  describe('获取上传文件状态', function() {
+  describe('获取上传状态', function() {
     it('获取成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick/' + upload_id)
@@ -111,20 +111,11 @@ describe('文件上传模块', function() {
   })
 
   describe('删除文件', function() {
-    it('删除成功', function(done) {
+    it('删除成功', function() {
       request(app)
         .delete('/api/v1/uploads/nick/' + upload_id)
         .set('x-access-token', access_token)
         .expect(204)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
     })
   })
 })

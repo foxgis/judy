@@ -33,8 +33,14 @@ module.exports = function(req) {
       shapefile(req)
     }
 
-    if (exts.indexOf('.png') > -1 && exts.indexOf('.json') > -1) {
-      sprite(req)
+    if (exts.length === 2 && exts.indexOf('.png') > -1 && exts.indexOf('.json') > -1) {
+      sprite(req.params.username, req.files[0].path, function(err, sprite_id) {
+        if (err) {
+          req.upload.error = err
+        } else {
+          req.upload.sprite_id = sprite_id
+        }
+      })
     }
 
   } else {
