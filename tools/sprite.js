@@ -5,8 +5,7 @@ var Sprite = require('../models/sprite')
 module.exports = function(owner, filename, callback) {
   var zip = new AdmZip(filename)
   var sprite = new Sprite({
-    owner: owner,
-    name: path.basename(filename)
+    owner: owner
   })
 
   zip.getEntries().forEach(function(entry) {

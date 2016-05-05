@@ -19,6 +19,24 @@ module.exports.list = function(req, res) {
 
 module.exports.retrieve = function(req, res) {
   Sprite.findOne({
+    owner: req.params.username,
+    is_deleted: false
+  }, '-image -json', function(err, sprite) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (sprite) {
+      return res.sendStatus(404)
+    }
+
+    res.status(200).json(sprite)
+  })
+}
+
+
+module.exports.download = function(req, res) {
+  Sprite.findOne({
     sprite_id: req.params.sprite_id,
     owner: req.params.username,
     is_deleted: false
@@ -46,7 +64,10 @@ module.exports.retrieve = function(req, res) {
     }
 
     if (req.params.format === 'png') {
-      if (!req.params.scale) {
+      if (req.params.scale === '@2x') {
+        res.attachment('sprite@2x.png')
+        return res.send(sprite.image)
+      } else {
         var bitmap = new ImageJS.Bitmap()
         var bufferStream = new stream.PassThrough()
         bufferStream.end(sprite.image)
@@ -58,16 +79,11 @@ module.exports.retrieve = function(req, res) {
               algorithm: 'nearestNeighbor'
             })
 
-            // BUG
-            console.log(image.width)
-            // return res.send(image)
+            res.attachment('sprite@2x.png')
+            image.write(res, {type: ImageJS.ImageType.PNG})
           })
       }
-
-      return res.send(sprite.image)
     }
-
-    res.sendStatus(404)
   })
 }
 

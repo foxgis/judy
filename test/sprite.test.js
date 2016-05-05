@@ -77,7 +77,7 @@ describe('符号库模块', function() {
   describe('下载符号库', function() {
     it('@2x', function(done) {
       request(app)
-        .get('/api/v1/sprites/nick/' + sprite_id + '@2x')
+        .get('/api/v1/sprites/nick/' + sprite_id + '/sprite@2x')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -93,7 +93,7 @@ describe('符号库模块', function() {
 
     it('@1x', function(done) {
       request(app)
-        .get('/api/v1/sprites/nick/' + sprite_id)
+        .get('/api/v1/sprites/nick/' + sprite_id + '/sprite')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -109,7 +109,7 @@ describe('符号库模块', function() {
 
     it('@2x.json', function(done) {
       request(app)
-        .get('/api/v1/sprites/nick/' + sprite_id + '@2x.json')
+        .get('/api/v1/sprites/nick/' + sprite_id + '/sprite@2x.json')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -125,7 +125,7 @@ describe('符号库模块', function() {
 
     it('@1x.json', function(done) {
       request(app)
-        .get('/api/v1/sprites/nick/' + sprite_id + '.json')
+        .get('/api/v1/sprites/nick/' + sprite_id + '/sprite.json')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -141,7 +141,7 @@ describe('符号库模块', function() {
 
     it('@2x.png', function(done) {
       request(app)
-        .get('/api/v1/sprites/nick/' + sprite_id + '@2x.png')
+        .get('/api/v1/sprites/nick/' + sprite_id + '/sprite@2x.png')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -149,7 +149,7 @@ describe('符号库模块', function() {
             return done(err)
           }
 
-          res.header['content-length'].should.equal('99217')
+          res.header['content-type'].should.equal('image/png')
 
           done()
         })
@@ -157,7 +157,7 @@ describe('符号库模块', function() {
 
     it('@1x.png', function(done) {
       request(app)
-        .get('/api/v1/sprites/nick/' + sprite_id + '.png')
+        .get('/api/v1/sprites/nick/' + sprite_id + '/sprite.png')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -165,7 +165,7 @@ describe('符号库模块', function() {
             return done(err)
           }
 
-          res.header['content-length'].should.equal('99217')
+          res.header['content-type'].should.equal('image/png')
 
           done()
         })
@@ -173,7 +173,7 @@ describe('符号库模块', function() {
 
     it('下载不存在的符号库', function() {
       request(app)
-        .get('/api/v1/sprites/nick/un_exist_sprite_id')
+        .get('/api/v1/sprites/nick/un_existed_sprite_id/sprite')
         .set('x-access-token', access_token)
         .expect(404)
     })
