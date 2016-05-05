@@ -149,7 +149,7 @@ describe('符号库模块', function() {
             return done(err)
           }
 
-          res.should.exist
+          res.header['content-length'].should.equal('99217')
 
           done()
         })
@@ -165,7 +165,7 @@ describe('符号库模块', function() {
             return done(err)
           }
 
-          res.should.exist
+          res.header['content-length'].should.equal('99217')
 
           done()
         })

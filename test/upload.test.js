@@ -100,10 +100,14 @@ describe('上传模块', function() {
         .get('/api/v1/uploads/nick/' + upload_id + '/raw')
         .set('x-access-token', access_token)
         .expect(200)
-        .end(function(err) {
+        .end(function(err, res) {
           if (err) {
             return done(err)
           }
+
+          console.log(res.header)
+
+          res.header['content-type'].should.equal('application/octet-stream')
 
           done()
         })
