@@ -8,8 +8,7 @@ module.exports.list = function(req, res) {
     'style_id owner version name createdAt updatedAt',
     function(err, styles) {
       if (err) {
-        res.status(500).json({ error: err })
-        return
+        return res.status(500).json({ error: err })
       }
 
       res.status(200).json(styles)
@@ -21,8 +20,7 @@ module.exports.list = function(req, res) {
 module.exports.create = function(req, res) {
   var errors = validate(req.body)
   if (errors.length > 0) {
-    res.status(400).json(errors)
-    return
+    return res.status(400).json(errors)
   }
 
   var style = new Style(req.body)
@@ -30,8 +28,7 @@ module.exports.create = function(req, res) {
 
   style.save(function(err) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     res.status(200).json(style)
@@ -45,13 +42,11 @@ module.exports.retrieve = function(req, res) {
     style_id: req.params.style_id
   }, function(err, style) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     if (!style) {
-      res.sendStatus(404)
-      return
+      return res.sendStatus(404)
     }
 
     res.status(200).json(style)
@@ -67,13 +62,11 @@ module.exports.update = function(req, res) {
     owner: req.params.username
   }, _.omit(req.body, filter), { new: true }, function(err, style) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     if (!style) {
-      res.sendStatus(404)
-      return
+      return res.sendStatus(404)
     }
 
     res.status(200).json(style)
@@ -87,8 +80,7 @@ module.exports.delete = function(req, res) {
     style_id: req.params.style_id
   }, function(err) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     res.sendStatus(204)

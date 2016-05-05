@@ -1,6 +1,7 @@
 var ImageJS = require('imagejs')
 var Sprite = require('../models/sprite')
 var stream = require('stream')
+var _ = require('underscore')
 
 
 module.exports.list = function(req, res) {
@@ -80,10 +81,31 @@ module.exports.download = function(req, res) {
             })
 
             res.attachment('sprite@2x.png')
-            image.write(res, {type: ImageJS.ImageType.PNG})
+            image.write(res, { type: ImageJS.ImageType.PNG })
           })
       }
     }
+  })
+}
+
+
+module.exports.update = function(req, res) {
+  var filter = ['name']
+
+  Sprite.findOneAndUpdate({
+    owner: req.params.username,
+    sprite_id: req.params.sprite_id,
+    is_deleted: false
+  }, _.pick(req.body, filter), { new: true }, function(err, sprite) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!sprite) {
+      return res.sendStatus(404)
+    }
+
+    res.status(200).json(sprite)
   })
 }
 

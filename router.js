@@ -50,6 +50,7 @@ router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
 router.get('/sprites/:username', auth, sprites.list)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
+router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 
 module.exports = router

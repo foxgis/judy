@@ -8,7 +8,7 @@ var SpriteSchema = new mongoose.Schema({
   owner: String,
   is_deleted: { type: Boolean, default: false },
 
-  name: String,
+  name: { type: String, default: 'Sprite'},
   image: Buffer,
   json: mongoose.Schema.Types.Mixed
 }, { timestamps: true })
