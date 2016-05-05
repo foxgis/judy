@@ -74,6 +74,32 @@ describe('符号库模块', function() {
     })
   })
 
+  describe('获取符号库', function() {
+    it('获取成功', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick/' + sprite_id)
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.owner.should.equal('nick')
+          res.body.sprite_id.should.equal(sprite_id)
+
+          done()
+        })
+    })
+
+    it('获取失败', function() {
+      request(app)
+        .get('/api/v1/sprites/nick/un_existed_sprite_id')
+        .set('x-access-token', access_token)
+        .expect(404)
+    })
+  })
+
   describe('下载符号库', function() {
     it('@2x', function(done) {
       request(app)
@@ -175,6 +201,34 @@ describe('符号库模块', function() {
       request(app)
         .get('/api/v1/sprites/nick/un_existed_sprite_id/sprite')
         .set('x-access-token', access_token)
+        .expect(404)
+    })
+  })
+
+  describe('更新符号库',function(){
+    it('更新符号库',function(done){
+      request(app)
+        .patch('/api/v1/sprites/nick/' + sprite_id)
+        .set('x-access-token', access_token)
+        .send({ owner: 'judy', name: 'new_name' })
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
+
+          res.body.owner.should.equal('nick')
+          res.body.name.should.equal('new_name')
+
+          done()
+        })
+    })
+
+    it('更新不存在的符号库',function(){
+      request(app)
+        .patch('/api/v1/sprites/nick/un_existed_sprite_id')
+        .set('x-access-token', access_token)
+        .send({ owner: 'judy', name: 'new_name' })
         .expect(404)
     })
   })
