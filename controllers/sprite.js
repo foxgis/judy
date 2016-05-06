@@ -27,7 +27,7 @@ module.exports.retrieve = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    if (sprite) {
+    if (!sprite) {
       return res.sendStatus(404)
     }
 

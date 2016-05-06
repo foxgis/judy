@@ -105,8 +105,6 @@ describe('上传模块', function() {
             return done(err)
           }
 
-          console.log(res.header)
-
           res.header['content-type'].should.equal('application/octet-stream')
 
           done()

@@ -19,7 +19,7 @@ var upload = multer({
 router.post('/users', users.create)
 router.get('/users/:username', auth, users.retrieve)
 router.patch('/users/:username', auth, users.update)
-router.post('/users/:username', auth, users.login)
+router.post('/users/:username', users.login)
 
 // 上传文件
 router.get('/uploads/:username', auth, uploads.list)

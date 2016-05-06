@@ -33,7 +33,7 @@ UserSchema.virtual('password').set(function(password) {
 
 
 UserSchema.methods.updateAccessToken = function() {
-  this.access_token = jwt.sign({ username: this.username }, config.jwt_secret, { expiresIn: '7d' })
+  this.access_token = jwt.sign({ username: this.username }, config.jwt_secret, { expiresIn: '30d' })
 }
 
 

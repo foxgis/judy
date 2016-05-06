@@ -4,65 +4,32 @@ var User = require('../models/user')
 
 
 module.exports = function(req, res, next) {
-  if (req.body.username && req.body.password) {
-    authPassword(req, res, function() {
-      authResource(req, res, next)
-    })
-  } else {
-    authAccessToken(req, res, function() {
-      authResource(req, res, next)
-    })
-  }
-}
-
-
-var authPassword = function(req, res, next) {
-  if (!req.body.username || !req.body.password) {
-    res.status(401).json({ error: '登录信息不完整' })
-    return
-  }
-
-  User.findOne({ username: req.body.username }, function(err, user) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return
-    }
-
-    if (!user || !user.validPassword(req.body.password)) {
-      res.sendStatus(401)
-      return
-    }
-
-    req.user = user
-    next()
+  authAccessToken(req, res, function() {
+    authResource(req, res, next)
   })
 }
 
 
 var authAccessToken = function(req, res, next) {
-  var access_token = req.query.access_token || req.body.access_token ||
+  var access_token = req.query.access_token ||
     req.cookies.access_token || req.headers['x-access-token']
   if (!access_token) {
-    res.status(401).json({ error: 'access_token缺失' })
-    return
+    return res.status(401).json({ error: 'access_token缺失' })
   }
 
 
   jwt.verify(access_token, config.jwt_secret, function(err, decoded) {
     if (err) {
-      res.status(401).json(err)
-      return
+      return res.status(401).json(err)
     }
 
     User.findOne({ username: decoded.username }, function(err, user) {
       if (err) {
-        res.status(500).json({ error: err })
-        return
+        return res.status(500).json({ error: err })
       }
 
       if (!user || user.access_token !== access_token) {
-        res.sendStatus(401)
-        return
+        return res.sendStatus(401)
       }
 
       req.user = user
@@ -76,39 +43,32 @@ var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
   if (resourceType === 'users') {
     if (req.user.username !== req.params.username) {
-      res.sendStatus(401)
-      return
+      return res.sendStatus(401)
     }
 
-    next()
-    return
+    return next()
   }
 
   /* eslint-disable no-empty */
 
   if (resourceType === 'uploads') {
-    next()
-    return
+    return next()
   }
 
   if (resourceType === 'styles') {
-    next()
-    return
+    return next()
   }
 
   if (resourceType === 'tilesets') {
-    next()
-    return
+    return next()
   }
 
   if (resourceType === 'fonts') {
-    next()
-    return
+    return next()
   }
 
   if (resourceType === 'sprites') {
-    next()
-    return
+    return next()
   }
 
   res.sendStatus(404)
