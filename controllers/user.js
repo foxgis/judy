@@ -28,8 +28,8 @@ module.exports.create = function(req, res) {
       username: req.body.username,
       password: req.body.password
     })
-    newUser.updateAccessToken()
 
+    newUser.updateAccessToken()
     newUser.save(function(err) {
       if (err) {
         res.status(500).json({ error: err })
@@ -54,7 +54,7 @@ module.exports.retrieve = function(req, res) {
       return
     }
 
-    res.status(200).json(user)
+    res.status(200).json(_.omit(user.toJSON(), 'access_token'))
   })
 }
 
@@ -70,20 +70,23 @@ module.exports.update = function(req, res) {
         return
       }
 
-      res.status(200).json(user)
+      res.status(200).json(_.omit(user.toJSON(), 'access_token'))
     })
 }
 
 
 module.exports.login = function(req, res) {
+  if (!req.body.password) {
+    return res.status(401).json({ error: '登录信息不完整' })
+  }
+
   User.findOne({ username: req.params.username }, function(err, user) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
-    if (!user) {
-      res.sendStatus(404)
+    if (!user || !user.validPassword(req.body.password)) {
+      res.sendStatus(401).json({ error: '用户名或密码错误' })
       return
     }
 

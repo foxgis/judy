@@ -110,7 +110,6 @@ describe('用户管理模块', function() {
           }
 
           res.body.username.should.equal('nick')
-          res.body.access_token.should.equal(access_token)
 
           done()
         })
@@ -158,7 +157,7 @@ describe('用户管理模块', function() {
 
     it('用户名错误', function() {
       request(app)
-        .post('/api/v1/users/nick')
+        .post('/api/v1/users/nick1')
         .send({ username: 'nick1', password: '123456' })
         .expect(401)
     })
@@ -167,29 +166,6 @@ describe('用户管理模块', function() {
       request(app)
         .post('/api/v1/users/nick')
         .send({ username: 'nick', password: '12345' })
-        .expect(401)
-    })
-
-    it('access_token登录成功', function(done) {
-      request(app)
-        .post('/api/v1/users/nick')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.access_token.should.exist
-
-          done()
-        })
-    })
-
-    it('access_token登录失败', function() {
-      request(app)
-        .get('/api/v1/users/nick/access_token')
-        .set('x-access-token', 'invalid-access-token')
         .expect(401)
     })
   })
