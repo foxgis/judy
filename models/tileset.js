@@ -6,8 +6,6 @@ var shortid = require('shortid')
 var TilesetSchema = new mongoose.Schema({
   tileset_id: { type: String, default: shortid.generate, index: true },
   owner: String,
-  filesize: Number,
-  format: String,
   scopes: { type: [String], default: ['private'] },
   is_deleted: { type: Boolean, default: false },
 
@@ -26,6 +24,8 @@ var TilesetSchema = new mongoose.Schema({
   bounds: { type: [Number], default: [-180, -90, 180, 90] },
   center: [Number],
 
+  filesize: Number,
+  format: String,
   vector_layers: [mongoose.Schema.Types.Mixed]
   // vector_layers: [{
   //   id: String,
