@@ -42,7 +42,7 @@ var authAccessToken = function(req, res, next) {
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
   if (resourceType === 'users') {
-    if (req.user.username !== req.params.username) {
+    if (req.user.username !== req.params.username && req.method !== 'GET') {
       return res.sendStatus(401)
     }
 
