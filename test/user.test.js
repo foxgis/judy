@@ -30,6 +30,7 @@ describe('用户管理模块', function() {
 
   after('清除用户数据', function() {
     User.remove({ username: 'nick' }).exec()
+    User.remove({ username: 'judy' }).exec()
   })
 
   describe('注册', function() {
