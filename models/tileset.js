@@ -8,6 +8,7 @@ var TilesetSchema = new mongoose.Schema({
   owner: String,
   scopes: { type: [String], default: ['private'] },
   is_deleted: { type: Boolean, default: false },
+  tags: [String],
 
   // tilejson spec
   tilejson: { type: String, default: '2.1.0' },

@@ -11,6 +11,7 @@ var UploadSchema = new mongoose.Schema({
   owner: String,
   scopes: { type: [String], default: ['private'] },
   is_deleted: { type: Boolean, default: false },
+  tags: [String],
 
   tileset_id: String,
   font_id: String,

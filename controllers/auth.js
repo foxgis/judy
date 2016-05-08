@@ -55,6 +55,10 @@ var authResource = function(req, res, next) {
 
   /* eslint-disable no-empty */
 
+  if (resourceType === 'groups') {
+    return next()
+  }
+
   if (resourceType === 'uploads') {
     if (req.user.username === req.params.username) {
       return next()

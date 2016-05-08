@@ -59,7 +59,8 @@ module.exports.update = function(req, res) {
 
   Style.findOneAndUpdate({
     style_id: req.params.style_id,
-    owner: req.params.username
+    owner: req.params.username,
+    is_deleted: false
   }, _.omit(req.body, filter), { new: true }, function(err, style) {
     if (err) {
       return res.status(500).json({ error: err })
