@@ -1,9 +1,9 @@
 var jwt = require('jsonwebtoken')
 var config = require('../config')
 var User = require('../models/user')
-var Style = require('../models/style') 
-var Upload = require('../models/upload')
+var Style = require('../models/style')
 var Sprite = require('../models/sprite')
+var Group = require('../models/group')
 
 
 module.exports = function(req, res, next) {
@@ -44,81 +44,21 @@ var authAccessToken = function(req, res, next) {
 
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
-  var resourceId = req.url.split('/')[3] // eslint-disable-line no-unused-vars
-  if (resourceType === 'users') {
-    if (req.user.username !== req.params.username && req.method !== 'GET') {
-      return res.sendStatus(401)
-    }
 
-    return next()
+  if (resourceType === 'users') {
+    authUser(req, res, next)
   }
 
-  /* eslint-disable no-empty */
-
   if (resourceType === 'groups') {
-    return next()
+    authGroup(req, res, next)
   }
 
   if (resourceType === 'uploads') {
-    if (req.user.username === req.params.username) {
-      return next()
-    } else if (req.method !== 'GET') {
-      return res.sendStatus(401)
-    } else {
-      if(!resourceId){
-        return next()
-      } else {
-        Upload.findOne({
-          owner: req.params.username,
-          upload_id: req.params.upload_id,
-          is_deleted: false
-        }, function(err,upload) {
-          console.log(upload.scopes[0])
-          if (err) {
-            return res.status(500).json({ error: err })
-          } else if (!upload){
-            return res.sendStatus(404)
-          } else if (upload.scopes[0] === 'private') {
-            return res.sendStatus(401)
-          } else if (upload.scopes.indexOf('public') > -1){
-            return next()
-          } else {
-            return res.sendStatus(401)
-          }
-        })
-      }
-    }
+    authUpload(req, res, next)
   }
 
   if (resourceType === 'styles') {
-    if (req.user.username === req.params.username) {
-      return next()
-    } else if (req.method !== 'GET') {
-      return res.sendStatus(401)
-    } else {
-      if(!resourceId){
-        return next()
-      } else {
-        Style.findOne({
-          owner: req.params.username,
-          upload_id: req.params.upload_id,
-          is_deleted: false
-        }, function(err,style) {
-          console.log(style.scopes[0])
-          if (err) {
-            return res.status(500).json({ error: err })
-          } else if (!style){
-            return res.sendStatus(404)
-          } else if (style.scopes[0] === 'private') {
-            return res.sendStatus(401)
-          } else if (style.scopes.indexOf('public') > -1){
-            return next()
-          } else {
-            return res.sendStatus(401)
-          }
-        })
-      }
-    }
+    authStyle(req, res, next)
   }
 
   if (resourceType === 'tilesets') {
@@ -130,33 +70,144 @@ var authResource = function(req, res, next) {
   }
 
   if (resourceType === 'sprites') {
-    if (req.user.username === req.params.username) {
-      return next()
-    } else if (req.method !== 'GET') {
-      return res.sendStatus(401)
-    } else {
-      if(!resourceId){
+    authSprite(req, res, next)
+  }
+}
+
+
+var authUser = function(req, res, next) {
+  var resourceUsername = req.url.split('/')[2]
+
+  if (!resourceUsername) {
+    return next()
+  } else if (req.user.username === req.params.username
+    || req.method === 'GET'){
+    return next()
+  }
+
+  return res.sendStatus(401)
+}
+
+
+var authGroup = function(req, res, next) {
+  if (req.user.username === req.params.username) {
+    return next()
+  } else if (req.method !== 'GET') {
+    return res.sendStatus(401)
+  } else {
+    return next()
+  }
+}
+
+
+var authUpload = function(req, res, next) {
+  if (req.user.username === req.params.username) {
+    return next()
+  } else {
+    return res.sendStatus(401)
+  }
+}
+
+
+var authStyle = function(req, res, next) {
+  var style_id = req.url.split('/')[3]
+
+  if (req.user.username === req.params.username) {
+    return next()
+  } else if (req.method !== 'GET') {
+    return res.sendStatus(401)
+  } else if (!style_id){
+    return next()
+  } else {
+    Style.findOne({
+      owner: req.params.username,
+      style_id: req.params.style_id,
+      is_deleted: false
+    }, function(err,style) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!style){
+        return res.sendStatus(404)
+      }
+
+      if (style.scopes[0] === 'private') {
+        return res.sendStatus(401)
+      } else if (style.scopes[0] === 'public'){
         return next()
       } else {
-        Sprite.findOne({
-          owner: req.params.username,
-          upload_id: req.params.upload_id,
-          is_deleted: false
-        }, function(err,sprite) {
-          console.log(sprite.scopes[0])
-          if (err) {
-            return res.status(500).json({ error: err })
-          } else if (!sprite){
-            return res.sendStatus(404)
-          } else if (sprite.scopes[0] === 'private') {
-            return res.sendStatus(401)
-          } else if (sprite.scopes.indexOf('public') > -1){
-            return next()
-          } else {
-            return res.sendStatus(401)
-          }
+        style.scopes.forEach(function(scope){
+          Group.findOne({ groupname: scope}, function(err, group){
+            if (err) {
+              return res.status(500).json({ error: err})
+            }
+
+            if (!group) {
+              return res.sendStatus(404)
+            }
+
+
+            if (group.members.indexOf(req.user.username) > -1){
+              return next()
+            } else {
+              return res.sendStatus(401)
+            }
+          })
         })
       }
-    }
+    })
+  }
+}
+
+
+var authSprite = function(req, res, next) {
+  var sprite_id = req.url.split('/')[3]
+
+  if (req.user.username === req.params.username) {
+    return next()
+  } else if (req.method !== 'GET') {
+    return res.sendStatus(401)
+  } else if (!sprite_id){
+    return next()
+  } else {
+    Sprite.findOne({
+      owner: req.params.username,
+      sprite_id: req.params.sprite_id,
+      is_deleted: false
+    }, function(err,sprite) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!sprite){
+        return res.sendStatus(404)
+      }
+
+      if (sprite.scopes[0] === 'private') {
+        return res.sendStatus(401)
+      } else if (sprite.scopes[0] === 'public'){
+        return next()
+      } else {
+        sprite.scopes.forEach(function(scope){
+          Group.findOne({ groupname: scope}, function(err, group){
+            if (err) {
+              return res.status(500).json({ error: err})
+            }
+
+            if (!group) {
+              return res.sendStatus(404)
+            }
+
+
+            if (group.members.indexOf(req.user.username) > -1){
+              return next()
+            } else {
+              return res.sendStatus(401)
+            }
+          })
+        })
+      }
+    })
   }
 }

@@ -70,10 +70,6 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    if (style.scopes.length > 1 && style.scopes.indexOf('private') > -1){
-      return res.status(401).json({ error: '不能共享私有状态的文件'})
-    }
-
     res.status(200).json(style)
   })
 }
