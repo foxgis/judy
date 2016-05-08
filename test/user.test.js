@@ -191,8 +191,8 @@ describe('用户管理模块', function() {
     })
   })
 
-  describe('查看其他用户信息',function(){
-    it('获取成功', function(done) {
+  describe('操作其他用户信息',function(){
+    it('获取信息成功', function(done) {
       request(app)
         .get('/api/v1/users/nick')
         .set('x-access-token', judy_access_token)
@@ -213,6 +213,14 @@ describe('用户管理模块', function() {
         .patch('/api/v1/users/nick')
         .set('x-access-token', judy_access_token)
         .send({ name: '张三' })
+        .expect(401)
+    })
+
+    it('登录失败', function() {
+      request(app)
+        .post('/api/v1/users/nick')
+        .set('x-access-token', access_token)
+        .send({ username: 'nick', password: '123456' })
         .expect(401)
     })
   })
