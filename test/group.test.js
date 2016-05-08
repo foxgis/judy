@@ -5,8 +5,8 @@ var Group = require('../models/group')
 var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 describe('群组模块', function(){
-  var access_token  // eslint-disable-line no-unused-vars
-  var group_id   // eslint-disable-line no-unused-vars
+  var access_token
+  var group_id
 
   before('注册用户', function(done){
     request(app)

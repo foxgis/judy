@@ -7,6 +7,7 @@ var SpriteSchema = new mongoose.Schema({
   sprite_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   is_deleted: { type: Boolean, default: false },
+  scopes: { type: [String], default: ['private'] },
 
   name: { type: String, default: 'Sprite'},
   image: Buffer,
