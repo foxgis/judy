@@ -241,4 +241,37 @@ describe('符号库模块', function() {
         .expect(204)
     })
   })
+
+  describe('查看其他人的样式', function() {
+    var judy_access_token
+
+    before('注册judy', function(done){
+      request(app)
+      .post('/api/v1/users')
+      .send({ username: 'judy', password: '123456' })
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
+
+        judy_access_token = res.body.access_token
+
+        done()
+      })
+    })
+
+    after('清理', function(){
+      User.remove({ username: 'judy'}).exec()
+    })
+
+    describe('查看其他用户的样式',function(){
+      it('获取失败', function() {
+        request(app)
+        .get('/api/v1/styles/nick/' + sprite_id)
+        .set('x-access-token', judy_access_token)
+        .expect(401)
+      })
+    })
+  })
 })

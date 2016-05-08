@@ -3,6 +3,7 @@ var config = require('../config')
 var User = require('../models/user')
 var Style = require('../models/style') 
 var Upload = require('../models/upload')
+var Sprite = require('../models/sprite')
 
 
 module.exports = function(req, res, next) {
@@ -61,7 +62,7 @@ var authResource = function(req, res, next) {
       return res.sendStatus(401)
     } else {
       if(!resourceId){
-        return next()   
+        return next()
       } else {
         Upload.findOne({
           owner: req.params.username,
@@ -92,21 +93,21 @@ var authResource = function(req, res, next) {
       return res.sendStatus(401)
     } else {
       if(!resourceId){
-        return next()   
+        return next()
       } else {
         Style.findOne({
           owner: req.params.username,
           upload_id: req.params.upload_id,
           is_deleted: false
-        }, function(err,upload) {
-          console.log(upload.scopes[0])
+        }, function(err,style) {
+          console.log(style.scopes[0])
           if (err) {
             return res.status(500).json({ error: err })
-          } else if (!upload){
+          } else if (!style){
             return res.sendStatus(404)
-          } else if (upload.scopes[0] === 'private') {
+          } else if (style.scopes[0] === 'private') {
             return res.sendStatus(401)
-          } else if (upload.scopes.indexOf('public') > -1){
+          } else if (style.scopes.indexOf('public') > -1){
             return next()
           } else {
             return res.sendStatus(401)
@@ -125,8 +126,33 @@ var authResource = function(req, res, next) {
   }
 
   if (resourceType === 'sprites') {
-    return next()
+    if (req.user.username === req.params.username) {
+      return next()
+    } else if (req.method !== 'GET') {
+      return res.sendStatus(401)
+    } else {
+      if(!resourceId){
+        return next()
+      } else {
+        Sprite.findOne({
+          owner: req.params.username,
+          upload_id: req.params.upload_id,
+          is_deleted: false
+        }, function(err,sprite) {
+          console.log(sprite.scopes[0])
+          if (err) {
+            return res.status(500).json({ error: err })
+          } else if (!sprite){
+            return res.sendStatus(404)
+          } else if (sprite.scopes[0] === 'private') {
+            return res.sendStatus(401)
+          } else if (sprite.scopes.indexOf('public') > -1){
+            return next()
+          } else {
+            return res.sendStatus(401)
+          }
+        })
+      }
+    }
   }
-
-  // res.sendStatus(404)
 }
