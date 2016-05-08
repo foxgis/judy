@@ -6,7 +6,9 @@ var shortid = require('shortid')
 var StyleSchema = new mongoose.Schema({
   style_id: { type: String, default: shortid.generate, index: true },
   owner: String,
+  scopes: { type: [String], default: ['private'] },
   draft: { type: Boolean, default: true },
+  is_deleted: { type: Boolean, default: false },
 
   version: { type: Number, default: 8 },
   name: String,

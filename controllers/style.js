@@ -77,10 +77,12 @@ module.exports.update = function(req, res) {
 module.exports.delete = function(req, res) {
   Style.findOneAndRemove({
     owner: req.params.username,
-    style_id: req.params.style_id
-  }, function(err) {
+    style_id: req.params.style_id,
+    is_deleted: false
+  }, { is_deleted: true }, function(err) {
     if (err) {
-      return res.status(500).json({ error: err })
+      res.status(500).json({ error: err })
+      return
     }
 
     res.sendStatus(204)

@@ -1,6 +1,8 @@
 var jwt = require('jsonwebtoken')
 var config = require('../config')
 var User = require('../models/user')
+var Style = require('../models/style') 
+var Upload = require('../models/upload')
 
 
 module.exports = function(req, res, next) {
@@ -41,6 +43,7 @@ var authAccessToken = function(req, res, next) {
 
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
+  var resourceId = req.url.split('/')[3] // eslint-disable-line no-unused-vars
   if (resourceType === 'users') {
     if (req.user.username !== req.params.username && req.method !== 'GET') {
       return res.sendStatus(401)
@@ -52,11 +55,65 @@ var authResource = function(req, res, next) {
   /* eslint-disable no-empty */
 
   if (resourceType === 'uploads') {
-    return next()
+    if (req.user.username === req.params.username) {
+      return next()
+    } else if (req.method !== 'GET') {
+      return res.sendStatus(401)
+    } else {
+      if(!resourceId){
+        return next()   
+      } else {
+        Upload.findOne({
+          owner: req.params.username,
+          upload_id: req.params.upload_id,
+          is_deleted: false
+        }, function(err,upload) {
+          console.log(upload.scopes[0])
+          if (err) {
+            return res.status(500).json({ error: err })
+          } else if (!upload){
+            return res.sendStatus(404)
+          } else if (upload.scopes[0] === 'private') {
+            return res.sendStatus(401)
+          } else if (upload.scopes.indexOf('public') > -1){
+            return next()
+          } else {
+            return res.sendStatus(401)
+          }
+        })
+      }
+    }
   }
 
   if (resourceType === 'styles') {
-    return next()
+    if (req.user.username === req.params.username) {
+      return next()
+    } else if (req.method !== 'GET') {
+      return res.sendStatus(401)
+    } else {
+      if(!resourceId){
+        return next()   
+      } else {
+        Style.findOne({
+          owner: req.params.username,
+          upload_id: req.params.upload_id,
+          is_deleted: false
+        }, function(err,upload) {
+          console.log(upload.scopes[0])
+          if (err) {
+            return res.status(500).json({ error: err })
+          } else if (!upload){
+            return res.sendStatus(404)
+          } else if (upload.scopes[0] === 'private') {
+            return res.sendStatus(401)
+          } else if (upload.scopes.indexOf('public') > -1){
+            return next()
+          } else {
+            return res.sendStatus(401)
+          }
+        })
+      }
+    }
   }
 
   if (resourceType === 'tilesets') {
@@ -71,5 +128,5 @@ var authResource = function(req, res, next) {
     return next()
   }
 
-  res.sendStatus(404)
+  // res.sendStatus(404)
 }

@@ -6,23 +6,23 @@ var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 describe('上传模块', function() {
 
-  var access_token
+  var nick_access_token
   var upload_id
 
-  before('注册用户', function(done) {
+  before('注册用户',function(done){
     request(app)
-      .post('/api/v1/users')
-      .send({ username: 'nick', password: '123456' })
-      .expect(200)
-      .end(function(err, res) {
-        if (err) {
-          return done(err)
-        }
+        .post('/api/v1/users')
+        .send({ username: 'nick', password: '123456' })
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-        access_token = res.body.access_token
+          nick_access_token = res.body.access_token
 
-        done()
-      })
+          done()
+        })
   })
 
   after('清理', function() {
@@ -34,7 +34,7 @@ describe('上传模块', function() {
     it('上传成功', function(done) {
       request(app)
         .post('/api/v1/uploads/nick')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .attach('aa', './test/fixtures/create.txt')
         .expect(200)
         .end(function(err, res) {
@@ -59,7 +59,7 @@ describe('上传模块', function() {
     it('获取成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -79,7 +79,7 @@ describe('上传模块', function() {
     it('获取成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick/' + upload_id)
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -98,7 +98,7 @@ describe('上传模块', function() {
     it('下载成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick/' + upload_id + '/raw')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -116,8 +116,58 @@ describe('上传模块', function() {
     it('删除成功', function() {
       request(app)
         .delete('/api/v1/uploads/nick/' + upload_id)
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(204)
+    })
+  })
+
+  describe('获取其他用户文件', function(){
+
+    var judy_access_token
+
+    before('注册judy', function(done){
+      request(app)
+        .post('/api/v1/users')
+        .send({ username: 'judy', password: '123456' })
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          judy_access_token = res.body.access_token
+
+          done()
+        })
+    })
+
+    after('清理', function(){
+      User.remove({ username: 'judy' }).exec()
+    })
+
+    it('获取用户文件列表', function(done) {
+      request(app)
+        .get('/api/v1/uploads/nick')
+        .set('x-access-token', judy_access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.forEach(function(upload) {
+            upload.owner.should.equal('nick')
+          })
+
+          done()
+        })
+    })
+
+    it('获取文件失败', function() {
+      request(app)
+        .get('/api/v1/uploads/nick/'+upload_id)
+        .set('x-access-token', judy_access_token)
+        .expect(401)
     })
   })
 })

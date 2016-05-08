@@ -6,7 +6,7 @@ var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 describe('样式管理模块', function() {
 
-  var access_token
+  var nick_access_token
   var style_id
 
   before('注册用户', function(done) {
@@ -19,7 +19,7 @@ describe('样式管理模块', function() {
           return done(err)
         }
 
-        access_token = res.body.access_token
+        nick_access_token = res.body.access_token
 
         done()
       })
@@ -34,7 +34,7 @@ describe('样式管理模块', function() {
     it('新建成功', function(done) {
       request(app)
         .post('/api/v1/styles/nick')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .send({
           'version': 8,
           'name': 'test',
@@ -77,7 +77,7 @@ describe('样式管理模块', function() {
     it('不合法的样式', function() {
       request(app)
         .post('/api/v1/styles/nick')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .send({
           'version': 8,
           'name': 'test',
@@ -91,7 +91,7 @@ describe('样式管理模块', function() {
     it('获取成功', function(done) {
       request(app)
         .get('/api/v1/styles/nick')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -111,7 +111,7 @@ describe('样式管理模块', function() {
     it('获取成功', function(done) {
       request(app)
         .get('/api/v1/styles/nick/' + style_id)
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -129,7 +129,7 @@ describe('样式管理模块', function() {
     it('获取不存在的样式', function() {
       request(app)
         .get('/api/v1/styles/nick/lbhy')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(404)
     })
   })
@@ -138,7 +138,7 @@ describe('样式管理模块', function() {
     it('更新成功', function(done) {
       request(app)
         .patch('/api/v1/styles/nick/' + style_id)
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .send({
           'style_id': 'abcd',
           'owner': 'judy',
@@ -169,7 +169,7 @@ describe('样式管理模块', function() {
     it('更新不存在的样式', function() {
       request(app)
         .patch('/api/v1/styles/nick/kdik')
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(404)
     })
   })
@@ -178,8 +178,41 @@ describe('样式管理模块', function() {
     it('删除成功', function() {
       request(app)
         .delete('/api/v1/styles/nick/' + style_id)
-        .set('x-access-token', access_token)
+        .set('x-access-token', nick_access_token)
         .expect(204)
+    })
+  })
+
+  describe('查看其他人的样式', function() {
+    var judy_access_token
+
+    before('注册judy', function(done){
+      request(app)
+      .post('/api/v1/users')
+      .send({ username: 'judy', password: '123456' })
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
+
+        judy_access_token = res.body.access_token
+
+        done()
+      })
+    })
+
+    after('清理', function(){
+      User.remove({ username: 'judy'}).exec()
+    })
+
+    describe('查看其他用户的样式',function(){
+      it('获取失败', function() {
+        request(app)
+        .get('/api/v1/styles/nick/' + style_id)
+        .set('x-access-token', judy_access_token)
+        .expect(401)
+      })
     })
   })
 })
