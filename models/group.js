@@ -5,7 +5,7 @@ var select = require('mongoose-json-select')
 
 var GroupSchema = new mongoose.Schema({
   group_id: { type: String, default: shortid.generate, index: true },
-  name: String,
+  groupname: String,
   members: [String],
   admin: String
 }, { timestamps: true })

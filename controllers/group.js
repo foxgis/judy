@@ -3,19 +3,33 @@ var _ = require('underscore')
 
 
 module.exports.create = function(req, res){
-  var group = new Group({
-    name: req.body.groupname,
-    admin: req.params.username
-  })
-  group.members.push(req.params.username)
+  if (!req.body.groupname) {
+    return res.status(400).json({ error: '信息不完整'})
+  }
 
-  group.save(function(err){
+  Group.findOne({ groupname: req.body.groupname}, function(err, group){
     if (err) {
       return res.status(500).json({ error: err})
     }
-  })
 
-  return res.status(200).json(group)
+    if (group) {
+      return res.status(400).json({ error: '群组名已被占用'})
+    }
+
+    var newGroup = new Group({
+      groupname: req.body.groupname,
+      admin: req.params.username,
+      members: [req.params.username]
+    })
+
+    newGroup.save(function(err){
+      if (err) {
+        return res.status(500).json({ error: err})
+      }
+    })
+
+    return res.status(200).json(newGroup)
+  })
 }
 
 
@@ -38,7 +52,7 @@ module.exports.retrieve = function(req, res){
 
 
 module.exports.update = function(req, res){
-  var filter = ['name','members']
+  var filter = ['groupname','members']
 
   Group.findOneAndUpdate({
     admin: req.params.username,

@@ -74,14 +74,14 @@ describe('群组模块', function(){
       request(app)
         .patch('/api/v1/groups/nick/' + group_id)
         .set('x-access-token', access_token)
-        .send({ name: 'new_name', members: ['nick','judy']})
+        .send({ groupname: 'new_name', members: ['nick','judy']})
         .expect(200)
         .end(function(err,res){
           if(err){
             return done(err)
           }
 
-          res.body.name.should.equal('new_name')
+          res.body.groupname.should.equal('new_name')
           res.body.members[1].should.equal('judy')
           res.body.admin.should.equal('nick')
 
