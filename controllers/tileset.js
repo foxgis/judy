@@ -1,7 +1,7 @@
-var mongoose = require('mongoose')
 var _ = require('underscore')
 var Tileset = require('../models/tileset')
-var TileSchema = require('../models/tile')
+var tilelive = require('tilelive')
+var crypto = require('crypto')
 
 
 module.exports.list = function(req, res) {
@@ -56,34 +56,40 @@ module.exports.getTile = function(req, res) {
       return
     }
 
-    if (tileset.tiles.length > 0) {
-      var url = tileset.tiles[0]
-        .replace(/\{z\}/i, req.params.z)
-        .replace(/\{x\}/i, req.params.x)
-        .replace(/\{y\}/i, req.params.y)
-
-      res.redirect(url)
-    }
-
-    var tiles = 'tiles_' + req.params.tileset_id
-    var Tile = mongoose.model(tiles, TileSchema, tiles)
-
-    Tile.findOne({
-      zoom_level: +req.params.z,
-      tile_column: +req.params.x,
-      tile_row: +req.params.y
-    }, function(err, tile) {
+    tilelive.load(tileset.uri, function(err, source) {
       if (err) {
-        res.status(500).json({ error: err })
-        return
+        return res.status(500).json({ error: err })
       }
 
-      if (!tile) {
-        res.sendStatus(404)
-        return
-      }
+      source.getTile(req.params.z, req.params.x, req.params.y,
+        function(err, tile, headers) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
 
-      res.status(200).send(tile.tile_data)
+          if (!tile) {
+            return res.sendStatus(404)
+          }
+
+          var _headers = {}
+          Object.keys(headers).forEach(function(x) {
+            _headers[x.toLowerCase()] = headers[x]
+          })
+
+          if (!_headers['content-md5']) {
+            var hash = crypto.createHash('md5')
+            hash.update(tile)
+            _headers['content-md5'] = hash.digest().toString('base64')
+          }
+
+          if (req.params.format === 'pbf') {
+            _headers['content-type'] = _headers['content-type'] || 'application/x-protobuf'
+            _headers['content-encoding'] = _headers['content-encoding'] || 'gzip'
+          }
+
+          res.set(_headers)
+          res.status(200).send(tile)
+        })
     })
   })
 }

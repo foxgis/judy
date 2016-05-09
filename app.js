@@ -6,6 +6,9 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 var cors = require('cors')
+var tilelive = require('tilelive')
+var tileliveLoader = require('tilelive-modules/loader')
+var config = require('./config')
 var router = require('./router')
 
 
@@ -23,6 +26,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride())
 app.use(cookieParser())
 app.use(express.static('public'))
+
+tileliveLoader(tilelive, config)
 
 app.use('/api/v1', router)
 
