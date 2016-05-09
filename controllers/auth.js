@@ -90,22 +90,21 @@ var authUser = function(req, res, next) {
 
 
 var authGroup = function(req, res, next) {
-  if (req.user.username === req.params.username) {
-    return next()
-  } else if (req.method !== 'GET') {
-    return res.sendStatus(401)
-  } else {
+  if (req.user.username === req.params.username
+    || req.method === 'GET') {
     return next()
   }
+
+  return res.sendStatus(401)
 }
 
 
 var authUpload = function(req, res, next) {
   if (req.user.username === req.params.username) {
     return next()
-  } else {
-    return res.sendStatus(401)
   }
+
+  return res.sendStatus(401)
 }
 
 
@@ -114,10 +113,8 @@ var authStyle = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
     return next()
-  } else if (req.method !== 'GET') {
+  } else if (!style_id || req.method !== 'GET') {
     return res.sendStatus(401)
-  } else if (!style_id){
-    return next()
   } else {
     Style.findOne({
       owner: req.params.username,
@@ -138,7 +135,7 @@ var authStyle = function(req, res, next) {
         return next()
       } else {
         style.scopes.forEach(function(scope){
-          Group.findOne({ groupname: scope}, function(err, group){
+          Group.findOne({ group_id: scope}, function(err, group){
             if (err) {
               return res.status(500).json({ error: err})
             }
@@ -166,10 +163,8 @@ var authSprite = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
     return next()
-  } else if (req.method !== 'GET') {
+  } else if (!sprite_id || req.method !== 'GET') {
     return res.sendStatus(401)
-  } else if (!sprite_id){
-    return next()
   } else {
     Sprite.findOne({
       owner: req.params.username,
@@ -190,7 +185,7 @@ var authSprite = function(req, res, next) {
         return next()
       } else {
         sprite.scopes.forEach(function(scope){
-          Group.findOne({ groupname: scope}, function(err, group){
+          Group.findOne({ group_id: scope}, function(err, group){
             if (err) {
               return res.status(500).json({ error: err})
             }

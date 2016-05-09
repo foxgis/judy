@@ -3,11 +3,11 @@ var _ = require('underscore')
 
 
 module.exports.create = function(req, res){
-  if (!req.body.groupname) {
+  if (!req.body.name) {
     return res.status(400).json({ error: '信息不完整'})
   }
 
-  Group.findOne({ groupname: req.body.groupname}, function(err, group){
+  Group.findOne({ name: req.body.name}, function(err, group){
     if (err) {
       return res.status(500).json({ error: err})
     }
@@ -17,10 +17,14 @@ module.exports.create = function(req, res){
     }
 
     var newGroup = new Group({
-      groupname: req.body.groupname,
+      name: req.body.name,
       admin: req.params.username,
       members: [req.params.username]
     })
+
+    if (req.body.members){
+      newGroup.members = req.body.members
+    }
 
     newGroup.save(function(err){
       if (err) {
@@ -52,7 +56,7 @@ module.exports.retrieve = function(req, res){
 
 
 module.exports.update = function(req, res){
-  var filter = ['groupname','members']
+  var filter = ['name','members']
 
   Group.findOneAndUpdate({
     admin: req.params.username,
