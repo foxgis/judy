@@ -4,6 +4,8 @@ var User = require('../models/user')
 var Style = require('../models/style')
 var Sprite = require('../models/sprite')
 var Group = require('../models/group')
+var Tileset = require('../models/tileset')
+var Font = require('../models/font')
 
 
 module.exports = function(req, res, next) {
@@ -62,11 +64,11 @@ var authResource = function(req, res, next) {
   }
 
   if (resourceType === 'tilesets') {
-    return next()
+    authTileset(req, res, next)
   }
 
   if (resourceType === 'fonts') {
-    return next()
+    authFont(req, res, next)
   }
 
   if (resourceType === 'sprites') {
@@ -135,6 +137,106 @@ var authStyle = function(req, res, next) {
         return next()
       } else {
         style.scopes.forEach(function(scope){
+          Group.findOne({ group_id: scope}, function(err, group){
+            if (err) {
+              return res.status(500).json({ error: err})
+            }
+
+            if (!group) {
+              return res.sendStatus(404)
+            }
+
+
+            if (group.members.indexOf(req.user.username) > -1){
+              return next()
+            } else {
+              return res.sendStatus(401)
+            }
+          })
+        })
+      }
+    })
+  }
+}
+
+
+var authTileset = function(req, res, next) {
+  var tileset_id = req.url.split('/')[3]
+
+  if (req.user.username === req.params.username) {
+    return next()
+  } else if (!tileset_id || req.method !== 'GET') {
+    return res.sendStatus(401)
+  } else {
+    Tileset.findOne({
+      owner: req.params.username,
+      tileset_id: req.params.tileset_id,
+      is_deleted: false
+    }, function(err,tileset) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!tileset){
+        return res.sendStatus(404)
+      }
+
+      if (tileset.scopes[0] === 'private') {
+        return res.sendStatus(401)
+      } else if (tileset.scopes[0] === 'public'){
+        return next()
+      } else {
+        tileset.scopes.forEach(function(scope){
+          Group.findOne({ group_id: scope}, function(err, group){
+            if (err) {
+              return res.status(500).json({ error: err})
+            }
+
+            if (!group) {
+              return res.sendStatus(404)
+            }
+
+
+            if (group.members.indexOf(req.user.username) > -1){
+              return next()
+            } else {
+              return res.sendStatus(401)
+            }
+          })
+        })
+      }
+    })
+  }
+}
+
+
+var authFont = function(req, res, next) {
+  var font_id = req.url.split('/')[3]
+
+  if (req.user.username === req.params.username) {
+    return next()
+  } else if (!font_id) {
+    return res.sendStatus(401)
+  } else {
+    Font.findOne({
+      owner: req.params.username,
+      font_id: req.params.tileset_id,
+      is_deleted: false
+    }, function(err,font) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!font){
+        return res.sendStatus(404)
+      }
+
+      if (font.scopes[0] === 'private') {
+        return res.sendStatus(401)
+      } else if (font.scopes[0] === 'public'){
+        return next()
+      } else {
+        font.scopes.forEach(function(scope){
           Group.findOne({ group_id: scope}, function(err, group){
             if (err) {
               return res.status(500).json({ error: err})
