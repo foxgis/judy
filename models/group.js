@@ -7,6 +7,7 @@ var GroupSchema = new mongoose.Schema({
   group_id: { type: String, default: shortid.generate, index: true },
   name: { type: String, index: { unique: true } },
   members: [String],
+  applicants: [String],
   admin: String
 }, { timestamps: true })
 

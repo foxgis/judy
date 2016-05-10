@@ -23,9 +23,11 @@ router.patch('/users/:username', auth, users.update)
 router.post('/users/:username', users.login)
 
 // 群组
+router.get('/groups/:username', auth, groups.list)
 router.post('/groups/:username', auth, groups.create)
 router.get('/groups/:username/:group_id', auth, groups.retrieve)
 router.patch('/groups/:username/:group_id', auth, groups.update)
+router.delete('/groups/:username/:group_id', auth, groups.delete)
 
 // 上传文件
 router.get('/uploads/:username', auth, uploads.list)
