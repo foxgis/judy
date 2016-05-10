@@ -1,4 +1,4 @@
-var _ = require('underscore')
+var _ = require('lodash')
 var Tileset = require('../models/tileset')
 var tilelive = require('tilelive')
 var crypto = require('crypto')

@@ -1,5 +1,5 @@
 var Group = require('../models/group')
-var _ = require('underscore')
+var _ = require('lodash')
 
 
 module.exports.create = function(req, res){
@@ -69,7 +69,7 @@ module.exports.update = function(req, res){
     if (!group) {
       return res.sendStatus(404)
     }
-    
+
     return res.status(200).json(group)
   })
 }
