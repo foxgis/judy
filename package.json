@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "lint": "eslint *.js models/** controllers/** tools/** test/*",
-    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha",
-    "deploy": "ssh bygis@192.9.105.123 'cd projects/judy && git pull'"
+    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "bin": {
     "tilelive-copy": "./node_modules/.bin/tilelive-copy"
