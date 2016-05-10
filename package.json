@@ -30,6 +30,7 @@
     "method-override": "^2.3.5",
     "mongoose": "^4.4.14",
     "mongoose-json-select": "^0.2.1",
+    "mongotiles": "^0.2.0",
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
     "shortid": "^2.2.6",
@@ -40,7 +41,9 @@
     "tilelive-bridge": "^2.3.1",
     "tilelive-cache": "^0.6.5",
     "tilelive-http": "^0.10.0",
-    "tilelive-modules": "^0.3.0"
+    "tilelive-modules": "^0.3.0",
+    "tilelive-vector": "^3.9.3",
+    "tilelive-xray": "^0.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
