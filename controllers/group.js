@@ -70,7 +70,8 @@ module.exports.retrieve = function(req, res){
 
 
 module.exports.update = function(req, res) {
-  var filter = ['name', 'members', 'admin']
+  var filter = ['join', 'quit', 'name', 'admin', 'add', 'delete']
+  _.pick(req.body, filter)
 
   Group.findOne({
     admin: req.params.username,
@@ -84,26 +85,50 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    if (req.body.admin && group.members.indexOf(req.body.admin) < 0) {
-      return res.sendStatus(401)
-    }
-
     if (group.admin === req.user.username){
-      Group.findOneAndUpdate({
-        admin: req.params.username,
-        group_id: req.params.group_id
-      },  _.pick(req.body, filter), { new: true }, function(err, updatedGroup) {
+      if (req.body.add) {
+        if (group.members.indexOf(req.body.add) > -1
+          || group.applicants.indexOf(req.body.add) < 0) {
+          return res.sendStatus(400)
+        }
+
+        group.members.push(req.body.add)
+        group.applicants.splice(group.applicants.indexOf(req.body.add),1)
+      }
+
+      if (req.body.delete) {
+        if (group.members.indexOf(req.body.delete) < 0){
+          return res.sendStatus(400)
+        }
+
+        group.members.splice(group.members.indexOf(req.body.quit),1)
+      }
+
+      if (req.body.admin) {
+        if (group.members.indexOf(req.body.admin) < 0) {
+          return res.sendStatus(401)
+        }
+
+        group.admin = req.body.admin
+      }
+
+      if (req.body.name) {
+        group.name = req.body.name
+      }
+
+      group.save(function(err){
         if (err) {
-          return res.status(500).json({ error: err })
+          return res.status(500).json({ error: err})
         }
-
-        if (!updatedGroup) {
-          return res.sendStatus(404)
-        }
-
-        return res.status(200).json(updatedGroup)
       })
+
+      return res.status(200).json(group)
+
     } else if (group.members.indexOf(req.user.username) > -1) {
+      if (!req.body.quit || req.body.quit === false) {
+        return res.sendStatus(401)
+      }
+
       group.members.splice(group.members.indexOf(req.user.username),1)
       group.save(function(err){
         if (err) {
@@ -112,7 +137,16 @@ module.exports.update = function(req, res) {
       })
 
       return res.status(200).json(group)
+
+    } else if (group.applicants.indexOf(req.user.username) > -1) {
+
+      return res.sendStatus(200)
+
     } else {
+      if(!req.body.join || req.body.join === false) {
+        return res.sendStatus(401)
+      }
+
       group.applicants.push(req.user.username)
       group.save(function(err){
         if (err) {
