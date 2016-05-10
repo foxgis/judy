@@ -7,6 +7,7 @@ var styles = require('./controllers/style')
 var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
+var groups = require('./controllers/group')
 
 
 var router = express.Router()
@@ -20,6 +21,11 @@ router.post('/users', users.create)
 router.get('/users/:username', auth, users.retrieve)
 router.patch('/users/:username', auth, users.update)
 router.post('/users/:username', users.login)
+
+// 群组
+router.post('/groups/:username', auth, groups.create)
+router.get('/groups/:username/:group_id', auth, groups.retrieve)
+router.patch('/groups/:username/:group_id', auth, groups.update)
 
 // 上传文件
 router.get('/uploads/:username', auth, uploads.list)

@@ -10,6 +10,7 @@ var UploadSchema = new mongoose.Schema({
   filesize: Number,
   owner: String,
   is_deleted: { type: Boolean, default: false },
+  tags: [String],
 
   tileset_id: String,
   font_id: String,

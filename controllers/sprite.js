@@ -90,7 +90,7 @@ module.exports.download = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['name']
+  var filter = ['name','scopes']
 
   Sprite.findOneAndUpdate({
     owner: req.params.username,
