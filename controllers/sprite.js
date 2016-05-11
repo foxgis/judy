@@ -1,7 +1,7 @@
 var ImageJS = require('imagejs')
 var Sprite = require('../models/sprite')
 var stream = require('stream')
-var _ = require('underscore')
+var _ = require('lodash')
 
 
 module.exports.list = function(req, res) {

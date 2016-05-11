@@ -1,4 +1,4 @@
-var _ = require('underscore')
+var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
 var Style = require('../models/style')
 

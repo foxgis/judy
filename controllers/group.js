@@ -1,5 +1,5 @@
 var Group = require('../models/group')
-var _ = require('underscore')
+var _ = require('lodash')
 
 
 module.exports.list = function(req, res) {
@@ -86,9 +86,14 @@ module.exports.update = function(req, res) {
     }
 
     if (group.admin === req.user.username){
+      if (req.body.join || req.body.quit) {
+        return res.sendStatus(401)
+      }
+      
       if (req.body.add) {
         if (group.members.indexOf(req.body.add) > -1
           || group.applicants.indexOf(req.body.add) < 0) {
+
           return res.sendStatus(400)
         }
 
@@ -97,7 +102,9 @@ module.exports.update = function(req, res) {
       }
 
       if (req.body.delete) {
-        if (group.members.indexOf(req.body.delete) < 0){
+        if (group.members.indexOf(req.body.delete) < 0
+          || req.body.delete === group.admin){
+
           return res.sendStatus(400)
         }
 
@@ -125,7 +132,7 @@ module.exports.update = function(req, res) {
       return res.status(200).json(group)
 
     } else if (group.members.indexOf(req.user.username) > -1) {
-      if (!req.body.quit || req.body.quit === false) {
+      if (!req.body.quit || req.body.quit !== true) {
         return res.sendStatus(401)
       }
 
@@ -136,14 +143,14 @@ module.exports.update = function(req, res) {
         }
       })
 
-      return res.status(200).json(group)
+      return res.sendStatus(200)
 
     } else if (group.applicants.indexOf(req.user.username) > -1) {
 
-      return res.sendStatus(200)
+      return res.status(200).json(group)
 
     } else {
-      if(!req.body.join || req.body.join === false) {
+      if(!req.body.join || req.body.join !== true) {
         return res.sendStatus(401)
       }
 

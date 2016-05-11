@@ -47,6 +47,7 @@ router.delete('/styles/:username/:style_id', auth, styles.delete)
 router.get('/tilesets/:username', auth, tilesets.list)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
 router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[23]x)?.:format([\\w\\.]+)', auth, tilesets.getTile)
+router.get('/tilesets/:username/:tileset_id/', auth, tilesets.getTile)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
 

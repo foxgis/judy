@@ -1,11 +1,14 @@
 var express = require('express')
-var compression = require('compression')
+// var compression = require('compression')
 var helmet = require('helmet')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
 var cors = require('cors')
+var tilelive = require('tilelive')
+var tileliveLoader = require('tilelive-modules/loader')
+var config = require('./config')
 var router = require('./router')
 
 
@@ -14,7 +17,7 @@ require('./db')
 
 var app = express()
 
-app.use(compression())
+// app.use(compression())
 app.use(helmet())
 app.use(cors())
 app.use(logger('dev'))
@@ -23,6 +26,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride())
 app.use(cookieParser())
 app.use(express.static('public'))
+
+tileliveLoader(tilelive, config)
 
 app.use('/api/v1', router)
 
