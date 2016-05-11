@@ -50,6 +50,31 @@ describe('群组模块', function(){
           done()
         })
     })
+
+    it ('创建失败', function(){
+      request(app)
+        .post('/api/v1/groups/nick')
+        .set('x-access-token', access_token)
+        .send({ myname: 'nick'})
+        .expect(400)
+    })
+
+    it ('群组名已被占用', function(done){
+      request(app)
+        .post('/api/v1/groups/nick')
+        .set('x-access-token', access_token)
+        .send({ name: 'police'})
+        .expect(400)
+        .end(function(err,res){
+          if (err) {
+            return done(err)
+          }
+
+          res.body.error.should.equal('群组名已被占用')
+
+          done()
+        })
+    })
   })
 
   describe('获取群组列表', function(){
@@ -90,6 +115,13 @@ describe('群组模块', function(){
           done()
         })
     })
+
+    it('获取失败', function(){
+      request(app)
+        .get('/api/v1/groups/nick/bad_group_id')
+        .set('x-access-token', access_token)
+        .expect(404)
+    })
   })
 
   describe('更新群组', function(){
@@ -110,9 +142,65 @@ describe('群组模块', function(){
           done()
         })
     })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/bad_group_id')
+        .set('x-access-token', access_token)
+        .send({ name: 'new_name'})
+        .expect(404)
+    })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', access_token)
+        .send({ quit: true})
+        .expect(401)
+    })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', access_token)
+        .send({ add: 'nick'})
+        .expect(400)
+    })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', access_token)
+        .send({ add: 'no_this_user'})
+        .expect(400)
+    })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', access_token)
+        .send({ delete: 'nick'})
+        .expect(400)
+    })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', access_token)
+        .send({ delete: 'not_in_members'})
+        .expect(400)
+    })
+
+    it('更新失败', function(){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', access_token)
+        .send({ admin: 'not_in_members'})
+        .expect(401)
+    })
   })
 
-  describe('操作其他用户的群组', function(){
+  describe('操作未加入的群组', function(){
     var judy_access_token
 
     before('注册judy', function(done){
@@ -158,80 +246,6 @@ describe('群组模块', function(){
 
           done()
         })
-    })
-
-    it('申请加入群组成功', function(done){
-      request(app)
-        .patch('/api/v1/groups/nick/' + group_id)
-        .set('x-access-token', judy_access_token)
-        .send({join: true})
-        .expect(200)
-        .end(function(err, res){
-          if (err){
-            return done(err)
-          }
-
-          res.body.admin.should.equal('nick')
-          res.body.applicants[0].should.equal('judy')
-
-          done()
-        })
-    })
-
-    describe('组内成员操作群组', function(){
-      before('添加新成员', function(done){
-        request(app)
-          .patch('/api/v1/groups/nick/' + group_id)
-          .set('x-access-token', access_token)
-          .send({ add: 'judy'})
-          .expect(200)
-          .end(function(err,res){
-            if(err){
-              return done(err)
-            }
-
-            res.body.admin.should.equal('nick')
-            res.body.applicants.should.be.empty
-
-            done()
-          })
-      })
-
-      it('转让群主', function(done){
-        request(app)
-          .patch('/api/v1/groups/nick/' + group_id)
-          .set('x-access-token', access_token)
-          .send({ admin: 'judy'})
-          .expect(200)
-          .end(function(err, res){
-            if (err){
-              return done(err)
-            }
-
-            res.body.admin.should.equal('judy')
-            res.body.group_id.should.equal(group_id)
-            res.body.members[0].should.equal('nick')
-
-            done()
-          })
-      })
-
-      it('退出群组', function(done){
-        request(app)
-          .patch('/api/v1/groups/judy/' + group_id)
-          .set('x-access-token', access_token)
-          .send({quit: true})
-          .expect(200)
-          .end(function(err, res){
-            if (err){
-              return done(err)
-            }
-
-            res.body.should.be.empty
-
-            done()
-          })
-      })
     })
   })
 })

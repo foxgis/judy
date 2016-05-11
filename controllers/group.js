@@ -150,7 +150,7 @@ module.exports.update = function(req, res) {
 
     } else {
       if(!req.body.join || req.body.join !== true) {
-        return res.sendStatus(401)
+        return res.sendStatus(400)
       }
 
       group.applicants.push(req.user.username)
