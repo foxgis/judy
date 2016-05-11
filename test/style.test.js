@@ -319,7 +319,7 @@ describe('样式管理模块', function() {
         request(app)
           .post('/api/v1/groups/nick')
           .set('x-access-token', access_token)
-          .send({ name: 'judy_nick', members: [ 'nick', 'judy']})
+          .send({ name: 'judy_nick', members:['nick', 'judy']})
           .expect(200)
           .end(function(err,res){
             if (err) {

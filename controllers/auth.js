@@ -91,8 +91,11 @@ var authUser = function(req, res, next) {
 
 
 var authGroup = function(req, res, next) {
-  if (req.user.username === req.params.username
-    || req.method === 'GET') {
+  var group_id = req.url.split('/')[3]
+
+  if (req.user.username === req.params.username) {
+    return next()
+  } else if (group_id || req.method !== 'DELETE') {
     return next()
   }
 
