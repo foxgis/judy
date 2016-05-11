@@ -78,8 +78,7 @@ module.exports.getTile = function(req, res) {
 
           if (!_headers['content-md5']) {
             var hash = crypto.createHash('md5')
-            hash.update(tile)
-            _headers['content-md5'] = hash.digest().toString('base64')
+            _headers['content-md5'] = hash.update(tile).digest('base64')
           }
 
           if (req.params.format === 'pbf') {
