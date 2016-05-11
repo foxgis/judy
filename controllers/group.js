@@ -89,10 +89,9 @@ module.exports.update = function(req, res) {
       if (req.body.join || req.body.quit) {
         return res.sendStatus(401)
       }
-      
+
       if (req.body.add) {
-        if (group.members.indexOf(req.body.add) > -1
-          || group.applicants.indexOf(req.body.add) < 0) {
+        if (group.members.indexOf(req.body.add) > -1) {
 
           return res.sendStatus(400)
         }
