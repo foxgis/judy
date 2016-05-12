@@ -21,6 +21,7 @@ module.exports.list = function(req, res) {
 module.exports.retrieve = function(req, res) {
   Sprite.findOne({
     owner: req.params.username,
+    sprite_id: req.params.sprite_id,
     is_deleted: false
   }, '-image -json', function(err, sprite) {
     if (err) {

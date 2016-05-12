@@ -50,7 +50,7 @@ module.exports.retrieve = function(req, res) {
     }
 
     if (!user) {
-      res.sendStatus(404)
+      res.status(404).json({ error: '没有这个用户'})
       return
     }
 
@@ -86,18 +86,16 @@ module.exports.login = function(req, res) {
     }
 
     if (!user || !user.validPassword(req.body.password)) {
-      res.sendStatus(401).json({ error: '用户名或密码错误' })
-      return
+      return res.status(401).json({ error: '用户名或密码错误' })
     }
 
     user.updateAccessToken()
     user.save(function(err) {
       if (err) {
-        res.status(500).json({ error: err })
-        return
+        return res.status(500).json({ error: err })
       }
 
-      res.status(200).json(user)
+      return res.status(200).json(user)
     })
   })
 }

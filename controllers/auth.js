@@ -77,16 +77,11 @@ var authResource = function(req, res, next) {
 
 
 var authUser = function(req, res, next) {
-  var resourceUsername = req.url.split('/')[2]
-
-  if (!resourceUsername) {
-    return next()
-  } else if (req.user.username === req.params.username
-    || req.method === 'GET'){
-    return next()
+  if (req.user.username !== req.params.username && req.method === 'PATCH') {
+    return res.sendStatus(401)
   }
 
-  return res.sendStatus(401)
+  return next()
 }
 
 
@@ -95,7 +90,7 @@ var authGroup = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
     return next()
-  } else if (group_id || req.method !== 'DELETE') {
+  } else if (group_id && req.method !== 'DELETE') {
     return next()
   }
 
@@ -116,10 +111,43 @@ var authStyle = function(req, res, next) {
   var style_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
-    return next()
-  } else if (!style_id || req.method !== 'GET') {
+    if (req.body.share && Object.keys(req.body).length > 1) {
+
+      return res.sendStatus(401)
+    }
+    else if (req.body.unshare && Object.keys(req.body).length > 1) {
+
+      return res.sendStatus(401)
+    }
+    else if (req.body.share && req.body.share !== 'public'){
+      Group.findOne({
+        group_id: req.body.share
+      }, function(err, group){
+        if (err) {
+          return res.status(500).json({ error:err})
+        }
+
+        if (!group){
+          return res.sendStatus(404)
+        }
+
+        if(group.members.indexOf(req.user.username) > -1){
+          return next()
+        } else {
+          return res.sendStatus(401)
+        }
+      })
+    }
+    else {
+
+      return next()
+    }
+  }
+  else if (!style_id || req.method !== 'GET') {
+
     return res.sendStatus(401)
-  } else {
+  }
+  else {
     Style.findOne({
       owner: req.params.username,
       style_id: req.params.style_id,
@@ -135,9 +163,12 @@ var authStyle = function(req, res, next) {
 
       if (style.scopes[0] === 'private') {
         return res.sendStatus(401)
-      } else if (style.scopes[0] === 'public'){
+      }
+      else if (style.scopes[0] === 'public'){
+
         return next()
-      } else {
+      }
+      else {
         style.scopes.forEach(function(scope){
           Group.findOne({ group_id: scope}, function(err, group){
             if (err) {
@@ -147,7 +178,6 @@ var authStyle = function(req, res, next) {
             if (!group) {
               return res.sendStatus(404)
             }
-
 
             if (group.members.indexOf(req.user.username) > -1){
               return next()

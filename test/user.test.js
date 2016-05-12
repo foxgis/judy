@@ -7,30 +7,9 @@ var should = require('chai').should() // eslint-disable-line no-unused-vars
 describe('用户管理模块', function() {
 
   var access_token
-  var judy_access_token
-
-  before('注册用户', function(done) {
-    request(app)
-      .post('/api/v1/users')
-      .send({ username: 'judy', password: '123456' })
-      .expect(200)
-      .end(function(err, res) {
-        if (err) {
-          return done(err)
-        }
-
-        res.body.username.should.equal('judy')
-        res.body.access_token.should.exist
-
-        judy_access_token = res.body.access_token
-
-        done()
-      })
-  })
 
   after('清除用户数据', function() {
     User.remove({ username: 'nick' }).exec()
-    User.remove({ username: 'judy' }).exec()
   })
 
   describe('注册', function() {
@@ -135,6 +114,38 @@ describe('用户管理模块', function() {
           done()
         })
     })
+
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/users/nick')
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.error.should.equal('access_token缺失')
+
+          done()
+        })
+    })
+
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/users/nick')
+        .set('x-access-token', 'bad_access_token')
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.name.should.equal('JsonWebTokenError')
+          res.body.message.should.equal('jwt malformed')
+
+          done()
+        })
+    })
   })
 
 
@@ -162,7 +173,7 @@ describe('用户管理模块', function() {
     it('密码登录成功', function(done) {
       request(app)
         .post('/api/v1/users/nick')
-        .send({ username: 'nick', password: '123456' })
+        .send({password: '123456' })
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -176,52 +187,35 @@ describe('用户管理模块', function() {
         })
     })
 
-    it('用户名错误', function() {
-      request(app)
-        .post('/api/v1/users/nick1')
-        .send({ username: 'nick1', password: '123456' })
-        .expect(401)
-    })
-
-    it('密码错误', function() {
+    it('密码缺失', function(done) {
       request(app)
         .post('/api/v1/users/nick')
-        .send({ username: 'nick', password: '12345' })
         .expect(401)
-    })
-  })
-
-  describe('操作其他用户信息',function(){
-    it('获取信息成功', function(done) {
-      request(app)
-        .get('/api/v1/users/nick')
-        .set('x-access-token', judy_access_token)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
+        .end(function(err, res){
+          if(err){
             return done(err)
           }
 
-          res.body.username.should.equal('nick')
+          res.body.error.should.equal('登录信息不完整')
 
           done()
         })
     })
 
-    it('修改失败', function() {
-      request(app)
-        .patch('/api/v1/users/nick')
-        .set('x-access-token', judy_access_token)
-        .send({ name: '张三' })
-        .expect(401)
-    })
-
-    it('登录失败', function() {
+    it('用户名或密码错误', function(done) {
       request(app)
         .post('/api/v1/users/nick')
-        .set('x-access-token', access_token)
-        .send({ username: 'nick', password: '123456' })
+        .send({password: '12345' })
         .expect(401)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
+
+          res.body.error.should.equal('用户名或密码错误')
+
+          done()
+        })
     })
   })
 })

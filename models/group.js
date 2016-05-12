@@ -8,7 +8,9 @@ var GroupSchema = new mongoose.Schema({
   name: { type: String, index: { unique: true } },
   members: [String],
   applicants: [String],
-  admin: String
+  admin: String,
+
+  is_verified: { type: Boolean, default: false }
 }, { timestamps: true })
 
 GroupSchema.plugin(select,'-_id -__v')
