@@ -40,9 +40,9 @@ module.exports.create = function(req, res) {
       if (err) {
         return res.status(500).json({ error: err})
       }
-    })
 
-    return res.status(200).json(newGroup)
+      return res.status(200).json(newGroup)
+    })
   })
 }
 

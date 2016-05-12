@@ -135,7 +135,7 @@ describe('样式管理模块', function() {
 
     it('获取失败', function(done) {
       request(app)
-        .get('/api/v1/styles/nick/lbhy')
+        .get('/api/v1/styles/nick/bad_style_id')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res){
@@ -185,7 +185,7 @@ describe('样式管理模块', function() {
 
     it('更新失败', function(done) {
       request(app)
-        .patch('/api/v1/styles/nick/kdik')
+        .patch('/api/v1/styles/nick/bad_style_id')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res){
@@ -212,57 +212,6 @@ describe('样式管理模块', function() {
           }
 
           res.body.should.be.empty
-
-          done()
-        })
-    })
-  })
-
-  describe('登录', function() {
-    it('密码登录成功', function(done) {
-      request(app)
-        .post('/api/v1/users/nick')
-        .send({password: '123456' })
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.username.should.equal('nick')
-          res.body.access_token.should.exist
-
-          done()
-        })
-    })
-
-    it('用户名错误', function(done) {
-      request(app)
-        .post('/api/v1/users/nickk1')
-        .send({password: '123456' })
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.error.should.equal('用户名或密码错误')
-
-          done()
-        })
-    })
-
-    it('密码错误', function(done) {
-      request(app)
-        .post('/api/v1/users/nick')
-        .send({password: '12345' })
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.error.should.equal('用户名或密码错误')
 
           done()
         })

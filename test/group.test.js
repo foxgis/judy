@@ -27,7 +27,6 @@ describe('群组模块', function(){
   after('清理', function(){
     User.remove({ username: 'nick'}).exec()
     Group.remove({ admin: 'nick'}).exec()
-    Group.remove({ admin: 'judy'}).exec()
   })
 
   describe('创建群组', function(){
@@ -156,6 +155,23 @@ describe('群组模块', function(){
 
           res.body.name.should.equal('new_name')
           res.body.admin.should.equal('nick')
+
+          done()
+        })
+    })
+
+    it('更新失败', function(done){
+      request(app)
+        .patch('/api/v1/groups/nick/bad_group_id')
+        .set('x-access-token', access_token)
+        .send({ bad_request: 'bad'})
+        .expect(400)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
+
+          res.body.should.be.empty
 
           done()
         })

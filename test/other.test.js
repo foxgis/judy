@@ -206,4 +206,91 @@ describe('其他用户权限模块', function(){
         })
     })
   })
+
+  describe('获取样式', function(){
+    it('获取样式列表失败', function(done){
+      request(app)
+        .get('/api/v1/styles/nick')
+        .set('x-access-token', judy_access_token)
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
+
+    it('获取私密样式失败', function(done){
+      request(app)
+        .get('/api/v1/styles/nick/' + style_id)
+        .set('x-access-token', judy_access_token)
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
+
+    describe('获取公开样式', function(){
+      before('公开分享样式', function(done){
+        request(app)
+          .patch('/api/v1/styles/nick/' + style_id)
+          .set('x-access-token', nick_access_token)
+          .send({share: 'public'})
+          .expect(200)
+          .end(function(err, res){
+            if(err){
+              return done(err)
+            }
+
+            res.body.scopes[0].should.equal('public')
+
+            done()
+          })
+      })
+
+      it('获取成功', function(done){
+        request(app)
+          .get('/api/v1/styles/nick/' + style_id)
+          .set('x-access-token', judy_access_token)
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err)
+            }
+
+            res.body.scopes[0].should.equal('public')
+            res.body.style_id.should.equal(style_id)
+            res.body.owner.should.equal('nick')
+
+            done()
+          })
+      })
+
+      it('获取失败', function(done){
+        request(app)
+          .get('/api/v1/styles/nick/bad_style_id')
+          .set('x-access-token', judy_access_token)
+          .expect(404)
+          .end(function(err, res) {
+            if (err) {
+              return done(err)
+            }
+
+            res.body.should.be.empty
+
+            done()
+          })
+      })
+    })
+  })
 })
