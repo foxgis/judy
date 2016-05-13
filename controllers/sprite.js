@@ -91,13 +91,11 @@ module.exports.download = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['name','scopes']
-
-  Sprite.findOneAndUpdate({
+  Sprite.findOne({
     owner: req.params.username,
     sprite_id: req.params.sprite_id,
     is_deleted: false
-  }, _.pick(req.body, filter), { new: true }, function(err, sprite) {
+  }, function(err, sprite) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -106,7 +104,64 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(sprite)
+    if (req.body.name) {
+      sprite.name = req.body.name
+    }
+    else if (req.body.share === 'public') {
+      if (sprite.scopes[0] === 'public') {
+        return res.status(200).json(sprite)
+      }
+      else if (sprite.scopes[0] === 'private') {
+        sprite.scopes.splice(0, 1, 'public')
+      }
+      else {
+        sprite.scopes.splice(0, 0, 'public')
+      }
+    }
+    else if (req.body.share && req.body.share !== 'public') {
+      if (sprite.scopes.indexOf(req.body.share) > -1) {
+        return res.status(200).json(sprite)
+      }
+      else if (sprite.scopes[0] === 'private') {
+        sprite.scopes.splice(0, 1, req.body.share)
+      }
+      else {
+        sprite.scopes.push(req.body.share)
+      }
+    }
+    else if (req.body.unshare === 'public') {
+      if (sprite.scopes[0] !== 'public') {
+        return res.status(200).json(sprite)
+      }
+      else if (sprite.scopes.length === 1) {
+        sprite.scopes = ['private']
+      }
+      else {
+        sprite.scopes.splice(0, 1)
+      }
+    }
+    else if (req.body.unshare && req.body.unshare !== 'public'){
+      if (sprite.scopes.indexOf(req.body.unshare) < 0) {
+        return res.status(200).json(sprite)
+      }
+      else if (sprite.scopes.length === 1) {
+        sprite.scopes = ['private']
+      }
+      else {
+        sprite.scopes.splice(sprite.scopes.indexOf(req.body.unshare), 1)
+      }
+    }
+    else{
+      return res.sendStatus(401)
+    }
+
+    sprite.save(function(err){
+      if (err) {
+        return res.status(500).json({ error: err})
+      }
+
+      return res.status(200).json(_.omit(sprite.toJSON(), 'image', 'json'))
+    })
   })
 }
 

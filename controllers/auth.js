@@ -246,10 +246,16 @@ var authSprite = function(req, res, next) {
   var sprite_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
+    if (req.method === 'PATCH' && Object.keys(req.body).length > 1) {
+      return res.sendStatus(401)
+    }
+
     return next()
-  } else if (!sprite_id || req.method !== 'GET') {
+  }
+  else if (!sprite_id || req.method !== 'GET') {
     return res.sendStatus(401)
-  } else {
+  }
+  else {
     Sprite.findOne({
       owner: req.params.username,
       sprite_id: req.params.sprite_id,

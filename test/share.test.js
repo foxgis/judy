@@ -30,6 +30,8 @@ describe('分享样式模块', function(){
       })
   })
 
+  // before('上传符号库文件', function(){})
+
   before('新建样式', function(done){
     request(app)
     .post('/api/v1/styles/nick')
