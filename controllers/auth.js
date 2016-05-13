@@ -196,10 +196,24 @@ var authTileset = function(req, res, next) {
   var tileset_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
-    return next()
-  } else if (!tileset_id || req.method !== 'GET') {
+    if (req.body.share && Object.keys(req.body).length > 1) {
+
+      return res.sendStatus(401)
+    }
+    else if (req.body.unshare && Object.keys(req.body).length > 1) {
+
+      return res.sendStatus(401)
+    }
+    else{
+
+      return next()
+    }
+  }
+  else if (!tileset_id || req.method !== 'GET') {
+
     return res.sendStatus(401)
-  } else {
+  }
+  else {
     Tileset.findOne({
       owner: req.params.username,
       tileset_id: req.params.tileset_id,
@@ -214,10 +228,14 @@ var authTileset = function(req, res, next) {
       }
 
       if (tileset.scopes[0] === 'private') {
+
         return res.sendStatus(401)
-      } else if (tileset.scopes[0] === 'public'){
+      }
+      else if (tileset.scopes[0] === 'public'){
+
         return next()
-      } else {
+      }
+      else {
         tileset.scopes.forEach(function(scope){
           Group.findOne({ group_id: scope}, function(err, group){
             if (err) {
@@ -228,10 +246,12 @@ var authTileset = function(req, res, next) {
               return res.sendStatus(404)
             }
 
-
             if (group.members.indexOf(req.user.username) > -1){
+
               return next()
-            } else {
+            }
+            else {
+
               return res.sendStatus(401)
             }
           })
