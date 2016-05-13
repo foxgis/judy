@@ -453,23 +453,6 @@ describe('分享样式模块', function(){
         })
     })
 
-    it('不当请求', function(done){
-      request(app)
-        .patch('/api/v1/sprites/nick/' + sprite_id)
-        .set('x-access-token', access_token)
-        .send({owner: 'judy'})
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
-
     it('私密样式取消分享', function(done){
       request(app)
         .patch('/api/v1/sprites/nick/' + sprite_id)

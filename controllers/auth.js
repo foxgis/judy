@@ -111,37 +111,8 @@ var authStyle = function(req, res, next) {
   var style_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
-    if (req.body.share && Object.keys(req.body).length > 1) {
 
-      return res.sendStatus(401)
-    }
-    else if (req.body.unshare && Object.keys(req.body).length > 1) {
-
-      return res.sendStatus(401)
-    }
-    else if (req.body.share && req.body.share !== 'public'){
-      Group.findOne({
-        group_id: req.body.share
-      }, function(err, group){
-        if (err) {
-          return res.status(500).json({ error:err})
-        }
-
-        if (!group){
-          return res.sendStatus(404)
-        }
-
-        if(group.members.indexOf(req.user.username) > -1){
-          return next()
-        } else {
-          return res.sendStatus(401)
-        }
-      })
-    }
-    else {
-
-      return next()
-    }
+    authSelf(req, res, next)
   }
   else if (!style_id || req.method !== 'GET') {
 
@@ -196,18 +167,8 @@ var authTileset = function(req, res, next) {
   var tileset_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
-    if (req.body.share && Object.keys(req.body).length > 1) {
 
-      return res.sendStatus(401)
-    }
-    else if (req.body.unshare && Object.keys(req.body).length > 1) {
-
-      return res.sendStatus(401)
-    }
-    else{
-
-      return next()
-    }
+    authSelf(req, res, next)
   }
   else if (!tileset_id || req.method !== 'GET') {
 
@@ -266,13 +227,11 @@ var authSprite = function(req, res, next) {
   var sprite_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
-    if (req.method === 'PATCH' && Object.keys(req.body).length > 1) {
-      return res.sendStatus(401)
-    }
 
-    return next()
+    authSelf(req, res, next)
   }
   else if (!sprite_id || req.method !== 'GET') {
+
     return res.sendStatus(401)
   }
   else {
@@ -290,10 +249,14 @@ var authSprite = function(req, res, next) {
       }
 
       if (sprite.scopes[0] === 'private') {
+
         return res.sendStatus(401)
-      } else if (sprite.scopes[0] === 'public'){
+      }
+      else if (sprite.scopes[0] === 'public'){
+
         return next()
-      } else {
+      }
+      else {
         sprite.scopes.forEach(function(scope){
           Group.findOne({ group_id: scope}, function(err, group){
             if (err) {
@@ -304,7 +267,6 @@ var authSprite = function(req, res, next) {
               return res.sendStatus(404)
             }
 
-
             if (group.members.indexOf(req.user.username) > -1){
               return next()
             } else {
@@ -312,6 +274,41 @@ var authSprite = function(req, res, next) {
             }
           })
         })
+      }
+    })
+  }
+}
+
+
+var authSelf = function(req, res, next) {
+  if (!req.body.share && !req.body.unshare) {
+
+    return next()
+  }
+  else if (Object.keys(req.body).length > 1) {
+
+    return res.sendStatus(401)
+  }
+  else if (req.body.unshare || req.body.share === 'public') {
+
+    return next()
+  }
+  else {
+    Group.findOne({
+      group_id: req.body.share
+    }, function(err, group){
+      if (err) {
+        return res.status(500).json({ error:err})
+      }
+
+      if (!group){
+        return res.sendStatus(404)
+      }
+
+      if(group.members.indexOf(req.user.username) > -1){
+        return next()
+      } else {
+        return res.sendStatus(401)
       }
     })
   }
