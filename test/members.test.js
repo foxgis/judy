@@ -297,6 +297,7 @@ describe('其他用户权限模块', function(){
           }
 
           res.body.owner.should.equal('nick')
+          should.not.exist(res.body.scopes)
 
           done()
         })
@@ -331,6 +332,7 @@ describe('其他用户权限模块', function(){
           }
 
           res.body.owner.should.equal('nick')
+          should.not.exist(res.body.scopes)
 
           done()
         })

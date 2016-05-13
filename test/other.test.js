@@ -266,9 +266,9 @@ describe('其他用户权限模块', function(){
               return done(err)
             }
 
-            res.body.scopes[0].should.equal('public')
             res.body.style_id.should.equal(style_id)
             res.body.owner.should.equal('nick')
+            should.not.exist(res.body.scopes)
 
             done()
           })
@@ -353,9 +353,9 @@ describe('其他用户权限模块', function(){
               return done(err)
             }
 
-            res.body.scopes[0].should.equal('public')
             res.body.sprite_id.should.equal(sprite_id)
             res.body.owner.should.equal('nick')
+            should.not.exist(res.body.scopes)
 
             done()
           })

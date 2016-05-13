@@ -32,7 +32,12 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(sprite)
+    if (req.user.username === req.params.username) {
+      return res.status(200).json(sprite)
+    }
+    else {
+      return res.status(200).json(_.omit(sprite.toJSON(), 'scopes'))
+    }
   })
 }
 
