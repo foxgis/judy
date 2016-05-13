@@ -27,30 +27,28 @@ describe('符号库模块', function() {
       })
   })
 
+  before('上传成功', function(done) {
+    request(app)
+      .post('/api/v1/uploads/nick')
+      .set('x-access-token', access_token)
+      .attach('aa', './test/fixtures/sprite.zip')
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.owner.should.equal('nick')
+        res.body.upload_id.should.exist
+
+        done()
+      })
+  })
+
   after('清除用户以及用户样式表信息', function() {
     User.remove({ username: 'nick' }).exec()
     Upload.remove({ owner: 'nick' }).exec()
     Sprite.remove({ owner: 'nick' }).exec()
-  })
-
-  describe('上传符号库文件', function() {
-    it('上传成功', function(done) {
-      request(app)
-        .post('/api/v1/uploads/nick')
-        .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/sprite.zip')
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.owner.should.equal('nick')
-          res.body.upload_id.should.exist
-
-          done()
-        })
-    })
   })
 
   describe('获取符号库列表', function() {

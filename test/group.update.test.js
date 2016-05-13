@@ -9,6 +9,60 @@ describe('群组更新模块', function(){
   var judy_access_token
   var group_id
 
+  before('注册nick', function(done){
+    request(app)
+      .post('/api/v1/users')
+      .send({ username: 'nick', password: '123456'})
+      .expect(200)
+      .end(function(err,res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.username.should.equal('nick')
+        nick_access_token = res.body.access_token
+
+        done()
+      })
+  })
+
+  before('注册judy', function(done){
+    request(app)
+      .post('/api/v1/users')
+      .send({ username: 'judy', password: '123456'})
+      .expect(200)
+      .end(function(err,res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.username.should.equal('judy')
+        judy_access_token = res.body.access_token
+
+        done()
+      })
+  })
+
+  before('新建群组', function(done){
+    request(app)
+      .post('/api/v1/groups/nick')
+      .set('x-access-token', nick_access_token)
+      .send({ name: 'police'})
+      .expect(200)
+      .end(function(err,res){
+        if (err) {
+          return done(err)
+        }
+
+        res.body.admin.should.equal('nick')
+        res.body.name.should.equal('police')
+
+        group_id = res.body.group_id
+
+        done()
+      })
+  })
+
   after('清理', function(){
     User.remove({username: 'nick'}).exec()
     User.remove({username: 'judy'}).exec()
@@ -16,167 +70,87 @@ describe('群组更新模块', function(){
     Group.remove({admin: 'judy'}).exec()
   })
 
-  describe('注册用户', function(){
-    it('注册nick', function(done){
-      request(app)
-        .post('/api/v1/users')
-        .send({ username: 'nick', password: '123456'})
-        .expect(200)
-        .end(function(err,res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.username.should.equal('nick')
-          nick_access_token = res.body.access_token
-
-          done()
-        })
-    })
-
-    it('注册judy', function(done){
-      request(app)
-        .post('/api/v1/users')
-        .send({ username: 'judy', password: '123456'})
-        .expect(200)
-        .end(function(err,res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.username.should.equal('judy')
-          judy_access_token = res.body.access_token
-
-          done()
-        })
-    })
-  })
-
-  describe('群组更新', function(){
-    before('新建群组', function(done){
-      request(app)
-        .post('/api/v1/groups/nick')
-        .set('x-access-token', nick_access_token)
-        .send({ name: 'police'})
-        .expect(200)
-        .end(function(err,res){
-          if (err) {
-            return done(err)
-          }
-
-          res.body.admin.should.equal('nick')
-          res.body.name.should.equal('police')
-
-          group_id = res.body.group_id
-
-          done()
-        })
-    })
-    
-    describe('加入群组', function(){
-      describe('申请加入', function(){
-        it('申请成功', function(done){
-          request(app)
-            .patch('/api/v1/groups/nick/' + group_id)
-            .set('x-access-token', judy_access_token)
-            .send({join: true})
-            .expect(200)
-            .end(function(err, res){
-              if (err){
-                return done(err)
-              }
-
-              res.body.admin.should.equal('nick')
-              res.body.applicants[0].should.equal('judy')
-
-              done()
-            })
-        })
-
-        it('重复申请', function(done){
-          request(app)
-            .patch('/api/v1/groups/nick/' + group_id)
-            .set('x-access-token', judy_access_token)
-            .send({join: true})
-            .expect(200)
-            .end(function(err, res){
-              if (err){
-                return done(err)
-              }
-
-              res.body.admin.should.equal('nick')
-              res.body.group_id.should.equal(group_id)
-
-              done()
-            })
-        })
-
-        it('申请失败', function(done){
-          request(app)
-            .patch('/api/v1/groups/nick/' + group_id)
-            .set('x-access-token', judy_access_token)
-            .send({join: false})
-            .expect(400)
-            .end(function(err, res){
-              if(err){
-                return done(err)
-              }
-
-              res.body.should.be.empty
-
-              done()
-            })
-        })
-      })
-
-      describe('加入成功', function(){
-        it('添加judy', function(done){
-          request(app)
-            .patch('/api/v1/groups/nick/' + group_id)
-            .set('x-access-token', nick_access_token)
-            .send({add: 'judy'})
-            .expect(200)
-            .end(function(err, res){
-              if (err){
-                return done(err)
-              }
-
-              res.body.admin.should.equal('nick')
-              res.body.members[1].should.equal('judy')
-
-              done()
-            })
-        })
-      }) 
-    })
-
-    describe('转移管理员身份', function(){
-      it('操作成功', function(done){
+  describe('加入群组', function(){
+    describe('申请加入', function(){
+      it('申请失败', function(done){
         request(app)
           .patch('/api/v1/groups/nick/' + group_id)
-          .set('x-access-token', nick_access_token)
-          .send({admin: 'judy'})
+          .set('x-access-token', judy_access_token)
+          .send({join: false})
+          .expect(400)
+          .end(function(err, res){
+            if(err){
+              return done(err)
+            }
+
+            res.body.should.be.empty
+
+            done()
+          })
+      })
+
+      it('申请成功', function(done){
+        request(app)
+          .patch('/api/v1/groups/nick/' + group_id)
+          .set('x-access-token', judy_access_token)
+          .send({join: true})
           .expect(200)
           .end(function(err, res){
             if (err){
               return done(err)
             }
 
-            res.body.admin.should.equal('judy')
-            res.body.members[0].should.equal('nick')
+            res.body.admin.should.equal('nick')
+            res.body.applicants[0].should.equal('judy')
+
+            done()
+          })
+      })
+
+      it('重复申请', function(done){
+        request(app)
+          .patch('/api/v1/groups/nick/' + group_id)
+          .set('x-access-token', judy_access_token)
+          .send({join: true})
+          .expect(200)
+          .end(function(err, res){
+            if (err){
+              return done(err)
+            }
+
+            res.body.admin.should.equal('nick')
+            res.body.group_id.should.equal(group_id)
 
             done()
           })
       })
     })
 
-    describe('退出群组', function(){
-      it('退出成功', function(done){
+    describe('添加judy', function(){
+      it('加入成功', function(done){
         request(app)
-          .patch('/api/v1/groups/judy/' + group_id)
+          .patch('/api/v1/groups/nick/' + group_id)
           .set('x-access-token', nick_access_token)
-          .send({quit: true})
+          .send({add: 'judy'})
           .expect(200)
+          .end(function(err, res){
+            if (err){
+              return done(err)
+            }
+
+            res.body.admin.should.equal('nick')
+            res.body.members[1].should.equal('judy')
+
+            done()
+          })
+      })
+
+      it('加入失败', function(done){
+        request(app)
+          .patch('/api/v1/groups/nick/' + group_id)
+          .set('x-access-token', nick_access_token)
+          .send({add: 'none_exist'})
+          .expect(400)
           .end(function(err, res){
             if (err){
               return done(err)
@@ -187,14 +161,107 @@ describe('群组更新模块', function(){
             done()
           })
       })
+    }) 
+  })
+
+  describe('转移管理员身份', function(){
+    it('操作失败', function(done){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', nick_access_token)
+        .send({admin: 'none_exist'})
+        .expect(401)
+        .end(function(err, res){
+          if (err){
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
     })
 
-    describe('删除用户', function(){
-      before('申请加入', function(done){
+    it('操作成功', function(done){
+      request(app)
+        .patch('/api/v1/groups/nick/' + group_id)
+        .set('x-access-token', nick_access_token)
+        .send({admin: 'judy'})
+        .expect(200)
+        .end(function(err, res){
+          if (err){
+            return done(err)
+          }
+
+          res.body.admin.should.equal('judy')
+          res.body.members[0].should.equal('nick')
+
+          done()
+        })
+    })
+  })
+
+  describe('退出群组', function(){
+    it('退出失败', function(done){
+      request(app)
+        .patch('/api/v1/groups/judy/' + group_id)
+        .set('x-access-token', nick_access_token)
+        .send({quit: false})
+        .expect(401)
+        .end(function(err, res){
+          if (err){
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
+
+    it('退出成功', function(done){
+      request(app)
+        .patch('/api/v1/groups/judy/' + group_id)
+        .set('x-access-token', nick_access_token)
+        .send({quit: true})
+        .expect(200)
+        .end(function(err, res){
+          if (err){
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
+  })
+
+  describe('删除用户', function(){
+    before('申请加入', function(done){
+      request(app)
+        .patch('/api/v1/groups/judy/' + group_id)
+        .set('x-access-token', nick_access_token)
+        .send({join: true})
+        .expect(200)
+        .end(function(err, res){
+          if (err){
+            return done(err)
+          }
+
+          res.body.admin.should.equal('judy')
+          res.body.applicants[0].should.equal('nick')
+
+          done()
+        })
+    })
+
+    describe('删除成功', function(){
+      before('添加nick', function(done){
         request(app)
           .patch('/api/v1/groups/judy/' + group_id)
-          .set('x-access-token', nick_access_token)
-          .send({join: true})
+          .set('x-access-token', judy_access_token)
+          .send({add: 'nick'})
           .expect(200)
           .end(function(err, res){
             if (err){
@@ -202,48 +269,45 @@ describe('群组更新模块', function(){
             }
 
             res.body.admin.should.equal('judy')
-            res.body.applicants[0].should.equal('nick')
+            res.body.members[1].should.equal('nick')
 
             done()
           })
       })
 
-      describe('删除成功', function(){
-        before('添加nick', function(done){
-          request(app)
-            .patch('/api/v1/groups/judy/' + group_id)
-            .set('x-access-token', judy_access_token)
-            .send({add: 'nick'})
-            .expect(200)
-            .end(function(err, res){
-              if (err){
-                return done(err)
-              }
+      it('删除失败', function(done){
+        request(app)
+          .patch('/api/v1/groups/judy/' + group_id)
+          .set('x-access-token', judy_access_token)
+          .send({delete: 'none_exist'})
+          .expect(400)
+          .end(function(err, res){
+            if (err){
+              return done(err)
+            }
 
-              res.body.admin.should.equal('judy')
-              res.body.members[1].should.equal('nick')
+            res.body.should.be.empty
 
-              done()
-            })
-        })
+            done()
+          })
+      })
 
-        it('删除成功', function(done){
-          request(app)
-            .patch('/api/v1/groups/judy/' + group_id)
-            .set('x-access-token', judy_access_token)
-            .send({delete: 'nick'})
-            .expect(200)
-            .end(function(err, res){
-              if (err){
-                return done(err)
-              }
+      it('删除成功', function(done){
+        request(app)
+          .patch('/api/v1/groups/judy/' + group_id)
+          .set('x-access-token', judy_access_token)
+          .send({delete: 'nick'})
+          .expect(200)
+          .end(function(err, res){
+            if (err){
+              return done(err)
+            }
 
-              res.body.admin.should.equal('judy')
-              res.body.members.length.should.equal(1)
+            res.body.admin.should.equal('judy')
+            res.body.members.length.should.equal(1)
 
-              done()
-            })
-        })
+            done()
+          })
       })
     })
   })
