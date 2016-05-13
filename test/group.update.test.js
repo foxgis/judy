@@ -144,44 +144,10 @@ describe('群组更新模块', function(){
             done()
           })
       })
-
-      it('加入失败', function(done){
-        request(app)
-          .patch('/api/v1/groups/nick/' + group_id)
-          .set('x-access-token', nick_access_token)
-          .send({add: 'none_exist'})
-          .expect(400)
-          .end(function(err, res){
-            if (err){
-              return done(err)
-            }
-
-            res.body.should.be.empty
-
-            done()
-          })
-      })
     }) 
   })
 
   describe('转移管理员身份', function(){
-    it('操作失败', function(done){
-      request(app)
-        .patch('/api/v1/groups/nick/' + group_id)
-        .set('x-access-token', nick_access_token)
-        .send({admin: 'none_exist'})
-        .expect(401)
-        .end(function(err, res){
-          if (err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
-
     it('操作成功', function(done){
       request(app)
         .patch('/api/v1/groups/nick/' + group_id)
@@ -270,23 +236,6 @@ describe('群组更新模块', function(){
 
             res.body.admin.should.equal('judy')
             res.body.members[1].should.equal('nick')
-
-            done()
-          })
-      })
-
-      it('删除失败', function(done){
-        request(app)
-          .patch('/api/v1/groups/judy/' + group_id)
-          .set('x-access-token', judy_access_token)
-          .send({delete: 'none_exist'})
-          .expect(400)
-          .end(function(err, res){
-            if (err){
-              return done(err)
-            }
-
-            res.body.should.be.empty
 
             done()
           })

@@ -162,7 +162,7 @@ describe('群组模块', function(){
 
     it('更新失败', function(done){
       request(app)
-        .patch('/api/v1/groups/nick/bad_group_id')
+        .patch('/api/v1/groups/nick/' + group_id)
         .set('x-access-token', access_token)
         .send({ bad_request: 'bad'})
         .expect(400)
