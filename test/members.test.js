@@ -4,6 +4,7 @@ var User = require('../models/user')
 var Upload = require('../models/upload')
 var Style = require('../models/style')
 var Sprite = require('../models/sprite')
+var Group = require('../models/group')
 var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 
@@ -12,6 +13,7 @@ describe('其他用户权限模块', function(){
   var judy_access_token
   var style_id
   var sprite_id
+  var group_id
 
   before('注册nick', function(done){
     request(app)
@@ -27,6 +29,26 @@ describe('其他用户权限模块', function(){
         res.body.access_token.should.exist
 
         nick_access_token = res.body.access_token
+
+        done()
+      })
+  })
+
+  before('新建群组', function(done){
+    request(app)
+      .post('/api/v1/groups/nick')
+      .set('x-access-token', nick_access_token)
+      .send({name: 'police'})
+      .expect(200)
+      .end(function(err, res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.admin.should.equal('nick')
+        res.body.group_id.should.exist
+
+        group_id = res.body.group_id
 
         done()
       })
@@ -91,6 +113,24 @@ describe('其他用户权限模块', function(){
     })
   })
 
+  before('分享样式到组', function(done){
+    request(app)
+      .patch('/api/v1/styles/nick/' + style_id)
+      .set('x-access-token', nick_access_token)
+      .send({share: group_id})
+      .expect(200)
+      .end(function(err, res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.owner.should.equal('nick')
+        res.body.scopes[0].should.equal(group_id)
+
+        done()
+      })
+  })
+
   before('获取符号库信息', function(done){
     request(app)
       .get('/api/v1/sprites/nick')
@@ -104,6 +144,24 @@ describe('其他用户权限模块', function(){
         res.body[0].owner.should.equal('nick')
 
         sprite_id = res.body[0].sprite_id
+
+        done()
+      })
+  })
+
+  before('分享符号库到组', function(done){
+    request(app)
+      .patch('/api/v1/sprites/nick/' + sprite_id)
+      .set('x-access-token', nick_access_token)
+      .send({share: group_id})
+      .expect(200)
+      .end(function(err, res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.owner.should.equal('nick')
+        res.body.scopes[0].should.equal(group_id)
 
         done()
       })
@@ -128,47 +186,53 @@ describe('其他用户权限模块', function(){
       })
   })
 
+  before('申请加入群组', function(done){
+    request(app)
+      .patch('/api/v1/groups/nick/' + group_id)
+      .set('x-access-token', judy_access_token)
+      .send({join: true})
+      .expect(200)
+      .end(function(err, res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.admin.should.equal('nick')
+        res.body.applicants[0].should.equal('judy')
+
+        done()
+      })
+  })
+
+  before('群组添加新成员', function(done){
+    request(app)
+      .patch('/api/v1/groups/nick/' + group_id)
+      .set('x-access-token', nick_access_token)
+      .send({add: 'judy'})
+      .expect(200)
+      .end(function(err, res){
+        if(err){
+          return done(err)
+        }
+
+        res.body.members[1].should.equal('judy')
+        res.body.applicants.should.be.empty
+
+        done()
+      })
+  })
+
   after('清理', function(){
     User.remove({username: 'nick'}).exec()
     Upload.remove({owner: 'nick'}).exec()
     Style.remove({owner: 'nick'}).exec()
     Sprite.remove({owner: 'nick'}).exec()
     User.remove({username: 'judy'}).exec()
+    Group.remove({admin: 'nick'}).exec()
+    Group.remove({admin: 'judy'}).exec()
   })
 
-  describe('获取用户信息', function(){
-    it('获取信息成功', function(done){
-      request(app)
-        .get('/api/v1/users/nick')
-        .set('x-access-token', judy_access_token)
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.username.should.equal('nick')
-
-          done()
-        })
-    })
-
-    it('获取失败', function(done) {
-      request(app)
-        .get('/api/v1/users/no_this_user')
-        .set('x-access-token', judy_access_token)
-        .expect(404)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('没有这个用户')
-
-          done()
-        })
-    })
-
+  describe('操作用户信息', function(){
     it('更新失败', function(done){
       request(app)
         .patch('/api/v1/users/nick')
@@ -222,73 +286,20 @@ describe('其他用户权限模块', function(){
         })
     })
 
-    it('获取私密样式失败', function(done){
+    it('获取样式成功', function(done){
       request(app)
         .get('/api/v1/styles/nick/' + style_id)
         .set('x-access-token', judy_access_token)
-        .expect(401)
+        .expect(200)
         .end(function(err, res) {
           if (err) {
             return done(err)
           }
 
-          res.body.should.be.empty
+          res.body.owner.should.equal('nick')
 
           done()
         })
-    })
-
-    describe('获取公开样式', function(){
-      before('公开分享样式', function(done){
-        request(app)
-          .patch('/api/v1/styles/nick/' + style_id)
-          .set('x-access-token', nick_access_token)
-          .send({share: 'public'})
-          .expect(200)
-          .end(function(err, res){
-            if(err){
-              return done(err)
-            }
-
-            res.body.scopes[0].should.equal('public')
-
-            done()
-          })
-      })
-
-      it('获取成功', function(done){
-        request(app)
-          .get('/api/v1/styles/nick/' + style_id)
-          .set('x-access-token', judy_access_token)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            res.body.scopes[0].should.equal('public')
-            res.body.style_id.should.equal(style_id)
-            res.body.owner.should.equal('nick')
-
-            done()
-          })
-      })
-
-      it('获取失败', function(done){
-        request(app)
-          .get('/api/v1/styles/nick/bad_style_id')
-          .set('x-access-token', judy_access_token)
-          .expect(404)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            res.body.should.be.empty
-
-            done()
-          })
-      })
     })
   })
 
@@ -309,11 +320,27 @@ describe('其他用户权限模块', function(){
         })
     })
 
-    it('获取私密符号库失败', function(done){
+    it('获取符号库成功', function(done){
       request(app)
         .get('/api/v1/sprites/nick/' + sprite_id)
         .set('x-access-token', judy_access_token)
-        .expect(401)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.owner.should.equal('nick')
+
+          done()
+        })
+    })
+
+    it('获取失败', function(done){
+      request(app)
+        .get('/api/v1/sprites/nick/bad_sprite_id')
+        .set('x-access-token', judy_access_token)
+        .expect(404)
         .end(function(err, res) {
           if (err) {
             return done(err)
@@ -325,73 +352,20 @@ describe('其他用户权限模块', function(){
         })
     })
 
-    describe('获取公开符号库', function(){
-      before('公开分享符号库', function(done){
-        request(app)
-          .patch('/api/v1/sprites/nick/' + sprite_id)
-          .set('x-access-token', nick_access_token)
-          .send({share: 'public'})
-          .expect(200)
-          .end(function(err, res){
-            if(err){
-              return done(err)
-            }
+    it('下载成功', function(done){
+      request(app)
+        .get('/api/v1/sprites/nick/' + sprite_id +'/sprite@2x.json')
+        .set('x-access-token', judy_access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-            res.body.scopes[0].should.equal('public')
-
-            done()
-          })
-      })
-
-      it('获取成功', function(done){
-        request(app)
-          .get('/api/v1/sprites/nick/' + sprite_id)
-          .set('x-access-token', judy_access_token)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            res.body.scopes[0].should.equal('public')
-            res.body.sprite_id.should.equal(sprite_id)
-            res.body.owner.should.equal('nick')
-
-            done()
-          })
-      })
-
-      it('下载成功', function(done){
-        request(app)
-          .get('/api/v1/sprites/nick/' + sprite_id +'/sprite@2x.json')
-          .set('x-access-token', judy_access_token)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            res.body.london.pixelRatio.should.equal(2)
-
-            done()
-          })
-      })
-
-      it('获取失败', function(done){
-        request(app)
-          .get('/api/v1/styles/nick/bad_style_id')
-          .set('x-access-token', judy_access_token)
-          .expect(404)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            res.body.should.be.empty
-
-            done()
-          })
-      })
+          res.body.london.pixelRatio.should.equal(2)
+ 
+          done()
+        })
     })
   })
 })
