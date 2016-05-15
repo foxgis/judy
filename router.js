@@ -8,6 +8,7 @@ var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
 var groups = require('./controllers/group')
+var admin = require('./controllers/admin')
 
 
 var router = express.Router()
@@ -61,5 +62,8 @@ router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
+
+// 行政区划
+router.get('/admin.json', admin.retrieve)
 
 module.exports = router
