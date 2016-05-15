@@ -8,8 +8,8 @@ var TilesetSchema = new mongoose.Schema({
   owner: String,
   scopes: { type: [String], default: ['private'] },
   is_deleted: { type: Boolean, default: false },
-  uri: String,
   tags: [String],
+  external_uri: String,
 
   // tilejson spec
   tilejson: { type: String, default: '2.1.0' },
@@ -19,28 +19,27 @@ var TilesetSchema = new mongoose.Schema({
   attribution: String,
   template: String,
   legend: String,
+  formatter: String,
   scheme: { type: String, default: 'xyz' },
   tiles: [String],
+  grids: [String],
+  data: [String],
   minzoom: { type: Number, default: 0 },
   maxzoom: { type: Number, default: 22 },
+  resolution: { type: Number, default: 4 },
   bounds: { type: [Number], default: [-180, -90, 180, 90] },
   center: [Number],
 
   filesize: Number,
   format: String,
-  vector_layers: [mongoose.Schema.Types.Mixed]
-  // vector_layers: [{
-  //   id: String,
-  //   description: String,
-  //   minzoom: Number,
-  //   maxzoom: Number,
-  //   fields: [{
-  //     name: String,
-  //     type: String,
-  //     description: String,
-  //     values: [mongoose.Schema.Types.Mixed]
-  //   }]
-  // }]
+  vector_layers: [{
+    _id: false,
+    id: String,
+    description: String,
+    minzoom: Number,
+    maxzoom: Number,
+    fields: [mongoose.Schema.Types.Mixed]
+  }]
 }, { timestamps: true })
 
 
