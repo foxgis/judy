@@ -52,6 +52,7 @@
     "tilelive-merge": "^1.0.3",
     "tilelive-modules": "^0.3.0",
     "tilelive-null": "^0.1.0",
+    "tilelive-omnivore": "^2.5.1",
     "tilelive-overlay": "^0.7.0",
     "tilelive-raster": "^0.3.0",
     "tilelive-solid": "^0.1.2",
