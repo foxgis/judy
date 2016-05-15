@@ -1,5 +1,6 @@
-/* eslint-disable no-unused-vars */
 var Font = require('../models/font')
+var fs = require('fs')
+var path = require('path')
 
 
 module.exports.list = function(req, res) {
@@ -18,5 +19,13 @@ module.exports.list = function(req, res) {
 
 
 module.exports.retrieve = function(req, res) {
+  var filePath = path.join('fonts',req.params.fontstack, req.params.range + '.pbf')
 
+  fs.readFile(filePath, function(err, pbf){
+    if (err) {
+      return res.status(500).json({ error: err})
+    }
+
+    return res.status(200).send(pbf)
+  })
 }
