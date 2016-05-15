@@ -11,18 +11,18 @@ describe('上传模块', function() {
 
   before('注册用户',function(done){
     request(app)
-        .post('/api/v1/users')
-        .send({ username: 'nick', password: '123456' })
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+      .post('/api/v1/users')
+      .send({ username: 'nick', password: '123456' })
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-          access_token = res.body.access_token
+        access_token = res.body.access_token
 
-          done()
-        })
+        done()
+      })
   })
 
   after('清理', function() {
@@ -92,6 +92,22 @@ describe('上传模块', function() {
           done()
         })
     })
+
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/uploads/nick/bad_upload_id')
+        .set('x-access-token', access_token)
+        .expect(404)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
   })
 
   describe('下载文件', function() {
@@ -110,80 +126,39 @@ describe('上传模块', function() {
           done()
         })
     })
-  })
 
-  describe('删除文件', function() {
-    it('删除成功', function() {
+    it('下载失败', function(done) {
       request(app)
-        .delete('/api/v1/uploads/nick/' + upload_id)
+        .get('/api/v1/uploads/nick/bad_upload_id/raw')
         .set('x-access-token', access_token)
-        .expect(204)
-    })
-  })
-
-  describe('操作其他用户文件', function(){
-    var judy_access_token
-
-    before('注册judy', function(done){
-      request(app)
-        .post('/api/v1/users')
-        .send({ username: 'judy', password: '123456' })
-        .expect(200)
+        .expect(404)
         .end(function(err, res) {
           if (err) {
             return done(err)
           }
 
-          res.body.username.should.equal('judy')
-          res.body.access_token.should.exist
-
-          judy_access_token = res.body.access_token
+          res.body.should.be.empty
 
           done()
         })
     })
+  })
 
-    after('清理', function(){
-      User.remove({ username: 'judy'}).exec()
-      Upload.remove({ owner: 'judy'}).exec()
-    })
+  describe('删除文件', function() {
+    it('删除成功', function(done) {
+      request(app)
+        .delete('/api/v1/uploads/nick/' + upload_id)
+        .set('x-access-token', access_token)
+        .expect(204)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-    describe('操作其他用户文件', function(){
-      it('获取上传列表失败', function(){
-        request(app)
-          .get('/api/v1/uploads/nick')
-          .set('x-access-token', judy_access_token)
-          .expect(401)
-      })
+          res.body.should.be.empty
 
-      it('上传失败', function(){
-        request(app)
-          .post('/api/v1/uploads/nick')
-          .set('x-access-token', judy_access_token)
-          .attach('aa', './test/fixtures/create.txt')
-          .expect(401)
-      })
-
-      it('获取上传状态失败', function() {
-        request(app)
-          .get('/api/v1/uploads/nick/' + upload_id)
-          .set('x-access-token', judy_access_token)
-          .expect(401)
-      })
-
-      it('下载失败', function() {
-        request(app)
-          .get('/api/v1/uploads/nick/' + upload_id + '/raw')
-          .set('x-access-token', judy_access_token)
-          .expect(401)
-      })
-
-      it('删除失败', function() {
-        request(app)
-          .delete('/api/v1/uploads/nick/' + upload_id)
-          .set('x-access-token', judy_access_token)
-          .expect(401)
-      })
+          done()
+        })
     })
   })
 })

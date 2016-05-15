@@ -36,17 +36,13 @@ module.exports.create = function(req, res) {
       members: [req.params.username]
     })
 
-    if (req.body.members){
-      newGroup.members = req.body.members
-    }
-
     newGroup.save(function(err){
       if (err) {
         return res.status(500).json({ error: err})
       }
-    })
 
-    return res.status(200).json(newGroup)
+      return res.status(200).json(newGroup)
+    })
   })
 }
 
@@ -71,7 +67,11 @@ module.exports.retrieve = function(req, res){
 
 module.exports.update = function(req, res) {
   var filter = ['join', 'quit', 'name', 'admin', 'add', 'delete']
-  _.pick(req.body, filter)
+  req.body = _.pick(req.body, filter)
+
+  if (_.isEmpty(req.body)) {
+    return res.sendStatus(400)
+  }
 
   Group.findOne({
     admin: req.params.username,
@@ -91,7 +91,8 @@ module.exports.update = function(req, res) {
       }
 
       if (req.body.add) {
-        if (group.members.indexOf(req.body.add) > -1) {
+        if (group.members.indexOf(req.body.add) > -1
+          || group.applicants.indexOf(req.body.add) < 0) {
 
           return res.sendStatus(400)
         }
@@ -129,8 +130,8 @@ module.exports.update = function(req, res) {
       })
 
       return res.status(200).json(group)
-
-    } else if (group.members.indexOf(req.user.username) > -1) {
+    }
+    else if (group.members.indexOf(req.user.username) > -1) {
       if (!req.body.quit || req.body.quit !== true) {
         return res.sendStatus(401)
       }
@@ -143,16 +144,16 @@ module.exports.update = function(req, res) {
       })
 
       return res.sendStatus(200)
+    }
+    else if (req.body.join !== true) {
 
-    } else if (group.applicants.indexOf(req.user.username) > -1) {
+      return res.sendStatus(400)
+    }
+    else if (group.applicants.indexOf(req.user.username) > -1) {
 
       return res.status(200).json(group)
-
-    } else {
-      if(!req.body.join || req.body.join !== true) {
-        return res.sendStatus(400)
-      }
-
+    }
+    else {
       group.applicants.push(req.user.username)
       group.save(function(err){
         if (err) {

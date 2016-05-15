@@ -49,7 +49,12 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(style)
+    if (req.user.username === req.params.username) {
+      return res.status(200).json(style)
+    }
+    else {
+      return res.status(200).json(_.omit(style.toJSON(), 'scopes'))
+    }
   })
 }
 
@@ -57,26 +62,96 @@ module.exports.retrieve = function(req, res) {
 module.exports.update = function(req, res) {
   var filter = ['_id', 'style_id', 'owner', 'createdAt', 'updatedAt', '__v']
 
-  Style.findOneAndUpdate({
-    style_id: req.params.style_id,
-    owner: req.params.username,
-    is_deleted: false
-  }, _.omit(req.body, filter), { new: true }, function(err, style) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
+  if (!req.body.share && !req.body.unshare) {
+    Style.findOneAndUpdate({
+      style_id: req.params.style_id,
+      owner: req.params.username,
+      is_deleted: false
+    }, _.omit(req.body, filter), { new: true }, function(err, style) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
 
-    if (!style) {
-      return res.sendStatus(404)
-    }
+      if (!style) {
+        return res.sendStatus(404)
+      }
 
-    res.status(200).json(style)
-  })
+      res.status(200).json(style)
+    })
+  }
+  else {
+    Style.findOne({
+      style_id: req.params.style_id,
+      owner: req.params.username,
+      is_deleted: false
+    }, function(err, style){
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!style) {
+        return res.sendStatus(404)
+      }
+
+      if (req.body.share === 'public') {
+        if (style.scopes[0] === 'public') {
+          return res.status(200).json(style)
+        }
+        else if (style.scopes[0] === 'private') {
+          style.scopes.splice(0, 1, 'public')
+        }
+        else {
+          style.scopes.splice(0, 0, 'public')
+        }
+      }
+      else if (req.body.share && req.body.share !== 'public') {
+        if (style.scopes.indexOf(req.body.share) > -1) {
+          return res.status(200).json(style)
+        } 
+        else if (style.scopes[0] === 'private') {
+          style.scopes.splice(0, 1, req.body.share)
+        }
+        else {
+          style.scopes.push(req.body.share)
+        }
+      }
+      else if (req.body.unshare === 'public') {
+        if (style.scopes[0] !== 'public') {
+          return res.status(200).json(style)
+        }
+        else if (style.scopes.length === 1) {
+          style.scopes = ['private']
+        }
+        else {
+          style.scopes.splice(0, 1)
+        }
+      }
+      else {
+        if (style.scopes.indexOf(req.body.unshare) < 0) {
+          return res.status(200).json(style)
+        } 
+        else if (style.scopes.length === 1) {
+          style.scopes = ['private']
+        }
+        else {
+          style.scopes.splice(style.scopes.indexOf(req.body.unshare), 1)
+        }
+      }
+
+      style.save(function(err){
+        if (err) {
+          return res.status(500).json({ error: err})
+        }
+
+        return res.status(200).json(style)
+      })
+    })
+  }
 }
 
 
 module.exports.delete = function(req, res) {
-  Style.findOneAndRemove({
+  Style.findOneAndUpdate({
     owner: req.params.username,
     style_id: req.params.style_id,
     is_deleted: false
