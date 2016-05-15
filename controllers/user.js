@@ -8,6 +8,11 @@ module.exports.create = function(req, res) {
     return
   }
 
+  if (req.body.username === 'foxgis') {
+    res.status(400).json({ error: '该用户名已经被注册'})
+    return
+  }
+
   if (req.body.password.length < 6) {
     res.status(400).json({ error: '密码长度过短' })
     return
