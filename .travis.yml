@@ -24,6 +24,6 @@ before_install:
 after_success:
   - chmod 600 ~/.ssh/id_rsa
   - echo -e "Host bygis.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - tar -jcf judy.tar.bz2 ../judy
+  - tar -jcf judy.tar.bz2 *
   - scp judy.tar.bz2 bygis@bygis.com
-  - ssh bygis@bygis.com 'tar -jxf judy.tar.bz2'
+  - ssh bygis@bygis.com 'tar -jxf judy.tar.bz2 -C ./judy'
