@@ -9,7 +9,7 @@ var FontSchema = new mongoose.Schema({
   is_deleted: { type: Boolean, default: false},
   scopes: { type: [String], default: ['private'] },
 
-  name: { type: String, index: { unique: true } }
+  name: String
 }, { timestamps: true })
 
 

@@ -1,6 +1,7 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
 var Style = require('../models/style')
+var Group = require('../models/group')
 
 
 module.exports.list = function(req, res) {
@@ -147,6 +148,78 @@ module.exports.update = function(req, res) {
       })
     })
   }
+}
+
+
+module.exports.search = function(req, res) {
+  Style.find({
+    tags: req.body.search
+  }, function(err, styles){
+    if (err) {
+      return res.status(500).json({ error: err})
+    }
+
+    if (!styles) {
+      return res.sendStatus(404)
+    }
+
+    (function stylesLoop(i, callback){
+      if (i < styles.length) {
+        var style = styles[i]
+
+        if (style.owner !== req.user.username && style.scopes[0] === 'private') {
+          styles.splice(styles.indexOf(style),1)
+          stylesLoop(i+1, callback)
+        }
+        else if (style.owner !== req.user.username && style.scopes[0] !== 'public') {
+          style.scopes.forEach(function(scope){
+            Group.findOne({
+              group_id: scope
+            }, function(err, group) {
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
+
+              if (!group || group.members.indexOf(req.user.username) < 0) {
+                styles.splice(styles.indexOf(style),1)
+              }
+
+              stylesLoop(i+1, callback)
+            })
+          })
+        }
+      }
+    }(0, function(){ return res.status(200).send(styles)}))
+
+    var i = 0
+
+    if (i < styles.length) {
+      i++
+      var style = styles[i]
+
+      if (style.owner !== req.user.username && style.scopes[0] === 'private') {
+        styles.splice(styles.indexOf(style),1)
+      }
+      else if (style.owner !== req.user.username && style.scopes[0] !== 'public') {
+        style.scopes.forEach(function(scope){
+          Group.findOne({
+            group_id: scope
+          }, function(err, group) {
+            if (err) {
+              return res.status(500).json({ error: err})
+            }
+
+            if (!group || group.members.indexOf(req.user.username) < 0) {
+              styles.splice(styles.indexOf(style),1)
+            }
+          })
+        })
+      }
+    }
+    else {
+      return res.status(200).send(styles)
+    }
+  })
 }
 
 

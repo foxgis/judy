@@ -141,23 +141,25 @@ var authStyle = function(req, res, next) {
         return next()
       }
       else {
-        style.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < style.scopes.length) {
+            Group.findOne({ group_id: style.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
-              return next()
-            } else {
-              return res.sendStatus(401)
-            }
-          })
-        })
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
+
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -198,26 +200,25 @@ var authTileset = function(req, res, next) {
         return next()
       }
       else {
-        tileset.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < tileset.scopes.length) {
+            Group.findOne({ group_id: tileset.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
 
-              return next()
-            }
-            else {
-
-              return res.sendStatus(401)
-            }
-          })
-        })
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -255,23 +256,25 @@ var authFonts = function(req, res, next) {
         return next()
       }
       else {
-        font.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < font.scopes.length) {
+            Group.findOne({ group_id: font.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
-              return next()
-            } else {
-              return res.sendStatus(401)
-            }
-          })
-        })
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
+
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -312,23 +315,25 @@ var authSprite = function(req, res, next) {
         return next()
       }
       else {
-        sprite.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < sprite.scopes.length) {
+            Group.findOne({ group_id: sprite.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
-              return next()
-            } else {
-              return res.sendStatus(401)
-            }
-          })
-        })
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
+
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -361,8 +366,11 @@ var authSelf = function(req, res, next) {
       }
 
       if(group.members.indexOf(req.user.username) > -1){
+
         return next()
-      } else {
+      }
+      else {
+
         return res.sendStatus(401)
       }
     })
