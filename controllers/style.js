@@ -82,74 +82,47 @@ module.exports.update = function(req, res) {
 
 
 module.exports.search = function(req, res) {
-  var styles = new Array
+  var page = 1
+  if (req.query.page) {
+    page = req.query.page
+  }
 
-  (function loop(i, callback){
-    if (i < 1) {
-      Group.find({ members: req.user.username }
-        , function(err, groups) {
-          if (err) {
-            return res.status(500).json({ error: err})
-          }
+  var pagesize = 20
+  var finalStyles = new Array
+  var filter = ['style_id','owner','version','name','createdAt','updatedAt','tags']
 
-          if (!groups) {
-            Style.find({
-              scopes: 'public'
-            }, function(err, publicstyles) {
-              if (err) {
-                return res.status(500).json({ error: err})
-              }
-
-              publicstyles.forEach(function(style){
-                styles.splice(0, 0, style)
-              })
-
-              loop(i+1, callback)
-            })
-          }
-
-          groups.forEach(function(group){
-            Style.find({
-              scopes: group.group_id
-            }, function(err, groupstyles) {
-              if (err) {
-                return res.status(500).json({ error: err})
-              }
-
-              groupstyles.forEach(function(style){
-                styles.splice(0, 0, style)
-              })
-
-              Style.find({
-                scopes: 'public'
-              }, function(err, publicstyles) {
-                if (err) {
-                  return res.status(500).json({ error: err})
-                }
-
-                publicstyles.forEach(function(style){
-                  styles.splice(0, 0, style)
-                }) 
-
-                loop(i+1, callback)
-              })
-            })
-          })
-        }
-      )
-    }
-    else{
-      callback()
-    }
-  }(0, function(){
-    styles.forEach(function(style){
-      if (style === undefined || style.tags.indexOf(req.query.search) < 0) {
-        styles.splice(styles.indexOf(style), 1)
+  Group.find({ members: req.user.username }
+    , function(err, groups) {
+      if (err) {
+        return res.status(500).json({ error: err})
       }
-    })
 
-    return res.status(200).json(styles)
-  }))
+      var scopes = ['public']
+      groups.forEach(function(group){
+        scopes.push(group.group_id)
+      })
+
+      Style.find({
+        scopes: {$in: scopes},
+        tags: req.query.search
+      }, function(err, styles) {
+        if (err) {
+          return res.status(500).json({ error: err})
+        }
+
+        if (!styles) {
+          return res.sendStatus(404)
+        }
+
+        styles.forEach(function(style){
+          finalStyles.push(_.pick(style, filter))
+        })
+
+        return res.status(200).json(finalStyles)
+
+      }).skip(pagesize*(page-1)).limit(pagesize)
+    }
+  )
 }
 
 
