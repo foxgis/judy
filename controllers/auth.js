@@ -46,33 +46,38 @@ var authAccessToken = function(req, res, next) {
 
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
+  var resourceUser = req.url.split('/')[2]
+
+  if (!resourceUser) {
+    return next()
+  }
 
   if (resourceType === 'users') {
-    authUser(req, res, next)
+    return authUser(req, res, next)
   }
 
   if (resourceType === 'groups') {
-    authGroup(req, res, next)
+    return authGroup(req, res, next)
   }
 
   if (resourceType === 'uploads') {
-    authUpload(req, res, next)
+    return authUpload(req, res, next)
   }
 
   if (resourceType === 'styles') {
-    authStyle(req, res, next)
+    return authStyle(req, res, next)
   }
 
   if (resourceType === 'tilesets') {
-    authTileset(req, res, next)
+    return authTileset(req, res, next)
   }
 
   if (resourceType === 'fonts') {
-    authFonts(req, res, next)
+    return authFonts(req, res, next)
   }
 
   if (resourceType === 'sprites') {
-    authSprite(req, res, next)
+    return authSprite(req, res, next)
   }
 }
 
@@ -113,7 +118,7 @@ var authStyle = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
 
-    authSelf(req, res, next)
+    return authSelf(req, res, next)
   }
   else if (!style_id || req.method !== 'GET') {
 
@@ -341,6 +346,23 @@ var authSprite = function(req, res, next) {
 
 
 var authSelf = function(req, res, next) {
+  // if (req.body.scopes) {
+  //   req.body.scopes.forEach(function(scope){
+  //     if (scope !== 'private' && scope !== 'public') {
+  //       Group.findOne({
+  //         group_id: scope
+  //       }, function(err, group) {
+  //         if (err) {
+  //           return res.status(500).json({ error: err})
+  //         }
+
+  //         if (!group)
+  //       })
+  //     }
+  //   })
+  // }
+
+
   if (!req.body.share && !req.body.unshare) {
 
     return next()

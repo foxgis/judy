@@ -42,6 +42,7 @@ router.get('/styles/:username', auth, styles.list)
 router.post('/styles/:username', auth, styles.create)
 router.get('/styles/:username/:style_id', auth, styles.retrieve)
 router.patch('/styles/:username/:style_id', auth, styles.update)
+router.get('/styles', auth, styles.search)
 router.delete('/styles/:username/:style_id', auth, styles.delete)
 
 // 瓦片集
