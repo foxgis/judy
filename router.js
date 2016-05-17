@@ -38,14 +38,15 @@ router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 
 // 样式
+router.get('/styles', auth, styles.search)
 router.get('/styles/:username', auth, styles.list)
 router.post('/styles/:username', auth, styles.create)
 router.get('/styles/:username/:style_id', auth, styles.retrieve)
 router.patch('/styles/:username/:style_id', auth, styles.update)
-router.get('/styles', auth, styles.search)
 router.delete('/styles/:username/:style_id', auth, styles.delete)
 
 // 瓦片集
+router.get('/tilesets', auth, tilesets.search)
 router.get('/tilesets/:username', auth, tilesets.list)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
 router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[23]x)?.:format([\\w\\.]+)', auth, tilesets.getTile)

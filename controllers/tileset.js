@@ -1,5 +1,6 @@
 var _ = require('lodash')
 var Tileset = require('../models/tileset')
+var Group = require('../models/group')
 var tilelive = require('tilelive')
 var crypto = require('crypto')
 
@@ -112,6 +113,52 @@ module.exports.update = function(req, res) {
 
     res.status(200).json(tileset)
   })
+}
+
+
+module.exports.search = function(req, res) {
+  var page = 1
+  if (req.query.page) {
+    page = req.query.page
+  }
+
+  var pagesize = 20
+  var finalTilesets = new Array
+  var filter = ['tileset_id','owner','name','createdAt','updatedAt'
+  ,'tags','version','description','tilejson']
+
+  Group.find({ members: req.user.username }
+    , function(err, groups) {
+      if (err) {
+        return res.status(500).json({ error: err})
+      }
+
+      var scopes = ['public']
+      groups.forEach(function(group){
+        scopes.push(group.group_id)
+      })
+
+      Tileset.find({
+        scopes: {$in: scopes},
+        tags: req.query.search
+      }, function(err, tilesets) {
+        if (err) {
+          return res.status(500).json({ error: err})
+        }
+
+        if (!tilesets) {
+          return res.sendStatus(404)
+        }
+
+        tilesets.forEach(function(tileset){
+          finalTilesets.push(_.pick(tileset, filter))
+        })
+
+        return res.status(200).json(finalTilesets)
+
+      }).skip(pagesize*(page-1)).limit(pagesize)
+    }
+  )
 }
 
 

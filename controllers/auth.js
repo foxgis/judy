@@ -83,7 +83,7 @@ var authResource = function(req, res, next) {
 
 
 var authUser = function(req, res, next) {
-  if (req.user.username !== req.params.username && req.method === 'PATCH') {
+  if (req.method === 'PATCH' && req.user.username !== req.params.username) {
     return res.sendStatus(401)
   }
 
