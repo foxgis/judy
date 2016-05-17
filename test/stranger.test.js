@@ -243,7 +243,7 @@ describe('其他用户权限模块', function(){
         request(app)
           .patch('/api/v1/styles/nick/' + style_id)
           .set('x-access-token', nick_access_token)
-          .send({share: 'public'})
+          .send({scopes: ['public']})
           .expect(200)
           .end(function(err, res){
             if(err){
@@ -330,7 +330,7 @@ describe('其他用户权限模块', function(){
         request(app)
           .patch('/api/v1/sprites/nick/' + sprite_id)
           .set('x-access-token', nick_access_token)
-          .send({share: 'public'})
+          .send({scopes: ['public']})
           .expect(200)
           .end(function(err, res){
             if(err){
