@@ -12,7 +12,7 @@ describe('上传模块', function() {
   before('注册用户',function(done){
     request(app)
       .post('/api/v1/users')
-      .send({ username: 'nick', password: '123456' })
+      .send({ username: 'nick1', password: '123456' })
       .expect(200)
       .end(function(err, res) {
         if (err) {
@@ -26,14 +26,14 @@ describe('上传模块', function() {
   })
 
   after('清理', function() {
-    User.remove({ username: 'nick' }).exec()
-    Upload.remove({ owner: 'nick' }).exec()
+    User.remove({ username: 'nick1' }).exec()
+    Upload.remove({ owner: 'nick1' }).exec()
   })
 
   describe('上传文件', function() {
     it('上传成功', function(done) {
       request(app)
-        .post('/api/v1/uploads/nick')
+        .post('/api/v1/uploads/nick1')
         .set('x-access-token', access_token)
         .attach('aa', './test/fixtures/create.txt')
         .expect(200)
@@ -42,7 +42,7 @@ describe('上传模块', function() {
             return done(err)
           }
 
-          res.body.owner.should.equal('nick')
+          res.body.owner.should.equal('nick1')
           res.body.filename.should.equal('create.txt')
           res.body.upload_id.should.exist
           should.not.exist(res.body.file_id)
@@ -58,7 +58,7 @@ describe('上传模块', function() {
   describe('获取上传列表', function() {
     it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick')
+        .get('/api/v1/uploads/nick1')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -67,7 +67,7 @@ describe('上传模块', function() {
           }
 
           res.body.forEach(function(upload) {
-            upload.owner.should.equal('nick')
+            upload.owner.should.equal('nick1')
           })
 
           done()
@@ -78,7 +78,7 @@ describe('上传模块', function() {
   describe('获取上传状态', function() {
     it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/' + upload_id)
+        .get('/api/v1/uploads/nick1/' + upload_id)
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -95,7 +95,7 @@ describe('上传模块', function() {
 
     it('获取失败', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/bad_upload_id')
+        .get('/api/v1/uploads/nick1/bad_upload_id')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res) {
@@ -113,7 +113,7 @@ describe('上传模块', function() {
   describe('下载文件', function() {
     it('下载成功', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/' + upload_id + '/raw')
+        .get('/api/v1/uploads/nick1/' + upload_id + '/raw')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -129,7 +129,7 @@ describe('上传模块', function() {
 
     it('下载失败', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/bad_upload_id/raw')
+        .get('/api/v1/uploads/nick1/bad_upload_id/raw')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res) {
@@ -147,7 +147,7 @@ describe('上传模块', function() {
   describe('删除文件', function() {
     it('删除成功', function(done) {
       request(app)
-        .delete('/api/v1/uploads/nick/' + upload_id)
+        .delete('/api/v1/uploads/nick1/' + upload_id)
         .set('x-access-token', access_token)
         .expect(204)
         .end(function(err, res){

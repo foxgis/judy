@@ -12,7 +12,7 @@ describe('样式管理模块', function() {
   before('注册用户', function(done) {
     request(app)
       .post('/api/v1/users')
-      .send({ username: 'nick', password: '123456' })
+      .send({ username: 'nick2', password: '123456' })
       .expect(200)
       .end(function(err, res) {
         if (err) {
@@ -26,14 +26,14 @@ describe('样式管理模块', function() {
   })
 
   after('清理', function() {
-    User.remove({ username: 'nick' }).exec()
-    Style.remove({ owner: 'nick' }).exec()
+    User.remove({ username: 'nick2' }).exec()
+    Style.remove({ owner: 'nick2' }).exec()
   })
 
   describe('新建样式', function() {
     it('新建成功', function(done) {
       request(app)
-        .post('/api/v1/styles/nick')
+        .post('/api/v1/styles/nick2')
         .set('x-access-token', access_token)
         .send({
           'version': 8,
@@ -64,7 +64,7 @@ describe('样式管理模块', function() {
             return done(err)
           }
 
-          res.body.owner.should.equal('nick')
+          res.body.owner.should.equal('nick2')
           res.body.style_id.should.exist
 
           style_id = res.body.style_id
@@ -75,7 +75,7 @@ describe('样式管理模块', function() {
 
     it('不合法的样式', function(done) {
       request(app)
-        .post('/api/v1/styles/nick')
+        .post('/api/v1/styles/nick2')
         .set('x-access-token', access_token)
         .send({
           'version': 8,
@@ -98,7 +98,7 @@ describe('样式管理模块', function() {
   describe('获取样式列表', function() {
     it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/styles/nick')
+        .get('/api/v1/styles/nick2')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -107,7 +107,7 @@ describe('样式管理模块', function() {
           }
 
           res.body[0].style_id.should.equal(style_id)
-          res.body[0].owner.should.equal('nick')
+          res.body[0].owner.should.equal('nick2')
 
           done()
         })
@@ -117,7 +117,7 @@ describe('样式管理模块', function() {
   describe('获取某个样式', function() {
     it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/styles/nick/' + style_id)
+        .get('/api/v1/styles/nick2/' + style_id)
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -127,7 +127,7 @@ describe('样式管理模块', function() {
 
           res.body.scopes[0].should.equal('private')
           res.body.style_id.should.equal(style_id)
-          res.body.owner.should.equal('nick')
+          res.body.owner.should.equal('nick2')
 
           done()
         })
@@ -135,7 +135,7 @@ describe('样式管理模块', function() {
 
     it('获取失败', function(done) {
       request(app)
-        .get('/api/v1/styles/nick/bad_style_id')
+        .get('/api/v1/styles/nick2/bad_style_id')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res){
@@ -153,9 +153,11 @@ describe('样式管理模块', function() {
   describe('更新样式', function() {
     it('更新成功', function(done) {
       request(app)
-        .patch('/api/v1/styles/nick/' + style_id)
+        .patch('/api/v1/styles/nick2/' + style_id)
         .set('x-access-token', access_token)
         .send({
+          'scopes': ['public'],
+          'tags': ['nick'],
           'style_id': 'abcd',
           'owner': 'judy',
           'name': 'test2',
@@ -173,8 +175,8 @@ describe('样式管理模块', function() {
           }
 
           res.body.style_id.should.equal(style_id)
-          res.body.scopes[0].should.equal('private')
-          res.body.owner.should.equal('nick')
+          res.body.scopes[0].should.equal('public')
+          res.body.owner.should.equal('nick2')
           res.body.name.should.equal('test2')
           res.body.center[0].should.equal(50)
           res.body.layers[0].paint['background-color'].should.equal('rgba(1,1,1,1)')
@@ -185,7 +187,7 @@ describe('样式管理模块', function() {
 
     it('更新失败', function(done) {
       request(app)
-        .patch('/api/v1/styles/nick/bad_style_id')
+        .patch('/api/v1/styles/nick2/bad_style_id')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res){
@@ -200,10 +202,29 @@ describe('样式管理模块', function() {
     })
   })
 
+  describe('搜索样式', function(){
+    it('搜索成功', function(done){
+      request(app)
+        .get('/api/v1/styles?search=nick&page=1')
+        .expect(200)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
+
+          res.body[0].owner.should.equal('nick2')
+          res.body[0].style_id.should.equal(style_id)
+          res.body[0].tags[0].should.equal('nick')
+
+          done()
+        })
+    })
+  })
+
   describe('删除样式', function() {
     it('删除成功', function(done) {
       request(app)
-        .delete('/api/v1/styles/nick/' + style_id)
+        .delete('/api/v1/styles/nick2/' + style_id)
         .set('x-access-token', access_token)
         .expect(204)
         .end(function(err, res){

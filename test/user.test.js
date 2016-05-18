@@ -97,7 +97,6 @@ describe('用户管理模块', function() {
     })
   })
 
-
   describe('获取用户信息', function() {
     it('获取成功', function(done) {
       request(app)
@@ -110,21 +109,6 @@ describe('用户管理模块', function() {
           }
 
           res.body.username.should.equal('nick')
-
-          done()
-        })
-    })
-
-    it('获取失败', function(done) {
-      request(app)
-        .get('/api/v1/users/nick')
-        .expect(401)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.error.should.equal('access_token缺失')
 
           done()
         })
@@ -148,7 +132,6 @@ describe('用户管理模块', function() {
     })
   })
 
-
   describe('更新用户信息', function() {
     it('更新名称', function(done) {
       request(app)
@@ -167,7 +150,6 @@ describe('用户管理模块', function() {
         })
     })
   })
-
 
   describe('登录', function() {
     it('密码登录成功', function(done) {

@@ -19,7 +19,8 @@ var authAccessToken = function(req, res, next) {
   var access_token = req.query.access_token ||
     req.cookies.access_token || req.headers['x-access-token']
   if (!access_token) {
-    return res.status(401).json({ error: 'access_token缺失' })
+    req.user = { username: 'guest' }
+    return next()
   }
 
 
@@ -95,8 +96,11 @@ var authGroup = function(req, res, next) {
   var group_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
+
     return next()
-  } else if (group_id && req.method !== 'DELETE') {
+  }
+  else if (group_id && req.method !== 'DELETE' && req.user.username !== 'guest') {
+
     return next()
   }
 

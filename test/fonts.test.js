@@ -10,14 +10,14 @@ describe('字体模块', function(){
   before('注册用户', function(done){
     request(app)
       .post('/api/v1/users')
-      .send({username: 'nick', password: '123456'})
+      .send({username: 'nick4', password: '123456'})
       .expect(200)
       .end(function(err, res){
         if(err){
           return done(err)
         }
 
-        res.body.username.should.equal('nick')
+        res.body.username.should.equal('nick4')
         res.body.access_token.should.exist
 
         access_token = res.body.access_token
@@ -27,7 +27,7 @@ describe('字体模块', function(){
   })
 
   after('清理', function(){
-    User.remove({username: 'nick'}).exec()
+    User.remove({username: 'nick4'}).exec()
   })
 
   describe('请求字体', function(){
