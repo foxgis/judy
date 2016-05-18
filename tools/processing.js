@@ -4,6 +4,7 @@ var geojson = require('./geojson')
 var mbtiles = require('./mbtiles')
 var shapefile = require('./shapefile')
 var sprite = require('./sprite')
+var svg = require('./svg')
 
 
 module.exports = function(req) {
@@ -31,6 +32,16 @@ module.exports = function(req) {
     if (exts.indexOf('.shp') > -1 && exts.indexOf('.shx') > -1 &&
       exts.indexOf('.dbf') > -1) {
       shapefile(req)
+    }
+
+    if (exts.indexOf('.svg') > -1) {
+      svg(req.params.username, req.files[0].path, function(err, sprite_id) {
+        if (err) {
+          req.upload.error = err
+        } else {
+          req.upload.sprite_id = sprite_id
+        }
+      })
     }
 
     if (exts.length === 2 && exts.indexOf('.png') > -1 && exts.indexOf('.json') > -1) {

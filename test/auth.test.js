@@ -58,7 +58,7 @@ describe('权限模块', function(){
     request(app)
       .post('/api/v1/uploads/nick6')
       .set('x-access-token', nick6_access_token)
-      .attach('aa', './test/fixtures/sprite.zip')
+      .attach('aa', './test/fixtures/svg.zip')
       .expect(200)
       .end(function(err, res){
         if(err){
@@ -420,7 +420,7 @@ describe('权限模块', function(){
                 return done(err)
               }
 
-              res.body.london.pixelRatio.should.equal(2)
+              res.body.airport.pixelRatio.should.equal(2)
 
               done()
             })
@@ -631,7 +631,7 @@ describe('权限模块', function(){
               return done(err)
             }
 
-            res.body.london.pixelRatio.should.equal(2)
+            res.body.airport.pixelRatio.should.equal(2)
    
             done()
           })

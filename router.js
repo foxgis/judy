@@ -32,7 +32,7 @@ router.delete('/groups/:username/:group_id', auth, groups.delete)
 
 // 上传文件
 router.get('/uploads/:username', auth, uploads.list)
-router.post('/uploads/:username', upload.any(), auth, uploads.create)
+router.post('/uploads/:username', auth, upload.any(), uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
@@ -60,6 +60,8 @@ router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
+router.post('/sprites/:username', auth, upload.any(), sprites.create)
+router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
