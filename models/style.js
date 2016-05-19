@@ -8,6 +8,7 @@ var StyleSchema = new mongoose.Schema({
   owner: String,
   scopes: { type: [String], default: ['private'] },
   draft: { type: Boolean, default: true },
+  tags: [String],
   is_deleted: { type: Boolean, default: false },
 
   version: { type: Number, default: 8 },

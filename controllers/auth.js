@@ -19,7 +19,8 @@ var authAccessToken = function(req, res, next) {
   var access_token = req.query.access_token ||
     req.cookies.access_token || req.headers['x-access-token']
   if (!access_token) {
-    return res.status(401).json({ error: 'access_token缺失' })
+    req.user = { username: 'guest' }
+    return next()
   }
 
 
@@ -46,39 +47,44 @@ var authAccessToken = function(req, res, next) {
 
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
+  var resourceUser = req.url.split('/')[2]
+
+  if (!resourceUser) {
+    return next()
+  }
 
   if (resourceType === 'users') {
-    authUser(req, res, next)
+    return authUser(req, res, next)
   }
 
   if (resourceType === 'groups') {
-    authGroup(req, res, next)
+    return authGroup(req, res, next)
   }
 
   if (resourceType === 'uploads') {
-    authUpload(req, res, next)
+    return authUpload(req, res, next)
   }
 
   if (resourceType === 'styles') {
-    authStyle(req, res, next)
+    return authStyle(req, res, next)
   }
 
   if (resourceType === 'tilesets') {
-    authTileset(req, res, next)
+    return authTileset(req, res, next)
   }
 
   if (resourceType === 'fonts') {
-    authFonts(req, res, next)
+    return authFonts(req, res, next)
   }
 
   if (resourceType === 'sprites') {
-    authSprite(req, res, next)
+    return authSprite(req, res, next)
   }
 }
 
 
 var authUser = function(req, res, next) {
-  if (req.user.username !== req.params.username && req.method === 'PATCH') {
+  if (req.method === 'PATCH' && req.user.username !== req.params.username) {
     return res.sendStatus(401)
   }
 
@@ -90,8 +96,11 @@ var authGroup = function(req, res, next) {
   var group_id = req.url.split('/')[3]
 
   if (req.user.username === req.params.username) {
+
     return next()
-  } else if (group_id && req.method !== 'DELETE') {
+  }
+  else if (group_id && req.method !== 'DELETE' && req.user.username !== 'guest') {
+
     return next()
   }
 
@@ -113,7 +122,7 @@ var authStyle = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
 
-    authSelf(req, res, next)
+    return authSelf(req, res, next)
   }
   else if (!style_id || req.method !== 'GET') {
 
@@ -133,31 +142,34 @@ var authStyle = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (style.scopes[0] === 'private') {
+      if (style.scopes.indexOf('private') > -1) {
+
         return res.sendStatus(401)
       }
-      else if (style.scopes[0] === 'public'){
+      else if (style.scopes.indexOf('public') > -1){
 
         return next()
       }
       else {
-        style.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < style.scopes.length) {
+            Group.findOne({ group_id: style.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
-              return next()
-            } else {
-              return res.sendStatus(401)
-            }
-          })
-        })
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
+
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -189,35 +201,34 @@ var authTileset = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (tileset.scopes[0] === 'private') {
-
+      if (tileset.scopes.indexOf('private') > -1) {
+        
         return res.sendStatus(401)
       }
-      else if (tileset.scopes[0] === 'public'){
+      else if (tileset.scopes.indexOf('public') > -1){
 
         return next()
       }
       else {
-        tileset.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < tileset.scopes.length) {
+            Group.findOne({ group_id: tileset.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
 
-              return next()
-            }
-            else {
-
-              return res.sendStatus(401)
-            }
-          })
-        })
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -246,32 +257,34 @@ var authFonts = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (font.scopes[0] === 'private') {
-
+      if (font.scopes.indexOf('private') > -1) {
+ 
         return res.sendStatus(401)
       }
-      else if (font.scopes[0] === 'public'){
+      else if (font.scopes.indexOf('public') > -1){
 
         return next()
       }
       else {
-        font.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < font.scopes.length) {
+            Group.findOne({ group_id: font.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
-              return next()
-            } else {
-              return res.sendStatus(401)
-            }
-          })
-        })
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
+
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -303,32 +316,34 @@ var authSprite = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (sprite.scopes[0] === 'private') {
-
+      if (sprite.scopes.indexOf('private') > -1) {
+ 
         return res.sendStatus(401)
       }
-      else if (sprite.scopes[0] === 'public'){
+      else if (sprite.scopes.indexOf('public') > -1){
 
         return next()
       }
       else {
-        sprite.scopes.forEach(function(scope){
-          Group.findOne({ group_id: scope}, function(err, group){
-            if (err) {
-              return res.status(500).json({ error: err})
-            }
+        (function scopesLoop(i, callback){
+          if (i < sprite.scopes.length) {
+            Group.findOne({ group_id: sprite.scopes[i]}, function(err, group){
+              if (err) {
+                return res.status(500).json({ error: err})
+              }
 
-            if (!group) {
-              return res.sendStatus(404)
-            }
+              if (group.members.indexOf(req.user.username) > -1){
+                return next()
+              }
 
-            if (group.members.indexOf(req.user.username) > -1){
-              return next()
-            } else {
-              return res.sendStatus(401)
-            }
-          })
-        })
+              scopesLoop(i+1, callback)
+            })
+          }
+          else{
+
+            callback()
+          }
+        }(0, function(){ return res.sendStatus(401) }))
       }
     })
   }
@@ -336,35 +351,35 @@ var authSprite = function(req, res, next) {
 
 
 var authSelf = function(req, res, next) {
-  if (!req.body.share && !req.body.unshare) {
-
+  if (!req.body.scopes) {
     return next()
   }
-  else if (Object.keys(req.body).length > 1) {
 
-    return res.sendStatus(401)
-  }
-  else if (req.body.unshare || req.body.share === 'public') {
+  (function scopesLoop(i, callback){
+    if (i < req.body.scopes.length) {
+      var scope = req.body.scopes[i]
 
-    return next()
-  }
-  else {
-    Group.findOne({
-      group_id: req.body.share
-    }, function(err, group){
-      if (err) {
-        return res.status(500).json({ error:err})
+      if (scope === 'private' || scope === 'public') {
+        scopesLoop(i+1, callback)
       }
+      else {
+        Group.findOne({
+          group_id: scope
+        }, function(err, group) {
+          if (err) {
+            return res.status(500).json({ error: err})
+          }
 
-      if (!group){
-        return res.sendStatus(404)
-      }
+          if (!group || group.members.indexOf(req.user.username) < 0) {
+            return res.sendStatus(401)
+          }
 
-      if(group.members.indexOf(req.user.username) > -1){
-        return next()
-      } else {
-        return res.sendStatus(401)
+          scopesLoop(i+1, callback)
+        })
       }
-    })
-  }
+    }
+    else {
+      callback()
+    }
+  }(0, function(){ return next()}))
 }

@@ -1,11 +1,12 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
 var Style = require('../models/style')
+var Group = require('../models/group')
 
 
 module.exports.list = function(req, res) {
   Style.find({ owner: req.params.username },
-    'style_id owner version name createdAt updatedAt',
+    'style_id owner version name createdAt updatedAt scopes tags',
     function(err, styles) {
       if (err) {
         return res.status(500).json({ error: err })
@@ -62,91 +63,66 @@ module.exports.retrieve = function(req, res) {
 module.exports.update = function(req, res) {
   var filter = ['_id', 'style_id', 'owner', 'createdAt', 'updatedAt', '__v']
 
-  if (!req.body.share && !req.body.unshare) {
-    Style.findOneAndUpdate({
-      style_id: req.params.style_id,
-      owner: req.params.username,
-      is_deleted: false
-    }, _.omit(req.body, filter), { new: true }, function(err, style) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+  Style.findOneAndUpdate({
+    style_id: req.params.style_id,
+    owner: req.params.username,
+    is_deleted: false
+  }, _.omit(req.body, filter), { new: true }, function(err, style) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
 
-      if (!style) {
-        return res.sendStatus(404)
-      }
+    if (!style) {
+      return res.sendStatus(404)
+    }
 
-      res.status(200).json(style)
-    })
+    res.status(200).json(style)
+  })
+}
+
+
+module.exports.search = function(req, res) {
+  var page = 1
+  if (req.query.page) {
+    page = req.query.page
   }
-  else {
-    Style.findOne({
-      style_id: req.params.style_id,
-      owner: req.params.username,
-      is_deleted: false
-    }, function(err, style){
+
+  var pagesize = 20
+  var finalStyles = new Array
+  var filter = ['style_id','owner','version','name','createdAt','updatedAt','tags']
+
+  Group.find({ members: req.user.username }
+    , function(err, groups) {
       if (err) {
-        return res.status(500).json({ error: err })
+        return res.status(500).json({ error: err})
       }
 
-      if (!style) {
-        return res.sendStatus(404)
-      }
+      var scopes = ['public']
+      groups.forEach(function(group){
+        scopes.push(group.group_id)
+      })
 
-      if (req.body.share === 'public') {
-        if (style.scopes[0] === 'public') {
-          return res.status(200).json(style)
-        }
-        else if (style.scopes[0] === 'private') {
-          style.scopes.splice(0, 1, 'public')
-        }
-        else {
-          style.scopes.splice(0, 0, 'public')
-        }
-      }
-      else if (req.body.share && req.body.share !== 'public') {
-        if (style.scopes.indexOf(req.body.share) > -1) {
-          return res.status(200).json(style)
-        } 
-        else if (style.scopes[0] === 'private') {
-          style.scopes.splice(0, 1, req.body.share)
-        }
-        else {
-          style.scopes.push(req.body.share)
-        }
-      }
-      else if (req.body.unshare === 'public') {
-        if (style.scopes[0] !== 'public') {
-          return res.status(200).json(style)
-        }
-        else if (style.scopes.length === 1) {
-          style.scopes = ['private']
-        }
-        else {
-          style.scopes.splice(0, 1)
-        }
-      }
-      else {
-        if (style.scopes.indexOf(req.body.unshare) < 0) {
-          return res.status(200).json(style)
-        } 
-        else if (style.scopes.length === 1) {
-          style.scopes = ['private']
-        }
-        else {
-          style.scopes.splice(style.scopes.indexOf(req.body.unshare), 1)
-        }
-      }
-
-      style.save(function(err){
+      Style.find({
+        scopes: {$in: scopes},
+        tags: req.query.search
+      }, function(err, styles) {
         if (err) {
           return res.status(500).json({ error: err})
         }
 
-        return res.status(200).json(style)
-      })
-    })
-  }
+        if (!styles) {
+          return res.sendStatus(404)
+        }
+
+        styles.forEach(function(style){
+          finalStyles.push(_.pick(style, filter))
+        })
+
+        return res.status(200).json(finalStyles)
+
+      }).skip(pagesize*(page-1)).limit(pagesize)
+    }
+  )
 }
 
 
