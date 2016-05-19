@@ -7,7 +7,6 @@ var styles = require('./controllers/style')
 var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
-var groups = require('./controllers/group')
 var admin = require('./controllers/admin')
 
 
@@ -22,13 +21,6 @@ router.post('/users', users.create)
 router.get('/users/:username', auth, users.retrieve)
 router.patch('/users/:username', auth, users.update)
 router.post('/users/:username', users.login)
-
-// 群组
-router.get('/groups/:username', auth, groups.list)
-router.post('/groups/:username', auth, groups.create)
-router.get('/groups/:username/:group_id', auth, groups.retrieve)
-router.patch('/groups/:username/:group_id', auth, groups.update)
-router.delete('/groups/:username/:group_id', auth, groups.delete)
 
 // 上传文件
 router.get('/uploads/:username', auth, uploads.list)
@@ -61,7 +53,6 @@ router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
 router.post('/sprites/:username', auth, upload.any(), sprites.create)
-router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)

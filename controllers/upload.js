@@ -2,7 +2,6 @@ var fs = require('fs')
 var mongoose = require('mongoose')
 var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
-var processing = require('../tools/processing')
 
 
 module.exports.list = function(req, res) {
@@ -44,10 +43,9 @@ module.exports.create = function(req, res) {
         return
       }
 
-      res.status(200).json(upload)
+      fs.unlink(req.files[0].path)
 
-      req.upload = upload
-      processing(req)
+      res.status(200).json(upload)
     })
   })
 }

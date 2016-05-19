@@ -7,7 +7,7 @@ var FontSchema = new mongoose.Schema({
   font_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   is_deleted: { type: Boolean, default: false},
-  scopes: { type: [String], default: ['private'] },
+  scope: { type: String, default: 'private' },
 
   name: String
 }, { timestamps: true })

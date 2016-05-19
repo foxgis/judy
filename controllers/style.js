@@ -1,7 +1,6 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
 var Style = require('../models/style')
-var Group = require('../models/group')
 
 
 module.exports.list = function(req, res) {
@@ -54,7 +53,7 @@ module.exports.retrieve = function(req, res) {
       return res.status(200).json(style)
     }
     else {
-      return res.status(200).json(_.omit(style.toJSON(), 'scopes'))
+      return res.status(200).json(style)
     }
   })
 }
@@ -91,38 +90,25 @@ module.exports.search = function(req, res) {
   var finalStyles = new Array
   var filter = ['style_id','owner','version','name','createdAt','updatedAt','tags']
 
-  Group.find({ members: req.user.username }
-    , function(err, groups) {
-      if (err) {
-        return res.status(500).json({ error: err})
-      }
-
-      var scopes = ['public']
-      groups.forEach(function(group){
-        scopes.push(group.group_id)
-      })
-
-      Style.find({
-        scopes: {$in: scopes},
-        tags: req.query.search
-      }, function(err, styles) {
-        if (err) {
-          return res.status(500).json({ error: err})
-        }
-
-        if (!styles) {
-          return res.sendStatus(404)
-        }
-
-        styles.forEach(function(style){
-          finalStyles.push(_.pick(style, filter))
-        })
-
-        return res.status(200).json(finalStyles)
-
-      }).skip(pagesize*(page-1)).limit(pagesize)
+  Style.find({
+    scope: 'public',
+    tags: req.query.search
+  }, function(err, styles) {
+    if (err) {
+      return res.status(500).json({ error: err})
     }
-  )
+
+    if (!styles) {
+      return res.sendStatus(404)
+    }
+
+    styles.forEach(function(style){
+      finalStyles.push(_.pick(style, filter))
+    })
+
+    return res.status(200).json(finalStyles)
+
+  }).skip(pagesize*(page-1)).limit(pagesize)
 }
 
 

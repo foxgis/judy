@@ -3,7 +3,6 @@ var config = require('../config')
 var User = require('../models/user')
 var Style = require('../models/style')
 var Sprite = require('../models/sprite')
-var Group = require('../models/group')
 var Tileset = require('../models/tileset')
 var Font = require('../models/font')
 
@@ -18,11 +17,11 @@ module.exports = function(req, res, next) {
 var authAccessToken = function(req, res, next) {
   var access_token = req.query.access_token ||
     req.cookies.access_token || req.headers['x-access-token']
+
   if (!access_token) {
     req.user = { username: 'guest' }
     return next()
   }
-
 
   jwt.verify(access_token, config.jwt_secret, function(err, decoded) {
     if (err) {
@@ -57,10 +56,6 @@ var authResource = function(req, res, next) {
     return authUser(req, res, next)
   }
 
-  if (resourceType === 'groups') {
-    return authGroup(req, res, next)
-  }
-
   if (resourceType === 'uploads') {
     return authUpload(req, res, next)
   }
@@ -92,22 +87,6 @@ var authUser = function(req, res, next) {
 }
 
 
-var authGroup = function(req, res, next) {
-  var group_id = req.url.split('/')[3]
-
-  if (req.user.username === req.params.username) {
-
-    return next()
-  }
-  else if (group_id && req.method !== 'DELETE' && req.user.username !== 'guest') {
-
-    return next()
-  }
-
-  return res.sendStatus(401)
-}
-
-
 var authUpload = function(req, res, next) {
   if (req.user.username === req.params.username) {
     return next()
@@ -122,7 +101,7 @@ var authStyle = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
 
-    return authSelf(req, res, next)
+    return next()
   }
   else if (!style_id || req.method !== 'GET') {
 
@@ -132,7 +111,7 @@ var authStyle = function(req, res, next) {
     Style.findOne({
       owner: req.params.username,
       style_id: req.params.style_id,
-      is_deleted: false
+      scope: 'public'
     }, function(err,style) {
       if (err) {
         return res.status(500).json({ error: err })
@@ -142,35 +121,7 @@ var authStyle = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (style.scopes.indexOf('private') > -1) {
-
-        return res.sendStatus(401)
-      }
-      else if (style.scopes.indexOf('public') > -1){
-
-        return next()
-      }
-      else {
-        (function scopesLoop(i, callback){
-          if (i < style.scopes.length) {
-            Group.findOne({ group_id: style.scopes[i]}, function(err, group){
-              if (err) {
-                return res.status(500).json({ error: err})
-              }
-
-              if (group.members.indexOf(req.user.username) > -1){
-                return next()
-              }
-
-              scopesLoop(i+1, callback)
-            })
-          }
-          else{
-
-            callback()
-          }
-        }(0, function(){ return res.sendStatus(401) }))
-      }
+      return next()
     })
   }
 }
@@ -181,7 +132,7 @@ var authTileset = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
 
-    authSelf(req, res, next)
+    return next()
   }
   else if (!tileset_id || req.method !== 'GET') {
 
@@ -191,7 +142,7 @@ var authTileset = function(req, res, next) {
     Tileset.findOne({
       owner: req.params.username,
       tileset_id: req.params.tileset_id,
-      is_deleted: false
+      scope: 'public'
     }, function(err,tileset) {
       if (err) {
         return res.status(500).json({ error: err })
@@ -201,35 +152,7 @@ var authTileset = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (tileset.scopes.indexOf('private') > -1) {
-        
-        return res.sendStatus(401)
-      }
-      else if (tileset.scopes.indexOf('public') > -1){
-
-        return next()
-      }
-      else {
-        (function scopesLoop(i, callback){
-          if (i < tileset.scopes.length) {
-            Group.findOne({ group_id: tileset.scopes[i]}, function(err, group){
-              if (err) {
-                return res.status(500).json({ error: err})
-              }
-
-              if (group.members.indexOf(req.user.username) > -1){
-                return next()
-              }
-
-              scopesLoop(i+1, callback)
-            })
-          }
-          else{
-
-            callback()
-          }
-        }(0, function(){ return res.sendStatus(401) }))
-      }
+      return next()
     })
   }
 }
@@ -239,15 +162,18 @@ var authFonts = function(req, res, next) {
   var fontstack = decodeURI(req.url).split('/')[3]
 
   if (req.user.username === req.params.username) {
-    authSelf(req, res, next)
+    
+    return next()
   }
-  else if (!fontstack) {
+  else if (!fontstack || req.method !== 'GET') {
+    
     return res.sendStatus(401)
   }
   else {
     Font.findOne({
       owner: req.params.username,
-      name: fontstack
+      name: fontstack,
+      scope: 'public'
     }, function(err, font) {
       if (err) {
         return res.status(500).json({ error: err})
@@ -257,35 +183,7 @@ var authFonts = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (font.scopes.indexOf('private') > -1) {
- 
-        return res.sendStatus(401)
-      }
-      else if (font.scopes.indexOf('public') > -1){
-
-        return next()
-      }
-      else {
-        (function scopesLoop(i, callback){
-          if (i < font.scopes.length) {
-            Group.findOne({ group_id: font.scopes[i]}, function(err, group){
-              if (err) {
-                return res.status(500).json({ error: err})
-              }
-
-              if (group.members.indexOf(req.user.username) > -1){
-                return next()
-              }
-
-              scopesLoop(i+1, callback)
-            })
-          }
-          else{
-
-            callback()
-          }
-        }(0, function(){ return res.sendStatus(401) }))
-      }
+      return next()
     })
   }
 }
@@ -296,7 +194,7 @@ var authSprite = function(req, res, next) {
 
   if (req.user.username === req.params.username) {
 
-    authSelf(req, res, next)
+    return next()
   }
   else if (!sprite_id || req.method !== 'GET') {
 
@@ -306,7 +204,7 @@ var authSprite = function(req, res, next) {
     Sprite.findOne({
       owner: req.params.username,
       sprite_id: req.params.sprite_id,
-      is_deleted: false
+      scope: 'public'
     }, function(err,sprite) {
       if (err) {
         return res.status(500).json({ error: err })
@@ -316,70 +214,7 @@ var authSprite = function(req, res, next) {
         return res.sendStatus(404)
       }
 
-      if (sprite.scopes.indexOf('private') > -1) {
- 
-        return res.sendStatus(401)
-      }
-      else if (sprite.scopes.indexOf('public') > -1){
-
-        return next()
-      }
-      else {
-        (function scopesLoop(i, callback){
-          if (i < sprite.scopes.length) {
-            Group.findOne({ group_id: sprite.scopes[i]}, function(err, group){
-              if (err) {
-                return res.status(500).json({ error: err})
-              }
-
-              if (group.members.indexOf(req.user.username) > -1){
-                return next()
-              }
-
-              scopesLoop(i+1, callback)
-            })
-          }
-          else{
-
-            callback()
-          }
-        }(0, function(){ return res.sendStatus(401) }))
-      }
+      return next()
     })
   }
-}
-
-
-var authSelf = function(req, res, next) {
-  if (!req.body.scopes) {
-    return next()
-  }
-
-  (function scopesLoop(i, callback){
-    if (i < req.body.scopes.length) {
-      var scope = req.body.scopes[i]
-
-      if (scope === 'private' || scope === 'public') {
-        scopesLoop(i+1, callback)
-      }
-      else {
-        Group.findOne({
-          group_id: scope
-        }, function(err, group) {
-          if (err) {
-            return res.status(500).json({ error: err})
-          }
-
-          if (!group || group.members.indexOf(req.user.username) < 0) {
-            return res.sendStatus(401)
-          }
-
-          scopesLoop(i+1, callback)
-        })
-      }
-    }
-    else {
-      callback()
-    }
-  }(0, function(){ return next()}))
 }
