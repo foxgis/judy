@@ -1,5 +1,6 @@
 var _ = require('lodash')
 var User = require('../models/user')
+var config = require('../config')
 
 
 module.exports.create = function(req, res) {
@@ -8,7 +9,7 @@ module.exports.create = function(req, res) {
     return
   }
 
-  if (req.body.username === 'foxgis') {
+  if (config.blacklist.indexOf(req.body.username) !== -1) {
     res.status(400).json({ error: '该用户名已经被注册'})
     return
   }

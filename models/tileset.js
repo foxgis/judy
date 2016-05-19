@@ -9,7 +9,7 @@ var TilesetSchema = new mongoose.Schema({
   scopes: { type: [String], default: ['private'] },
   is_deleted: { type: Boolean, default: false },
   tags: [String],
-  external_uri: String,
+  uri: String,
 
   // tilejson spec
   tilejson: { type: String, default: '2.1.0' },
@@ -43,7 +43,7 @@ var TilesetSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-TilesetSchema.plugin(select, '-_id -is_deleted -__v')
+TilesetSchema.plugin(select, '-_id -is_deleted -uri -__v')
 
 
 module.exports = mongoose.model('Tileset', TilesetSchema)
