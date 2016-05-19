@@ -48,7 +48,7 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(escaper.unescape(tileset))
+    res.status(200).json(escaper.unescape(tileset.toJSON()))
   })
 }
 
@@ -68,7 +68,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(escaper.unescape(tileset))
+    res.status(200).json(escaper.unescape(tileset.toJSON()))
   })
 }
 
@@ -83,13 +83,9 @@ module.exports.delete = function(req, res) {
     }
 
     var tiles = 'tiles_' + req.params.tileset_id
-    mongoose.connection.db.dropCollection(tiles, function(err) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+    mongoose.connection.db.dropCollection(tiles, function() {})
 
-      res.sendStatus(204)
-    })
+    res.sendStatus(204)
   })
 }
 

@@ -48,7 +48,7 @@ module.exports.create = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    res.status(200).json(escaper.unescape(style))
+    res.status(200).json(escaper.unescape(style.toJSON()))
   })
 }
 
@@ -66,7 +66,7 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(escaper.unescape(style))
+    res.status(200).json(escaper.unescape(style.toJSON()))
   })
 }
 
@@ -86,7 +86,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(escaper.unescape(style))
+    res.status(200).json(escaper.unescape(style.toJSON()))
   })
 }
 
