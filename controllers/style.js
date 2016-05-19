@@ -1,11 +1,28 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
+var escaper = require('mongo-key-escaper')
 var Style = require('../models/style')
+
+
+module.exports.search = function(req, res) {
+  var page = +req.query.page || 1
+
+  Style.find({ scope: 'public', tags: req.query.search },
+    'style_id owner scope tags version name createdAt updatedAt',
+    function(err, styles) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      res.status(200).json(styles)
+
+    }).limit(20).skip(20 * (page - 1))
+}
 
 
 module.exports.list = function(req, res) {
   Style.find({ owner: req.params.username },
-    'style_id owner version name createdAt updatedAt scopes tags',
+    'style_id owner scope tags version name createdAt updatedAt',
     function(err, styles) {
       if (err) {
         return res.status(500).json({ error: err })
@@ -23,7 +40,7 @@ module.exports.create = function(req, res) {
     return res.status(400).json(errors)
   }
 
-  var style = new Style(req.body)
+  var style = new Style(escaper.escape(req.body))
   style.owner = req.params.username
 
   style.save(function(err) {
@@ -31,7 +48,7 @@ module.exports.create = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    res.status(200).json(style)
+    res.status(200).json(escaper.unescape(style))
   })
 }
 
@@ -49,12 +66,7 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    if (req.user.username === req.params.username) {
-      return res.status(200).json(style)
-    }
-    else {
-      return res.status(200).json(style)
-    }
+    res.status(200).json(escaper.unescape(style))
   })
 }
 
@@ -64,9 +76,8 @@ module.exports.update = function(req, res) {
 
   Style.findOneAndUpdate({
     style_id: req.params.style_id,
-    owner: req.params.username,
-    is_deleted: false
-  }, _.omit(req.body, filter), { new: true }, function(err, style) {
+    owner: req.params.username
+  }, _.omit(escaper.escape(req.body), filter), { new: true }, function(err, style) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -75,54 +86,25 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(style)
+    res.status(200).json(escaper.unescape(style))
   })
-}
-
-
-module.exports.search = function(req, res) {
-  var page = 1
-  if (req.query.page) {
-    page = req.query.page
-  }
-
-  var pagesize = 20
-  var finalStyles = new Array
-  var filter = ['style_id','owner','version','name','createdAt','updatedAt','tags']
-
-  Style.find({
-    scope: 'public',
-    tags: req.query.search
-  }, function(err, styles) {
-    if (err) {
-      return res.status(500).json({ error: err})
-    }
-
-    if (!styles) {
-      return res.sendStatus(404)
-    }
-
-    styles.forEach(function(style){
-      finalStyles.push(_.pick(style, filter))
-    })
-
-    return res.status(200).json(finalStyles)
-
-  }).skip(pagesize*(page-1)).limit(pagesize)
 }
 
 
 module.exports.delete = function(req, res) {
-  Style.findOneAndUpdate({
-    owner: req.params.username,
+  Style.findOneAndRemove({
     style_id: req.params.style_id,
-    is_deleted: false
-  }, { is_deleted: true }, function(err) {
+    owner: req.params.username
+  }, function(err) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     res.sendStatus(204)
   })
+}
+
+
+module.exports.preview = function(req, res) {
+  return res.sendStatus(200)
 }

@@ -1,17 +1,33 @@
 var _ = require('lodash')
+var mongoose = require('mongoose')
+var tiletype = require('tiletype')
+var escaper = require('mongo-key-escaper')
+var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
-var tilelive = require('tilelive')
-var crypto = require('crypto')
+
+
+module.exports.search = function(req, res) {
+  var page = +req.query.page || 1
+
+  Tileset.find({ scope: 'public', tags: req.query.search },
+    '-vector_layers',
+    function(err, tilesets) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      res.status(200).json(tilesets)
+
+    }).limit(20).skip(20 * (page - 1))
+}
 
 
 module.exports.list = function(req, res) {
   Tileset.find({
-    owner: req.params.username,
-    is_deleted: false
+    owner: req.params.username
   }, '-vector_layers', function(err, tilesets) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     res.status(200).json(tilesets)
@@ -22,86 +38,8 @@ module.exports.list = function(req, res) {
 module.exports.retrieve = function(req, res) {
   Tileset.findOne({
     tileset_id: req.params.tileset_id,
-    owner: req.params.username,
-    is_deleted: false
+    owner: req.params.username
   }, function(err, tileset) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return
-    }
-
-    if (!tileset) {
-      res.sendStatus(404)
-      return
-    }
-
-    res.status(200).json(tileset)
-  })
-}
-
-
-module.exports.getTile = function(req, res) {
-  Tileset.findOne({
-    tileset_id: req.params.tileset_id,
-    owner: req.params.username,
-    is_deleted: false
-  }, function(err, tileset) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return
-    }
-
-    if (!tileset) {
-      res.sendStatus(404)
-      return
-    }
-
-    tilelive.load(tileset.uri, function(err, source) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      source.getTile(req.params.z, req.params.x, req.params.y,
-        function(err, tile, headers) {
-          if (err) {
-            return res.status(500).json({ error: err })
-          }
-
-          if (!tile) {
-            return res.sendStatus(404)
-          }
-
-          var _headers = {}
-          Object.keys(headers).forEach(function(x) {
-            _headers[x.toLowerCase()] = headers[x]
-          })
-
-          if (!_headers['content-md5']) {
-            var hash = crypto.createHash('md5')
-            _headers['content-md5'] = hash.update(tile).digest('base64')
-          }
-
-          if (req.params.format === 'pbf') {
-            _headers['content-type'] = _headers['content-type'] || 'application/x-protobuf'
-            _headers['content-encoding'] = _headers['content-encoding'] || 'gzip'
-          }
-
-          res.set(_headers)
-          res.status(200).send(tile)
-        })
-    })
-  })
-}
-
-
-module.exports.update = function(req, res) {
-  var filter = ['tileset_id', 'owner', 'is_deleted', 'createdAt', 'updatedAt']
-
-  Tileset.findOneAndUpdate({
-    tileset_id: req.params.tileset_id,
-    owner: req.params.username,
-    is_deleted: false
-  }, _.omit(req.body, filter), function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -110,55 +48,88 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(tileset)
+    res.status(200).json(escaper.unescape(tileset))
   })
 }
 
 
-module.exports.search = function(req, res) {
-  var page = 1
-  if (req.query.page) {
-    page = req.query.page
-  }
+module.exports.update = function(req, res) {
+  var filter = ['scope', 'tags', 'name', 'description', 'vector_layers']
 
-  var pagesize = 20
-  var finalTilesets = new Array
-  var filter = ['tileset_id','owner','name','createdAt','updatedAt'
-  ,'tags','version','description','tilejson']
-
-  Tileset.find({
-    scope: 'public',
-    tags: req.query.search
-  }, function(err, tilesets) {
+  Tileset.findOneAndUpdate({
+    tileset_id: req.params.tileset_id,
+    owner: req.params.username
+  }, _.pick(escaper.escape(req.body), filter), function(err, tileset) {
     if (err) {
-      return res.status(500).json({ error: err})
+      return res.status(500).json({ error: err })
     }
 
-    if (!tilesets) {
+    if (!tileset) {
       return res.sendStatus(404)
     }
 
-    tilesets.forEach(function(tileset){
-      finalTilesets.push(_.pick(tileset, filter))
-    })
-
-    return res.status(200).json(finalTilesets)
-
-  }).skip(pagesize*(page-1)).limit(pagesize)
+    res.status(200).json(escaper.unescape(tileset))
+  })
 }
 
 
 module.exports.delete = function(req, res) {
-  Tileset.findOneAndUpdate({
+  Tileset.findOneAndRemove({
     tileset_id: req.params.tileset_id,
-    owner: req.params.username,
-    is_deleted: false
-  }, { is_deleted: true }, function(err) {
+    owner: req.params.username
+  }, function(err) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
-    res.sendStatus(204)
+    var tiles = 'tiles_' + req.params.tileset_id
+    mongoose.connection.db.dropCollection(tiles, function(err) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      res.sendStatus(204)
+    })
   })
+}
+
+
+module.exports.getTile = function(req, res) {
+  Tileset.findOne({
+    tileset_id: req.params.tileset_id,
+    owner: req.params.username
+  }, function(err, tileset) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!tileset) {
+      return res.sendStatus(404)
+    }
+
+    var tiles = 'tiles_' + req.params.tileset_id
+    var Tile = mongoose.Model(tiles, TileSchema, tiles)
+
+    Tile.findOne({
+      zoom_level: +req.params.z,
+      tile_column: +req.params.x,
+      tile_row: +req.params.y
+    }, function(err, tile) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!tile) {
+        return res.sendStatus(404)
+      }
+
+      res.set(tiletype.headers(tile.tile_data))
+      return res.status(200).send(tile.tile_data)
+    })
+  })
+}
+
+
+module.exports.preview = function(req, res) {
+  return res.sendStatus(200)
 }

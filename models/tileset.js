@@ -7,9 +7,7 @@ var TilesetSchema = new mongoose.Schema({
   tileset_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   scope: { type: String, default: 'private' },
-  is_deleted: { type: Boolean, default: false },
   tags: [String],
-  external_uri: String,
 
   // tilejson spec
   tilejson: { type: String, default: '2.1.0' },
@@ -26,7 +24,7 @@ var TilesetSchema = new mongoose.Schema({
   data: [String],
   minzoom: { type: Number, default: 0 },
   maxzoom: { type: Number, default: 22 },
-  resolution: { type: Number, default: 4 },
+  resolution: Number,
   bounds: { type: [Number], default: [-180, -90, 180, 90] },
   center: [Number],
 
@@ -43,7 +41,7 @@ var TilesetSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-TilesetSchema.plugin(select, '-_id -is_deleted -__v')
+TilesetSchema.plugin(select, '-_id -__v')
 
 
 module.exports = mongoose.model('Tileset', TilesetSchema)

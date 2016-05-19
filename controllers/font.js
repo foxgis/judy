@@ -4,10 +4,7 @@ var path = require('path')
 
 
 module.exports.list = function(req, res) {
-  Font.find({
-    owner: req.params.username,
-    is_deleted: false
-  }, function(err, fonts) {
+  Font.find({ owner: req.params.username }, function(err, fonts) {
     if (err) {
       res.status(500).json({ error: err })
       return
@@ -19,11 +16,11 @@ module.exports.list = function(req, res) {
 
 
 module.exports.retrieve = function(req, res) {
-  var filePath = path.join('fonts',req.params.fontstack, req.params.range + '.pbf')
+  var filePath = path.join('fonts', req.params.fontstack, req.params.range + '.pbf')
 
-  fs.readFile(filePath, function(err, pbf){
+  fs.readFile(filePath, function(err, pbf) {
     if (err) {
-      return res.status(500).json({ error: err})
+      return res.status(500).json({ error: err })
     }
 
     return res.status(200).send(pbf)

@@ -3,10 +3,10 @@ var config = {
   jwt_secret: '29THD03',
   cacheSize: 10,
   sourceCacheSize: 10,
-  blackList: [
+  blacklist: [
+    'foxgis',
     'admin',
-    'guest',
-    'foxgis'
+    'guest'
   ]
 }
 

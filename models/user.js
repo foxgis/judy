@@ -16,10 +16,7 @@ var UserSchema = new mongoose.Schema({
   email: String,
   phone: String,
   location: String,
-  organization: String,
-  avatar: String,
-
-  is_verified: { type: Boolean, default: false }
+  organization: String
 }, { timestamps: true })
 
 
