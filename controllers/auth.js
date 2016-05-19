@@ -3,7 +3,6 @@ var config = require('../config')
 var User = require('../models/user')
 var Style = require('../models/style')
 var Sprite = require('../models/sprite')
-var Group = require('../models/group')
 var Tileset = require('../models/tileset')
 var Font = require('../models/font')
 
@@ -202,7 +201,7 @@ var authTileset = function(req, res, next) {
       }
 
       if (tileset.scopes.indexOf('private') > -1) {
-        
+
         return res.sendStatus(401)
       }
       else if (tileset.scopes.indexOf('public') > -1){
@@ -258,7 +257,7 @@ var authFonts = function(req, res, next) {
       }
 
       if (font.scopes.indexOf('private') > -1) {
- 
+
         return res.sendStatus(401)
       }
       else if (font.scopes.indexOf('public') > -1){
@@ -317,7 +316,7 @@ var authSprite = function(req, res, next) {
       }
 
       if (sprite.scopes.indexOf('private') > -1) {
- 
+
         return res.sendStatus(401)
       }
       else if (sprite.scopes.indexOf('public') > -1){

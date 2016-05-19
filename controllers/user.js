@@ -49,7 +49,7 @@ module.exports.retrieve = function(req, res) {
     }
 
     if (!user) {
-      return res.status(404).json({ error: '没有这个用户'})
+      return res.status(404).json({ error: '用户不存在'})
     }
 
     res.status(200).json(_.omit(user.toJSON(), 'access_token'))
@@ -58,7 +58,7 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['name', 'email', 'phone', 'location', 'organization', 'avatar']
+  var filter = ['name', 'email', 'phone', 'location', 'organization']
 
   User.findOneAndUpdate({ username: req.params.username },
     _.pick(req.body, filter), { new: true },
@@ -74,7 +74,7 @@ module.exports.update = function(req, res) {
 
 module.exports.login = function(req, res) {
   if (!req.body.password) {
-    return res.status(401).json({ error: '登录信息不完整' })
+    return res.status(400).json({ error: '登录信息不完整' })
   }
 
   User.findOne({ username: req.params.username }, function(err, user) {
