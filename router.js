@@ -56,6 +56,7 @@ router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
+router.post('/sprites/:username', auth, upload.any(), sprites.create)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)

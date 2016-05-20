@@ -6,7 +6,7 @@ var shortid = require('shortid')
 var FontSchema = new mongoose.Schema({
   font_id: { type: String, default: shortid.generate, index: true },
   owner: String,
-  scopes: { type: String, default: 'public' },
+  scope: { type: String, default: 'public' },
 
   name: { type: String, index: true }
 }, { timestamps: true })

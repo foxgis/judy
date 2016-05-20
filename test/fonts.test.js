@@ -10,14 +10,14 @@ describe('字体模块', function(){
   before('注册用户', function(done){
     request(app)
       .post('/api/v1/users')
-      .send({username: 'nick4', password: '123456'})
+      .send({username: 'nick_fo', password: '123456'})
       .expect(200)
       .end(function(err, res){
         if(err){
           return done(err)
         }
 
-        res.body.username.should.equal('nick4')
+        res.body.username.should.equal('nick_fo')
         res.body.access_token.should.exist
 
         access_token = res.body.access_token
@@ -27,7 +27,7 @@ describe('字体模块', function(){
   })
 
   after('清理', function(){
-    User.remove({username: 'nick4'}).exec()
+    User.remove({username: 'nick_fo'}).exec()
   })
 
   describe('请求字体', function(){
@@ -52,6 +52,22 @@ describe('字体模块', function(){
         .get(encodeURI('/api/v1/fonts/foxgis/酷炫字体/0-255.pbf'))
         .set('x-access-token', access_token)
         .expect(404)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
+
+    it('请求失败', function(done){
+      request(app)
+        .get(encodeURI('/api/v1/fonts/foxgis'))
+        .set('x-access-token', access_token)
+        .expect(401)
         .end(function(err, res){
           if(err){
             return done(err)
