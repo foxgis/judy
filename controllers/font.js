@@ -1,6 +1,8 @@
 var fs = require('fs')
 var path = require('path')
 var _ = require('lodash')
+// var mkdirp = require('mkdirp')
+// var fontmachine = require('fontmachine')
 var Font = require('../models/font')
 
 
@@ -20,6 +22,50 @@ module.exports.list = function(req, res) {
 
 module.exports.create = function(req, res) {
   res.sendStatus(200)
+  // var ext = path.extname(req.files[0].path)
+  // if (ext !== '.ttf' || ext !== '.otf') {
+  //   return res.status(400).json({ error: '仅支持ttf、otf字体文件' })
+
+  // } else {
+  //   fs.readFile(req.files[0].path, function(err, buffer) {
+  //     if (err) {
+  //       return res.status(500).json({ error: err })
+  //     }
+
+  //     fontmachine.makeGlyphs({ font: buffer, filetype: ext }, function(err, font) {
+  //       if (err) {
+  //         return res.status(500).json({ error: err })
+  //       }
+
+  //       var fontdir = path.join('fonts', req.params.username, font.name)
+  //       mkdirp(fontdir, function(err) {
+  //         if (err) {
+  //           return res.status(500).json({ error: err })
+  //         }
+
+  //         font.stack.forEach(function(pbf) {
+  //           fs.writeFile(pbf.name, pbf.data)
+  //         })
+
+
+  //         Font.findOneAndUpdate({
+  //           fontname: font.name,
+  //           owner: req.params.username
+  //         }, {
+  //           ontname: font.name,
+  //           owner: req.params.username,
+  //           is_deleted: false
+  //         }, { upsert: true, new: true }, function(err, font) {
+  //           if (err) {
+  //             return res.status(500).json({ error: err })
+  //           }
+
+  //           res.status(200).json(font)
+  //         })
+  //       })
+  //     })
+  //   })
+  // }
 }
 
 
