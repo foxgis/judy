@@ -7,7 +7,7 @@ var styles = require('./controllers/style')
 var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
-var files = require('./controllers/file')
+var uploads = require('./controllers/upload')
 var admin = require('./controllers/admin')
 
 
@@ -61,13 +61,13 @@ router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 
-// 文件库
-router.get('files/:username', auth, files.list)
-router.post('files/:username', auth, upload.any(), files.create)
-router.get('files/:username/:file_id', auth, files.retrieve)
-router.patch('files/:username/:file_id', auth, files.update)
-router.delete('files/:username/:file_id', auth, files.delete)
-router.get('/uploads/:username/:file_id/raw', auth, files.download)
+// 上传文件库
+router.get('uploads/:username', auth, uploads.list)
+router.post('uploads/:username', auth, upload.any(), uploads.create)
+router.get('uploads/:username/:upload_id', auth, uploads.retrieve)
+router.patch('uploads/:username/:upload_id', auth, uploads.update)
+router.delete('uploads/:username/:upload_id', auth, uploads.delete)
+router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
 
 // 行政区划
 router.get('/admin.json', admin.retrieve)

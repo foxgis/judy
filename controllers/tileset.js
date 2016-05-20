@@ -9,22 +9,25 @@ var Tileset = require('../models/tileset')
 module.exports.search = function(req, res) {
   var page = +req.query.page || 1
 
-  Tileset.find({ scope: 'public', tags: req.query.search },
-    '-vector_layers',
-    function(err, tilesets) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+  Tileset.find({
+    scope: 'public',
+    tags: req.query.search,
+    is_deleted: false
+  }, '-vector_layers', function(err, tilesets) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
 
-      res.status(200).json(tilesets)
+    res.status(200).json(tilesets)
 
-    }).limit(20).skip(20 * (page - 1))
+  }).limit(20).skip(20 * (page - 1))
 }
 
 
 module.exports.list = function(req, res) {
   Tileset.find({
-    owner: req.params.username
+    owner: req.params.username,
+    is_deleted: false
   }, '-vector_layers', function(err, tilesets) {
     if (err) {
       return res.status(500).json({ error: err })
@@ -54,12 +57,12 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'tags', 'name', 'description', 'vector_layers']
+  var filter = ['tileset_id', 'owner', 'is_deleted', 'createdAt', 'updatedAt']
 
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.pick(escaper.escape(req.body), filter), function(err, tileset) {
+  }, _.omit(escaper.escape(req.body), filter), function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -74,16 +77,13 @@ module.exports.update = function(req, res) {
 
 
 module.exports.delete = function(req, res) {
-  Tileset.findOneAndRemove({
+  Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, function(err) {
+  }, { is_deleted: true }, function(err) {
     if (err) {
       return res.status(500).json({ error: err })
     }
-
-    var tiles = 'tiles_' + req.params.tileset_id
-    mongoose.connection.db.dropCollection(tiles, function() {})
 
     res.sendStatus(204)
   })

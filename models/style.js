@@ -8,6 +8,7 @@ var StyleSchema = new mongoose.Schema({
   owner: String,
   scope: { type: String, default: 'private' },
   tags: [String],
+  is_deleted: { type: Boolean, default: false },
 
   version: { type: Number, default: 8 },
   name: String,
@@ -27,7 +28,7 @@ var StyleSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-StyleSchema.plugin(select, '-_id -__v')
+StyleSchema.plugin(select, '-_id -__v -is_deleted')
 
 
 module.exports = mongoose.model('Style', StyleSchema)

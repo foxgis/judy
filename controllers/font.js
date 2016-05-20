@@ -1,6 +1,6 @@
-var Font = require('../models/font')
 var fs = require('fs')
 var path = require('path')
+var Font = require('../models/font')
 
 
 module.exports.list = function(req, res) {
