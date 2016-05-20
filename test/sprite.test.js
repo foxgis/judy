@@ -1,280 +1,280 @@
-// var app = require('../app')
-// var request = require('supertest')
-// var User = require('../models/user')
-// var Sprite = require('../models/sprite')
-// var should = require('chai').should() // eslint-disable-line no-unused-vars
+var app = require('../app')
+var request = require('supertest')
+var User = require('../models/user')
+var Sprite = require('../models/sprite')
+var should = require('chai').should() // eslint-disable-line no-unused-vars
 
 
-// describe('符号库模块', function() {
+describe('符号库模块', function() {
 
-//   var access_token
-//   var sprite_id
+  var access_token
+  var sprite_id
 
-//   before('注册用户', function(done) {
-//     request(app)
-//       .post('/api/v1/users')
-//       .send({ username: 'nick_sp', password: '123456' })
-//       .expect(200)
-//       .end(function(err, res) {
-//         if (err) {
-//           return done(err)
-//         }
+  before('注册用户', function(done) {
+    request(app)
+      .post('/api/v1/users')
+      .send({ username: 'nick_sp', password: '123456' })
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-//         access_token = res.body.access_token
+        access_token = res.body.access_token
 
-//         done()
-//       })
-//   })
+        done()
+      })
+  })
 
-//   after('清除用户以及用户样式表信息', function() {
-//     User.remove({ username: 'nick_sp' }).exec()
-//     Sprite.remove({ owner: 'nick_sp' }).exec()
-//   })
+  after('清除用户以及用户样式表信息', function() {
+    User.remove({ username: 'nick_sp' }).exec()
+    Sprite.remove({ owner: 'nick_sp' }).exec()
+  })
 
-//   describe('创建符号库', function(){
-//     it('创建成功', function(done) {
-//       request(app)
-//         .post('/api/v1/sprites/nick_sp')
-//         .set('x-access-token', access_token)
-//         .attach('aa', './test/fixtures/svg.zip')
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+  describe('创建符号库', function(){
+    it('创建成功', function(done) {
+      request(app)
+        .post('/api/v1/sprites/nick_sp')
+        .set('x-access-token', access_token)
+        .attach('aa', './test/fixtures/svg.zip')
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body.owner.should.equal('nick_sp')
-//           res.body.sprite_id.should.exist
+          res.body.owner.should.equal('nick_sp')
+          res.body.sprite_id.should.exist
 
-//           sprite_id = res.body.sprite_id
+          sprite_id = res.body.sprite_id
 
-//           done()
-//         })
-//     })
-//   })
+          done()
+        })
+    })
+  })
 
-//   describe('获取符号库列表', function() {
-//     it('获取成功', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+  describe('获取符号库列表', function() {
+    it('获取成功', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body[0].owner.should.equal('nick_sp')
-//           res.body[0].sprite_id.should.exist
+          res.body[0].owner.should.equal('nick_sp')
+          res.body[0].sprite_id.should.exist
 
-//           sprite_id = res.body[0].sprite_id
+          sprite_id = res.body[0].sprite_id
 
-//           done()
-//         })
-//     })
-//   })
+          done()
+        })
+    })
+  })
 
-//   describe('获取符号库', function() {
-//     it('获取成功', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id)
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+  describe('获取符号库', function() {
+    it('获取成功', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id)
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body.owner.should.equal('nick_sp')
-//           res.body.sprite_id.should.equal(sprite_id)
+          res.body.owner.should.equal('nick_sp')
+          res.body.sprite_id.should.equal(sprite_id)
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('获取失败', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/un_existed_sprite_id')
-//         .set('x-access-token', access_token)
-//         .expect(404)
-//         .end(function(err, res){
-//           if(err){
-//             return done(err)
-//           }
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/un_existed_sprite_id')
+        .set('x-access-token', access_token)
+        .expect(404)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-//           res.body.should.be.empty
+          res.body.should.be.empty
 
-//           done()
-//         })
-//     })
-//   })
+          done()
+        })
+    })
+  })
 
-//   describe('下载符号库', function() {
-//     it('@2x', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite@2x')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+  describe('下载符号库', function() {
+    it('@2x', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite@2x')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body.airport.pixelRatio.should.equal(2)
+          res.body.airport.pixelRatio.should.equal(2)
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('@1x', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+    it('@1x', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body.airport.pixelRatio.should.equal(1)
+          res.body.airport.pixelRatio.should.equal(1)
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('@2x.json', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite@2x.json')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+    it('@2x.json', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite@2x.json')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body.airport.pixelRatio.should.equal(2)
+          res.body.airport.pixelRatio.should.equal(2)
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('@1x.json', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite.json')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+    it('@1x.json', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite.json')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.body.airport.pixelRatio.should.equal(1)
+          res.body.airport.pixelRatio.should.equal(1)
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('@2x.png', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite@2x.png')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+    it('@2x.png', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite@2x.png')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.header['content-type'].should.equal('image/png')
+          res.header['content-type'].should.equal('image/png')
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('@1x.png', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite.png')
-//         .set('x-access-token', access_token)
-//         .expect(200)
-//         .end(function(err, res) {
-//           if (err) {
-//             return done(err)
-//           }
+    it('@1x.png', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/' + sprite_id + '/sprite.png')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
 
-//           res.header['content-type'].should.equal('image/png')
+          res.header['content-type'].should.equal('image/png')
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('下载失败', function(done) {
-//       request(app)
-//         .get('/api/v1/sprites/nick_sp/un_existed_sprite_id/sprite')
-//         .set('x-access-token', access_token)
-//         .expect(404)
-//         .end(function(err, res){
-//           if(err){
-//             return done(err)
-//           }
+    it('下载失败', function(done) {
+      request(app)
+        .get('/api/v1/sprites/nick_sp/un_existed_sprite_id/sprite')
+        .set('x-access-token', access_token)
+        .expect(404)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-//           res.body.should.be.empty
+          res.body.should.be.empty
 
-//           done()
-//         })
-//     })
-//   })
+          done()
+        })
+    })
+  })
 
-//   describe('更新符号库',function(){
-//     it('更新成功',function(done){
-//       request(app)
-//         .patch('/api/v1/sprites/nick_sp/' + sprite_id)
-//         .set('x-access-token', access_token)
-//         .send({ name: 'new_name' })
-//         .expect(200)
-//         .end(function(err,res){
-//           if(err){
-//             return done(err)
-//           }
+  describe('更新符号库',function(){
+    it('更新成功',function(done){
+      request(app)
+        .patch('/api/v1/sprites/nick_sp/' + sprite_id)
+        .set('x-access-token', access_token)
+        .send({ name: 'new_name' })
+        .expect(200)
+        .end(function(err,res){
+          if(err){
+            return done(err)
+          }
 
-//           res.body.owner.should.equal('nick_sp')
-//           res.body.name.should.equal('new_name')
+          res.body.owner.should.equal('nick_sp')
+          res.body.name.should.equal('new_name')
 
-//           done()
-//         })
-//     })
+          done()
+        })
+    })
 
-//     it('更新失败',function(done){
-//       request(app)
-//         .patch('/api/v1/sprites/nick_sp/un_existed_sprite_id')
-//         .set('x-access-token', access_token)
-//         .send({ name: 'new_name' })
-//         .expect(404)
-//         .end(function(err, res){
-//           if(err){
-//             return done(err)
-//           }
+    it('更新失败',function(done){
+      request(app)
+        .patch('/api/v1/sprites/nick_sp/un_existed_sprite_id')
+        .set('x-access-token', access_token)
+        .send({ name: 'new_name' })
+        .expect(404)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-//           res.body.should.be.empty
+          res.body.should.be.empty
 
-//           done()
-//         })
-//     })
-//   })
+          done()
+        })
+    })
+  })
 
-//   describe('删除符号库', function() {
-//     it('删除成功', function(done) {
-//       request(app)
-//         .delete('/api/v1/sprites/nick_sp/' + sprite_id)
-//         .set('x-access-token', access_token)
-//         .expect(204)
-//         .end(function(err, res){
-//           if(err){
-//             return done(err)
-//           }
+  describe('删除符号库', function() {
+    it('删除成功', function(done) {
+      request(app)
+        .delete('/api/v1/sprites/nick_sp/' + sprite_id)
+        .set('x-access-token', access_token)
+        .expect(204)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-//           res.body.should.be.empty
+          res.body.should.be.empty
 
-//           done()
-//         })
-//     })
-//   })
-// })
+          done()
+        })
+    })
+  })
+})

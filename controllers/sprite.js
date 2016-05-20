@@ -34,7 +34,7 @@ module.exports.create = function(req, res) {
     .forEach(function(entry) {
       var img = {
         svg: zip.readFile(entry),
-        id: entry.name
+        id: path.basename(entry.entryName, path.extname(entry.entryName))
       }
 
       imgs.push(img)

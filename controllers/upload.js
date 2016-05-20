@@ -32,7 +32,8 @@ module.exports.create = function(req, res) {
   writeStream.on('close', function(file) {
     var newUpload = new Upload({
       file_id: file._id,
-      owner: req.params.username
+      owner: req.params.username,
+      name: file.filename
     })
 
     newUpload.save(function(err) {
@@ -48,8 +49,8 @@ module.exports.create = function(req, res) {
 
 
 module.exports.retrieve = function(req, res) {
-  Upload.find({
-    file_id: req.params.file_id,
+  Upload.findOne({
+    upload_id: req.params.upload_id,
     owner: req.params.username
   }, function(err, upload) {
     if (err) {
@@ -101,7 +102,7 @@ module.exports.delete = function(req, res) {
 
 module.exports.download = function(req, res) {
   Upload.findOne({
-    file_id: req.params.file_id,
+    upload_id: req.params.upload_id,
     owner: req.params.username
   }, function(err, upload) {
     if (err) {

@@ -67,11 +67,11 @@ router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 
 // 上传文件库
-router.get('uploads/:username', auth, uploads.list)
-router.post('uploads/:username', auth, upload.any(), uploads.create)
-router.get('uploads/:username/:upload_id', auth, uploads.retrieve)
-router.patch('uploads/:username/:upload_id', auth, uploads.update)
-router.delete('uploads/:username/:upload_id', auth, uploads.delete)
+router.get('/uploads/:username', auth, uploads.list)
+router.post('/uploads/:username', auth, upload.any(), uploads.create)
+router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
+router.patch('/uploads/:username/:upload_id', auth, uploads.update)
+router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
 
 // 行政区划
