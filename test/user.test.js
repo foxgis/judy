@@ -172,7 +172,7 @@ describe('用户管理模块', function() {
     it('密码缺失', function(done) {
       request(app)
         .post('/api/v1/users/nick')
-        .expect(401)
+        .expect(400)
         .end(function(err, res){
           if(err){
             return done(err)
