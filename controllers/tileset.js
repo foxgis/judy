@@ -57,12 +57,12 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['tileset_id', 'owner', 'is_deleted', 'createdAt', 'updatedAt']
+  var filter = ['scope', 'tags', 'name', 'description', 'vector_layers']
 
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.omit(escaper.escape(req.body), filter), function(err, tileset) {
+  }, _.pick(escaper.escape(req.body), filter), function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -100,6 +100,10 @@ module.exports.getTile = function(req, res) {
     }
 
     if (!tileset) {
+      return res.sendStatus(404)
+    }
+
+    if (req.params.format !=== tileset.format) {
       return res.sendStatus(404)
     }
 
