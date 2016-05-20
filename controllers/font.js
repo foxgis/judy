@@ -32,6 +32,8 @@ module.exports.create = function(req, res) {
   //       return res.status(500).json({ error: err })
   //     }
 
+  //     fs.unlink(req.files[0].path)
+
   //     fontmachine.makeGlyphs({ font: buffer, filetype: ext }, function(err, font) {
   //       if (err) {
   //         return res.status(500).json({ error: err })
