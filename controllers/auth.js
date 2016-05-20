@@ -159,20 +159,18 @@ var authTileset = function(req, res, next) {
 
 
 var authFonts = function(req, res, next) {
-  var fontstack = decodeURI(req.url).split('/')[3]
-
   if (req.user.username === req.params.username) {
     
     return next()
   }
-  else if (!fontstack || req.method !== 'GET') {
+  else if (req.params.fontstack|| req.method !== 'GET') {
     
     return res.sendStatus(401)
   }
   else {
     Font.findOne({
       owner: req.params.username,
-      name: fontstack,
+      name: req.params.fontstack,
       scope: 'public'
     }, function(err, font) {
       if (err) {
