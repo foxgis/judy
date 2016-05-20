@@ -14,7 +14,6 @@ var router = require('./router')
 
 // 连接数据库
 require('./db')
-require('./init')
 
 var app = express()
 

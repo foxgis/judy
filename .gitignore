@@ -37,4 +37,5 @@ public/uploads/*
 # Config file
 
 uploads/
+fonts/
 .vscode/
