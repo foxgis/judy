@@ -52,7 +52,11 @@ router.get('/tilesets/:username/:tileset_id' + util.format(staticPattern, bounds
 
 // 字体
 router.get('/fonts/:username', auth, fonts.list)
-router.get('/fonts/:username/:fontstack/:range.pbf', auth, fonts.retrieve)
+router.post('/fonts/:username', auth, upload.any(), fonts.create)
+router.get('/fonts/:username/:fontname', auth, fonts.retrieve)
+router.patch('/fonts/:username/:fontname', auth, fonts.update)
+router.delete('/fonts/:username/:fontname', auth, fonts.delete)
+router.get('/fonts/:username/:fontname/:range.pbf', auth, fonts.download)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)

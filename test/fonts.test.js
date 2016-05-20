@@ -51,7 +51,7 @@ describe('字体模块', function(){
       request(app)
         .get(encodeURI('/api/v1/fonts/foxgis/酷炫字体/0-255.pbf'))
         .set('x-access-token', access_token)
-        .expect(404)
+        .expect(401)
         .end(function(err, res){
           if(err){
             return done(err)

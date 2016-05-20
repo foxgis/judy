@@ -10,7 +10,7 @@ var should = require('chai').should() // eslint-disable-line no-unused-vars
 describe('权限模块', function(){
   var access_token
   var style_id
-  var sprite_id
+  var sprite_id// eslint-disable-line no-unused-vars
 
   before('注册nick_au', function(done){
     request(app)
@@ -202,7 +202,7 @@ describe('权限模块', function(){
       it('获取私密样式失败', function(done){
         request(app)
           .get('/api/v1/styles/nick_au/' + style_id)
-          .expect(404)
+          .expect(401)
           .end(function(err, res) {
             if (err) {
               return done(err)
@@ -252,7 +252,7 @@ describe('权限模块', function(){
         it('获取失败', function(done){
           request(app)
             .get('/api/v1/styles/nick_au/bad_style_id')
-            .expect(404)
+            .expect(401)
             .end(function(err, res) {
               if (err) {
                 return done(err)
@@ -282,7 +282,7 @@ describe('权限模块', function(){
           })
       })
 
-      it('获取私密符号库失败', function(done){
+      it('获取符号库成功', function(done){
         request(app)
           .get('/api/v1/sprites/nick_au/' + sprite_id)
           .expect(200)
@@ -293,25 +293,54 @@ describe('权限模块', function(){
 
             res.body.sprite_id.should.equal(sprite_id)
             res.body.owner.should.equal('nick_au')
-            should.not.exist(res.body.scopes)
 
             done()
           })
       })
 
-      describe('获取公开符号库', function(){
-        before('公开分享符号库', function(done){
+      it('下载成功', function(done){
+        request(app)
+          .get('/api/v1/sprites/nick_au/' + sprite_id +'/sprite@2x.json')
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err)
+            }
+
+            res.body.airport.pixelRatio.should.equal(2)
+
+            done()
+          })
+      })
+
+      it('获取失败', function(done){
+        request(app)
+          .get('/api/v1/styles/nick_au/bad_style_id')
+          .expect(401)
+          .end(function(err, res) {
+            if (err) {
+              return done(err)
+            }
+
+            res.body.should.be.empty
+
+            done()
+          })
+      })
+
+      describe('获取私密符号库', function(){
+        before('符号库设为私密', function(done){
           request(app)
             .patch('/api/v1/sprites/nick_au/' + sprite_id)
             .set('x-access-token', access_token)
-            .send({scope: 'public'})
+            .send({scope: 'private'})
             .expect(200)
             .end(function(err, res){
               if(err){
                 return done(err)
               }
 
-              res.body.scope.should.equal('public')
+              res.body.scope.should.equal('private')
 
               done()
             })
@@ -320,39 +349,7 @@ describe('权限模块', function(){
         it('获取成功', function(done){
           request(app)
             .get('/api/v1/sprites/nick_au/' + sprite_id)
-            .expect(200)
-            .end(function(err, res) {
-              if (err) {
-                return done(err)
-              }
-
-              res.body.sprite_id.should.equal(sprite_id)
-              res.body.owner.should.equal('nick_au')
-              should.not.exist(res.body.scopes)
-
-              done()
-            })
-        })
-
-        it('下载成功', function(done){
-          request(app)
-            .get('/api/v1/sprites/nick_au/' + sprite_id +'/sprite@2x.json')
-            .expect(200)
-            .end(function(err, res) {
-              if (err) {
-                return done(err)
-              }
-
-              res.body.airport.pixelRatio.should.equal(2)
-
-              done()
-            })
-        })
-
-        it('获取失败', function(done){
-          request(app)
-            .get('/api/v1/styles/nick_au/bad_style_id')
-            .expect(404)
+            .expect(401)
             .end(function(err, res) {
               if (err) {
                 return done(err)
