@@ -6,10 +6,10 @@ var shortid = require('shortid')
 var SpriteSchema = new mongoose.Schema({
   sprite_id: { type: String, default: shortid.generate, index: true },
   owner: String,
+  scope: { type: String, default: 'public' },
   is_deleted: { type: Boolean, default: false },
-  scope: { type: String, default: 'private' },
 
-  name: { type: String, default: 'Sprite'},
+  name: { type: String, default: 'sprite'},
   image: Buffer,
   json: String,
   image2x: Buffer,
