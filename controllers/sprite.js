@@ -57,7 +57,7 @@ module.exports.create = function(req, res) {
         if (err) {
           return res.status(500).json({ error: err })
         }
-        sprite.json2x = json2x
+        sprite.json2x = JSON.stringify(json2x)
 
         spritezero.generateLayout(imgs, 1, false, function(err, layout) {
           if (err) {
@@ -75,7 +75,7 @@ module.exports.create = function(req, res) {
                 return res.status(500).json({ error: err })
               }
 
-              sprite.json = json
+              sprite.json = JSON.stringify(json)
 
               sprite.save(function(err) {
                 if (err) {

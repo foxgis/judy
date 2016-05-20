@@ -5,6 +5,7 @@ var Style = require('../models/style')
 var Sprite = require('../models/sprite')
 var Tileset = require('../models/tileset')
 var Font = require('../models/font')
+var Upload = require('../models/upload')
 
 
 module.exports = function(req, res, next) {
@@ -46,40 +47,25 @@ var authAccessToken = function(req, res, next) {
 
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
-  var resourceUser = req.url.split('/')[2]
-
-  if (!resourceUser) {
-    return next()
-  }
-
-  if (resourceType === 'users') {
-    return authUser(req, res, next)
-  }
-
-  if (resourceType === 'uploads') {
-    return authUpload(req, res, next)
-  }
-
-  if (resourceType === 'styles') {
-    return authStyle(req, res, next)
-  }
-
-  if (resourceType === 'tilesets') {
-    return authTileset(req, res, next)
-  }
-
-  if (resourceType === 'fonts') {
-    return authFonts(req, res, next)
-  }
-
-  if (resourceType === 'sprites') {
-    return authSprite(req, res, next)
+  switch (resourceType) {
+    case 'users':
+      return authUser(req, res, next)
+    case 'styles':
+      return authStyle(req, res, next)
+    case 'tilesets':
+      return authTileset(req, res, next)
+    case 'fonts':
+      return authFont(req, res, next)
+    case 'sprites':
+      return authSprite(req, res, next)
+    case 'uploads':
+      return authUpload(req, res, next)
   }
 }
 
 
 var authUser = function(req, res, next) {
-  if (req.method === 'PATCH' && req.user.username !== req.params.username) {
+  if (req.method !== 'GET' && req.user.username !== req.params.username) {
     return res.sendStatus(401)
   }
 
@@ -87,38 +73,25 @@ var authUser = function(req, res, next) {
 }
 
 
-var authUpload = function(req, res, next) {
-  if (req.user.username === req.params.username) {
-    return next()
-  }
-
-  return res.sendStatus(401)
-}
-
-
 var authStyle = function(req, res, next) {
-  var style_id = req.url.split('/')[3]
-
   if (req.user.username === req.params.username) {
-
     return next()
-  }
-  else if (!style_id || req.method !== 'GET') {
 
+  } else if (!req.params.style_id || req.method !== 'GET') {
     return res.sendStatus(401)
-  }
-  else {
+
+  } else {
     Style.findOne({
-      owner: req.params.username,
       style_id: req.params.style_id,
+      owner: req.params.username,
       scope: 'public'
-    }, function(err,style) {
+    }, function(err, style) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      if (!style){
-        return res.sendStatus(404)
+      if (!style) {
+        return res.sendStatus(401)
       }
 
       return next()
@@ -128,28 +101,24 @@ var authStyle = function(req, res, next) {
 
 
 var authTileset = function(req, res, next) {
-  var tileset_id = req.url.split('/')[3]
-
   if (req.user.username === req.params.username) {
-
     return next()
-  }
-  else if (!tileset_id || req.method !== 'GET') {
 
+  } else if (!req.params.tileset_id || req.method !== 'GET') {
     return res.sendStatus(401)
-  }
-  else {
+
+  } else {
     Tileset.findOne({
-      owner: req.params.username,
       tileset_id: req.params.tileset_id,
+      owner: req.params.username,
       scope: 'public'
-    }, function(err,tileset) {
+    }, function(err, tileset) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      if (!tileset){
-        return res.sendStatus(404)
+      if (!tileset) {
+        return res.sendStatus(401)
       }
 
       return next()
@@ -158,29 +127,25 @@ var authTileset = function(req, res, next) {
 }
 
 
-var authFonts = function(req, res, next) {
-  var fontstack = decodeURI(req.url).split('/')[3]
-
+var authFont = function(req, res, next) {
   if (req.user.username === req.params.username) {
-    
     return next()
-  }
-  else if (!fontstack || req.method !== 'GET') {
-    
+
+  } else if (!req.params.fontstack || req.method !== 'GET') {
     return res.sendStatus(401)
-  }
-  else {
+
+  } else {
     Font.findOne({
+      fontname: req.params.fontstack.split(',')[0],
       owner: req.params.username,
-      name: fontstack,
       scope: 'public'
     }, function(err, font) {
       if (err) {
-        return res.status(500).json({ error: err})
+        return res.status(500).json({ error: err })
       }
 
       if (!font) {
-        return res.sendStatus(404)
+        return res.sendStatus(401)
       }
 
       return next()
@@ -190,28 +155,51 @@ var authFonts = function(req, res, next) {
 
 
 var authSprite = function(req, res, next) {
-  var sprite_id = req.url.split('/')[3]
-
   if (req.user.username === req.params.username) {
-
     return next()
-  }
-  else if (!sprite_id || req.method !== 'GET') {
 
+  } else if (!req.params.username || req.method !== 'GET') {
     return res.sendStatus(401)
-  }
-  else {
+
+  } else {
     Sprite.findOne({
-      owner: req.params.username,
       sprite_id: req.params.sprite_id,
+      owner: req.params.username,
       scope: 'public'
-    }, function(err,sprite) {
+    }, function(err, sprite) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      if (!sprite){
-        return res.sendStatus(404)
+      if (!sprite) {
+        return res.sendStatus(401)
+      }
+
+      return next()
+    })
+  }
+}
+
+
+var authUpload = function(req, res, next) {
+  if (req.user.username === req.params.username) {
+    return next()
+
+  } else if (!req.params.username || req.method !== 'GET') {
+    return res.sendStatus(401)
+
+  } else {
+    Upload.findOne({
+      upload_id: req.params.upload_id,
+      owner: req.params.username,
+      scope: 'public'
+    }, function(err, upload) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!upload) {
+        return res.sendStatus(401)
       }
 
       return next()

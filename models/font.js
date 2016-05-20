@@ -1,18 +1,16 @@
 var mongoose = require('mongoose')
 var select = require('mongoose-json-select')
-var shortid = require('shortid')
 
 
 var FontSchema = new mongoose.Schema({
-  font_id: { type: String, default: shortid.generate, index: true },
+  fontname: { type: String, index: true },
   owner: String,
   scope: { type: String, default: 'public' },
-
-  name: { type: String, index: true }
+  is_deleted: {type: Boolean, default: false}
 }, { timestamps: true })
 
 
-FontSchema.plugin(select, '-_id -__v')
+FontSchema.plugin(select, '-_id -__v is_deleted')
 
 
 module.exports = mongoose.model('Font', FontSchema)
