@@ -144,6 +144,45 @@ describe('上传模块', function() {
     })
   })
 
+  describe('修改文件', function() {
+    it('修改成功', function(done) {
+      request(app)
+        .patch('/api/v1/uploads/nick_up/' + upload_id )
+        .set('x-access-token', access_token)
+        .send({tags: ['nick'], name: 'newName', description: 'a txt', owner: 'judy'})
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.owner.should.equal('nick_up')
+          res.body.tags[0].should.equal('nick')
+          res.body.name.should.equal('newName')
+          res.body.description.should.equal('a txt')
+
+          done()
+        })
+    })
+
+    it('修改失败', function(done) {
+      request(app)
+        .patch('/api/v1/uploads/nick_up/bad_upload_id')
+        .set('x-access-token', access_token)
+        .send({tags: ['nick']})
+        .expect(404)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
+  })
+
   describe('删除文件', function() {
     it('删除成功', function(done) {
       request(app)

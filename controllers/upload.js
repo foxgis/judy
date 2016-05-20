@@ -70,18 +70,18 @@ module.exports.update = function(req, res) {
   var filter = ['tags', 'name', 'description']
 
   Upload.findOneAndUpdate({
-    file_id: req.params.file_id,
+    upload_id: req.params.upload_id,
     owner: req.params.username
-  }, _.pick(req.body, filter), function(err, file) {
+  }, _.pick(req.body, filter), { new: true }, function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    if (!file) {
+    if (!upload) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(file)
+    res.status(200).json(upload)
   })
 }
 

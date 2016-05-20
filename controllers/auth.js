@@ -46,11 +46,6 @@ var authAccessToken = function(req, res, next) {
 
 var authResource = function(req, res, next) {
   var resourceType = req.url.split('/')[1]
-  var resourceUser = req.url.split('/')[2]
-
-  if (!resourceUser) {
-    return next()
-  }
 
   if (resourceType === 'users') {
     return authUser(req, res, next)
@@ -97,13 +92,11 @@ var authUpload = function(req, res, next) {
 
 
 var authStyle = function(req, res, next) {
-  var style_id = req.url.split('/')[3]
-
   if (req.user.username === req.params.username) {
 
     return next()
   }
-  else if (!style_id || req.method !== 'GET') {
+  else if (!req.params.style_id|| req.method !== 'GET') {
 
     return res.sendStatus(401)
   }
@@ -128,13 +121,11 @@ var authStyle = function(req, res, next) {
 
 
 var authTileset = function(req, res, next) {
-  var tileset_id = req.url.split('/')[3]
-
   if (req.user.username === req.params.username) {
 
     return next()
   }
-  else if (!tileset_id || req.method !== 'GET') {
+  else if (!req.params.tileset_id || req.method !== 'GET') {
 
     return res.sendStatus(401)
   }
@@ -163,7 +154,7 @@ var authFonts = function(req, res, next) {
     
     return next()
   }
-  else if (req.params.fontstack|| req.method !== 'GET') {
+  else if (!req.params.fontstack || req.method !== 'GET') {
     
     return res.sendStatus(401)
   }
@@ -188,13 +179,11 @@ var authFonts = function(req, res, next) {
 
 
 var authSprite = function(req, res, next) {
-  var sprite_id = req.url.split('/')[3]
-
   if (req.user.username === req.params.username) {
 
     return next()
   }
-  else if (!sprite_id || req.method !== 'GET') {
+  else if (!req.params.sprite_id|| req.method !== 'GET') {
 
     return res.sendStatus(401)
   }
