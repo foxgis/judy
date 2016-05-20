@@ -143,7 +143,7 @@ describe('权限模块', function(){
               return done(err)
             }
 
-            res.body.error.should.equal('没有这个用户')
+            res.body.error.should.equal('用户不存在')
 
             done()
           })

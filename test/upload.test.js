@@ -43,7 +43,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick_up')
-          res.body.filename.should.equal('create.txt')
+          res.body.name.should.equal('create.txt')
           res.body.upload_id.should.exist
           should.not.exist(res.body.file_id)
           should.not.exist(res.body.is_deleted)
@@ -86,8 +86,8 @@ describe('上传模块', function() {
             return done(err)
           }
 
-          res.body.complete.should.exist
-          res.body.progress.should.exist
+          res.body.owner.should.equal('nick_up')
+          res.body.name.should.equal('create.txt')
 
           done()
         })
