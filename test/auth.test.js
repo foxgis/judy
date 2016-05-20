@@ -285,13 +285,15 @@ describe('权限模块', function(){
       it('获取私密符号库失败', function(done){
         request(app)
           .get('/api/v1/sprites/nick_au/' + sprite_id)
-          .expect(404)
+          .expect(200)
           .end(function(err, res) {
             if (err) {
               return done(err)
             }
 
-            res.body.should.be.empty
+            res.body.sprite_id.should.equal(sprite_id)
+            res.body.owner.should.equal('nick_au')
+            should.not.exist(res.body.scopes)
 
             done()
           })
