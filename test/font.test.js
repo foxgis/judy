@@ -137,7 +137,7 @@ describe('字体模块', function(){
         })
     })
 
-    it('请求成功', function(done){
+    it('guest用户请求成功', function(done){
       request(app)
         .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
         .expect(200)

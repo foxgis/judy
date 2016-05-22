@@ -103,7 +103,7 @@ module.exports.getTile = function(req, res) {
       return res.sendStatus(404)
     }
 
-    if (req.params.format !=== tileset.format) {
+    if (req.params.format !== tileset.format) {
       return res.sendStatus(404)
     }
 
