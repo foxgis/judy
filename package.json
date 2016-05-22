@@ -19,6 +19,7 @@
     "cors": "^2.7.1",
     "debug": "~2.2.0",
     "express": "~4.13.1",
+    "fontmachine": "^0.1.1",
     "gridfs-stream": "^1.1.1",
     "helmet": "^2.0.0",
     "jsonwebtoken": "^6.2.0",

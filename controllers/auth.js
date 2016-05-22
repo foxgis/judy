@@ -137,8 +137,8 @@ var authFont = function(req, res, next) {
   } else {
     Font.findOne({
       fontname: req.params.fontname.split(',')[0],
-      owner: req.params.username
-      // scope: 'public'
+      owner: req.params.username,
+      scope: 'public'
     }, function(err, font) {
       if (err) {
         return res.status(500).json({ error: err })

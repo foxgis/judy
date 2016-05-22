@@ -10,7 +10,7 @@ var FontSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-FontSchema.plugin(select, '-_id -__v is_deleted')
+FontSchema.plugin(select, '-_id -__v -is_deleted')
 
 
 module.exports = mongoose.model('Font', FontSchema)
