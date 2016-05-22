@@ -21,8 +21,14 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
+<<<<<<< HEAD
   var ext = path.extname(req.files[0].originalname)
   if (ext !== '.ttf' && ext !== '.otf') {
+=======
+  res.sendStatus(200)
+  var ext = path.extname(req.files[0].path)
+  if (ext !== '.ttf' || ext !== '.otf') {
+>>>>>>> 92a765973202777c404f4436daf280a1050fb4d4
     return res.status(400).json({ error: '仅支持ttf、otf字体文件' })
 
   } else {
@@ -45,7 +51,11 @@ module.exports.create = function(req, res) {
           }
 
           font.stack.forEach(function(pbf) {
+<<<<<<< HEAD
             fs.writeFile(fontdir + '/' + pbf.name, pbf.data)
+=======
+            fs.writeFile(pbf.name, pbf.data)
+>>>>>>> 92a765973202777c404f4436daf280a1050fb4d4
           })
 
 
@@ -53,9 +63,14 @@ module.exports.create = function(req, res) {
             fontname: font.name,
             owner: req.params.username
           }, {
+<<<<<<< HEAD
             fontname: font.name,
             owner: req.params.username,
             // scope: 'public',
+=======
+            ontname: font.name,
+            owner: req.params.username,
+>>>>>>> 92a765973202777c404f4436daf280a1050fb4d4
             is_deleted: false
           }, { upsert: true, new: true }, function(err, font) {
             if (err) {
