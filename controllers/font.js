@@ -55,7 +55,7 @@ module.exports.create = function(req, res) {
           }, {
             fontname: font.name,
             owner: req.params.username,
-            scope: 'public',
+            // scope: 'public',
             is_deleted: false
           }, { upsert: true, new: true }, function(err, font) {
             if (err) {
