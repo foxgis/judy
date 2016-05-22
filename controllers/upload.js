@@ -72,7 +72,8 @@ module.exports.update = function(req, res) {
   Upload.findOneAndUpdate({
     upload_id: req.params.upload_id,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true }, function(err, upload) {
+  }, _.pick(req.body, filter), { new: true, setDefaultsOnInsert: true }
+  ,function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }

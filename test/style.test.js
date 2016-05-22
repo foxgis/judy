@@ -27,6 +27,7 @@ describe('样式管理模块', function() {
 
   after('清理', function() {
     User.remove({ username: 'nick_st' }).exec()
+    User.remove({ username: 'judy'}).exec()
     Style.remove({ owner: 'nick_st' }).exec()
   })
 
@@ -233,15 +234,15 @@ describe('样式管理模块', function() {
 
     it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/styles/nick_st')
+        .get('/api/v1/styles/nick_st/' + style_id)
         .expect(200)
         .end(function(err, res) {
           if (err) {
             return done(err)
           }
 
-          res.body[0].style_id.should.equal(style_id)
-          res.body[0].owner.should.equal('nick_st')
+          res.body.style_id.should.equal(style_id)
+          res.body.owner.should.equal('nick_st')
 
           done()
         })

@@ -56,7 +56,7 @@ module.exports.update = function(req, res) {
   var filter = ['name', 'email', 'phone', 'location', 'organization']
 
   User.findOneAndUpdate({ username: req.params.username },
-    _.pick(req.body, filter), { new: true },
+    _.pick(req.body, filter), { new: true, setDefaultsOnInsert: true },
     function(err, user) {
       if (err) {
         return res.status(500).json({ error: err })

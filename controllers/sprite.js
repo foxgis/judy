@@ -118,7 +118,8 @@ module.exports.update = function(req, res) {
   Sprite.findOneAndUpdate({
     sprite_id: req.params.sprite_id,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true }, function(err, sprite) {
+  }, _.pick(req.body, filter), { new: true, setDefaultsOnInsert: true }
+  , function(err, sprite) {
     if (err) {
       return res.status(500).json({ error: err })
     }

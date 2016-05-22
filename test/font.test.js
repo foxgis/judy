@@ -43,7 +43,6 @@ describe('字体模块', function(){
           if(err){
             return done(err)
           }
-          console.log(res.body)
 
           res.body.owner.should.equal('nick_fo')
           res.body.fontname.should.equal('Sketch Gothic School Regular')
@@ -83,7 +82,6 @@ describe('字体模块', function(){
           }
 
           res.body[0].fontname.should.equal('Sketch Gothic School Regular')
-          console.log(res.body[0])
 
           done()
         })
