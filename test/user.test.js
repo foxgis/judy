@@ -114,6 +114,21 @@ describe('用户管理模块', function() {
         })
     })
 
+    it('获取信息成功', function(done){
+      request(app)
+        .get('/api/v1/users/nick')
+        .expect(200)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
+
+          res.body.username.should.equal('nick')
+
+          done()
+        })
+    })
+
     it('获取失败', function(done) {
       request(app)
         .get('/api/v1/users/nick')
@@ -145,6 +160,22 @@ describe('用户管理模块', function() {
           }
 
           res.body.name.should.equal('张三')
+
+          done()
+        })
+    })
+
+    it('更新失败', function(done) {
+      request(app)
+        .patch('/api/v1/users/nick')
+        .send({ name: '张三' })
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
 
           done()
         })

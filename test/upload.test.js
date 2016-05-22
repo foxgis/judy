@@ -108,6 +108,21 @@ describe('上传模块', function() {
           done()
         })
     })
+
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/uploads/nick_up/' + upload_id)
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
   })
 
   describe('下载文件', function() {

@@ -112,6 +112,21 @@ describe('样式管理模块', function() {
           done()
         })
     })
+
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/styles/nick_st')
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
+
+          done()
+        })
+    })
   })
 
   describe('获取某个样式', function() {
@@ -128,6 +143,21 @@ describe('样式管理模块', function() {
           res.body.scope.should.equal('private')
           res.body.style_id.should.equal(style_id)
           res.body.owner.should.equal('nick_st')
+
+          done()
+        })
+    })
+
+    it('获取失败', function(done) {
+      request(app)
+        .get('/api/v1/styles/nick_st/' + style_id)
+        .expect(401)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.be.empty
 
           done()
         })
@@ -196,6 +226,22 @@ describe('样式管理模块', function() {
           }
 
           res.body.should.be.empty
+
+          done()
+        })
+    })
+
+    it('获取成功', function(done) {
+      request(app)
+        .get('/api/v1/styles/nick_st')
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body[0].style_id.should.equal(style_id)
+          res.body[0].owner.should.equal('nick_st')
 
           done()
         })
