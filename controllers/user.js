@@ -1,15 +1,10 @@
 var _ = require('lodash')
 var User = require('../models/user')
-var config = require('../config')
 
 
 module.exports.create = function(req, res) {
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({ error: '注册信息不完整' })
-  }
-
-  if (config.blacklist.indexOf(req.body.username) !== -1) {
-    return res.status(400).json({ error: '该用户名已经被注册'})
   }
 
   if (req.body.password.length < 6) {

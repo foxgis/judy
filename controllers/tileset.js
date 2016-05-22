@@ -38,6 +38,21 @@ module.exports.list = function(req, res) {
 }
 
 
+module.exports.create = function(req, res) {
+  //req.files[0].path
+
+  // 获取文件，检查文件是否是支持的格式
+
+  // 构造omnivore://path/to/file.shp
+
+  // tilelive.copy(src, dst, opts, callback)
+
+  // report
+
+  res.sendStatus(200)
+}
+
+
 module.exports.retrieve = function(req, res) {
   Tileset.findOne({
     tileset_id: req.params.tileset_id,
@@ -100,10 +115,6 @@ module.exports.getTile = function(req, res) {
     }
 
     if (!tileset) {
-      return res.sendStatus(404)
-    }
-
-    if (req.params.format !=== tileset.format) {
       return res.sendStatus(404)
     }
 
