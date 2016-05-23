@@ -60,7 +60,7 @@ module.exports.create = function(req, res) {
       res.status(200).json(tileset)
 
       // 导入数据
-      var src = protocol + req.files[0].path
+      var src = protocol + '//./' + req.files[0].path
       var dst = 'foxgis+' + config.db + '?tileset_id=' + tileset.tileset_id
       var report = function(stats, p) {
         tileset.progress = p.percentage
@@ -111,8 +111,7 @@ module.exports.update = function(req, res) {
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.pick(escaper.escape(req.body), filter)
-  , { new: true, setDefaultsOnInsert: true }
+  }, _.pick(escaper.escape(req.body), filter), { new: true }
   , function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
@@ -159,7 +158,7 @@ module.exports.getTile = function(req, res) {
     }
 
     var tiles = 'tiles_' + req.params.tileset_id
-    var Tile = mongoose.Model(tiles, TileSchema, tiles)
+    var Tile = mongoose.model(tiles, TileSchema, tiles)
 
     Tile.findOne({
       zoom_level: +req.params.z,

@@ -1,8 +1,8 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
-var mbgl = require('mapbox-gl-native')
-var request = require('request')
-var sharp = require('sharp')
+// var mbgl = require('mapbox-gl-native')
+// var request = require('request')
+// var sharp = require('sharp')
 var escaper = require('mongo-key-escaper')
 var Style = require('../models/style')
 
@@ -116,71 +116,72 @@ module.exports.delete = function(req, res) {
 
 
 module.exports.preview = function(req, res) {
-  Style.findOne({
-    style_id: req.params.style_id,
-    owner: req.params.username
-  }, function(err, style) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
+  return res.sendStatus(200)
+  // Style.findOne({
+  //   style_id: req.params.style_id,
+  //   owner: req.params.username
+  // }, function(err, style) {
+  //   if (err) {
+  //     return res.status(500).json({ error: err })
+  //   }
 
-    if (!style) {
-      return res.sendStatus(404)
-    }
+  //   if (!style) {
+  //     return res.sendStatus(404)
+  //   }
 
-    var scale = (req.params.scale || '@1x').slice(1, 2)
+  //   var scale = (req.params.scale || '@1x').slice(1, 2)
 
-    var map = new mbgl.Map({
-      ratio: scale,
-      request: function(req, callback) {
-        request({
-          url: req.url
-          encoding: null,
-          gzip: true
-        }, function(err, response, body) {
-          if (err) {
-            callback(err);
-          } else if (response.statusCode != 200) {
-            callback(new Error(response.statusMessage))
-          } else {
-            callback(null, { data: body })
-          }
-        })
-      }
-    })
+  //   var map = new mbgl.Map({
+  //     ratio: scale,
+  //     request: function(req, callback) {
+  //       request({
+  //         url: req.url,
+  //         encoding: null,
+  //         gzip: true
+  //       }, function(err, response, body) {
+  //         if (err) {
+  //           callback(err)
+  //         } else if (response.statusCode != 200) {
+  //           callback(new Error(response.statusMessage))
+  //         } else {
+  //           callback(null, { data: body })
+  //         }
+  //       })
+  //     }
+  //   })
 
-    var opts = {
-      zoom: +req.params.z,
-      width: +req.params.width,
-      height: +req.params.height,
-      center: [+req.params.lon, +req.params.lat]
-    }
+  //   var opts = {
+  //     zoom: +req.params.z,
+  //     width: +req.params.width,
+  //     height: +req.params.height,
+  //     center: [+req.params.lon, +req.params.lat]
+  //   }
 
-    map.load(style)
+  //   map.load(style)
 
-    map.render(opts, function(err, buffer) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+  //   map.render(opts, function(err, buffer) {
+  //     if (err) {
+  //       return res.status(500).json({ error: err })
+  //     }
 
-      map.release()
+  //     map.release()
 
-      var image = sharp(buffer, {
-        raw: {
-          width: opts.width,
-          height: opts.height,
-          channels: 4
-        }
-      })
+  //     var image = sharp(buffer, {
+  //       raw: {
+  //         width: opts.width,
+  //         height: opts.height,
+  //         channels: 4
+  //       }
+  //     })
 
-      image.toFormat(req.params.format, function(err, buffer) {
-        if (err) {
-          return res.status(500).json({ error: err })
-        }
+  //     image.toFormat(req.params.format, function(err, buffer) {
+  //       if (err) {
+  //         return res.status(500).json({ error: err })
+  //       }
 
-        res.type(req.params.format)
-        res.status(200).send(buffer)
-      })
-    })
-  })
+  //       res.type(req.params.format)
+  //       res.status(200).send(buffer)
+  //     })
+  //   })
+  // })
 }

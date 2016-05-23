@@ -43,7 +43,7 @@ router.get('/styles/:username/:tileset_id' + util.format(staticPattern, boundsPa
 // 瓦片集
 router.get('/tilesets', tilesets.search)
 router.get('/tilesets/:username', auth, tilesets.list)
-router.get('/tilesets/:username/:tileset_id', upload.any(), auth, tilesets.create)
+router.post('/tilesets/:username', upload.any(), auth, tilesets.create)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
