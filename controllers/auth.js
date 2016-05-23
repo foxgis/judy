@@ -20,8 +20,7 @@ var authAccessToken = function(req, res, next) {
     req.cookies.access_token || req.headers['x-access-token']
 
   if (!access_token) {
-    req.user = { username: 'guest' }
-    return next()
+    return res.sendStatus(401)
   }
 
   jwt.verify(access_token, config.jwt_secret, function(err, decoded) {

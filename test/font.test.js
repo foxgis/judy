@@ -101,21 +101,6 @@ describe('字体模块', function(){
           done()
         })
     })
-
-    it('获取失败', function(done){
-      request(app)
-        .get('/api/v1/fonts/nick_fo')
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
   })
 
   describe('获取字体状态', function(){
@@ -123,21 +108,6 @@ describe('字体模块', function(){
       request(app)
         .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
         .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.owner.should.equal('nick_fo')
-
-          done()
-        })
-    })
-
-    it('guest用户请求成功', function(done){
-      request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
         .expect(200)
         .end(function(err, res){
           if(err){
@@ -214,21 +184,6 @@ describe('字体模块', function(){
           }
 
           res.body.scope.should.equal('private')
-
-          done()
-        })
-    })
-
-    it('获取失败', function(done){
-      request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
 
           done()
         })

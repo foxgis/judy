@@ -72,21 +72,6 @@ describe('符号库模块', function() {
           done()
         })
     })
-
-    it('获取失败', function(done) {
-      request(app)
-        .get('/api/v1/sprites/nick_sp')
-        .expect(401)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
   })
 
   describe('获取符号库', function() {
@@ -94,22 +79,6 @@ describe('符号库模块', function() {
       request(app)
         .get('/api/v1/sprites/nick_sp/' + sprite_id)
         .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.owner.should.equal('nick_sp')
-          res.body.sprite_id.should.equal(sprite_id)
-
-          done()
-        })
-    })
-
-    it('获取成功', function(done) {
-      request(app)
-        .get('/api/v1/sprites/nick_sp/' + sprite_id)
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -281,21 +250,6 @@ describe('符号库模块', function() {
         .expect(404)
         .end(function(err, res){
           if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
-
-    it('获取失败', function(done) {
-      request(app)
-        .get('/api/v1/sprites/nick_sp/' + sprite_id)
-        .expect(401)
-        .end(function(err, res) {
-          if (err) {
             return done(err)
           }
 
