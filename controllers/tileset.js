@@ -2,8 +2,11 @@ var _ = require('lodash')
 var mongoose = require('mongoose')
 var tiletype = require('tiletype')
 var escaper = require('mongo-key-escaper')
+var filesniffer = require('mapbox-file-sniff')
+var tilelive = require('tilelive')
 var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
+var config = require('../config')
 
 
 module.exports.search = function(req, res) {
@@ -39,17 +42,47 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  //req.files[0].path
+  filesniffer.quaff(req.files[0].path, true, function(err, protocol) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
 
-  // 获取文件，检查文件是否是支持的格式
+    var tileset = new Tileset({
+      owner: req.params.username
+    })
 
-  // 构造omnivore://path/to/file.shp
+    tileset.save(function(err) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
 
-  // tilelive.copy(src, dst, opts, callback)
+      return res.status(200).json(tileset)
 
-  // report
+      // 导入数据
+      var src = protocol + req.files[0].path
+      var dst = 'foxgis+' + config.db + '?tileset_id=' + tileset.tileset_id
+      var report = function(stats, p) {
+        tileset.progress = p.percentage
+        tileset.save()
+      }
+      var opts = {
+        type: 'scanline',
+        retry: 2,
+        timeout: 3600000,
+        progress: report,
+        close: true
+      }
 
-  res.sendStatus(200)
+      tilelive.copy(src, dst, opts, function(err) {
+        if (err) {
+          tileset.error = err.message
+          tileset.save()
+        }
+
+        fs.unlink(req.files[0].path)
+      })
+    })
+  })
 }
 
 
@@ -117,6 +150,10 @@ module.exports.getTile = function(req, res) {
     }
 
     if (!tileset) {
+      return res.sendStatus(404)
+    }
+
+    if (req.params.format !== 'vector.pbf') {
       return res.sendStatus(404)
     }
 
