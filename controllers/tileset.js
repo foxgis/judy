@@ -60,7 +60,7 @@ module.exports.create = function(req, res) {
       res.status(200).json(tileset)
 
       // 导入数据
-      var src = protocol + req.files[0].path
+      var src = protocol + '//./' + req.files[0].path
       var dst = 'foxgis+' + config.db + '?tileset_id=' + tileset.tileset_id
       var report = function(stats, p) {
         tileset.progress = p.percentage
@@ -159,7 +159,7 @@ module.exports.getTile = function(req, res) {
     }
 
     var tiles = 'tiles_' + req.params.tileset_id
-    var Tile = mongoose.Model(tiles, TileSchema, tiles)
+    var Tile = mongoose.model(tiles, TileSchema, tiles)
 
     Tile.findOne({
       zoom_level: +req.params.z,
