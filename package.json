@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "async": "^2.0.0-rc.5",
     "body-parser": "^1.15.1",
-    "commander": "^2.9.0",
     "compression": "^1.6.1",
     "cookie-parser": "^1.4.1",
     "cors": "^2.7.1",
@@ -24,6 +24,7 @@
     "helmet": "^2.0.0",
     "jsonwebtoken": "^6.2.0",
     "lodash": "^4.12.0",
+    "mapbox-file-sniff": "^0.4.4",
     "mapbox-gl-native": "^3.1.2",
     "mapbox-gl-style-spec": "^8.7.0",
     "mbtiles": "^0.9.0",
