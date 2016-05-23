@@ -20,8 +20,7 @@ var authAccessToken = function(req, res, next) {
     req.cookies.access_token || req.headers['x-access-token']
 
   if (!access_token) {
-    req.user = { username: 'guest' }
-    return next()
+    return res.sendStatus(401)
   }
 
   jwt.verify(access_token, config.jwt_secret, function(err, decoded) {
@@ -110,14 +109,13 @@ var authTileset = function(req, res, next) {
   } else {
     Tileset.findOne({
       tileset_id: req.params.tileset_id,
-      owner: req.params.username,
-      scope: 'public'
+      owner: req.params.username
     }, function(err, tileset) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      if (!tileset) {
+      if (!tileset ) {
         return res.sendStatus(401)
       }
 

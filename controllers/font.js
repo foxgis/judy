@@ -44,7 +44,6 @@ module.exports.create = function(req, res) {
           if (err) {
             return res.status(500).json({ error: err })
           }
-
           async.each(font.stack, function(pbf, callback) {
             fs.writeFile(path.join(fontdir, pbf.name), pbf.data, callback)
           }, function(err) {
@@ -59,7 +58,7 @@ module.exports.create = function(req, res) {
               fontname: font.name,
               owner: req.params.username,
               is_deleted: false
-            }, { upsert: true, new: true }, function(err, font) {
+            }, { upsert: true, new: true, setDefaultsOnInsert: true}, function(err, font) {
               if (err) {
                 return res.status(500).json({ error: err })
               }
@@ -98,7 +97,7 @@ module.exports.update = function(req, res) {
   Font.findOneAndUpdate({
     fontname: req.params.fontname,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true }, function(err, font) {
+  }, _.pick(req.body, filter), { new: true, setDefaultsOnInsert: true }, function(err, font) {
     if (err) {
       return res.status(500).json({ error: err })
     }

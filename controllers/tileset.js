@@ -6,6 +6,7 @@ var filesniffer = require('mapbox-file-sniff')
 var tilelive = require('tilelive')
 var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
+var fs = require('fs')
 var config = require('../config')
 
 
@@ -56,7 +57,7 @@ module.exports.create = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      return res.status(200).json(tileset)
+      res.status(200).json(tileset)
 
       // 导入数据
       var src = protocol + req.files[0].path
@@ -110,7 +111,9 @@ module.exports.update = function(req, res) {
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.pick(escaper.escape(req.body), filter), function(err, tileset) {
+  }, _.pick(escaper.escape(req.body), filter)
+  , { new: true, setDefaultsOnInsert: true }
+  , function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
     }

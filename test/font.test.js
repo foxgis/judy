@@ -11,14 +11,14 @@ describe('字体模块', function(){
   before('注册用户', function(done){
     request(app)
       .post('/api/v1/users')
-      .send({username: 'nick_fo', password: '123456'})
+      .send({username: 'nick', password: '123456'})
       .expect(200)
       .end(function(err, res){
         if(err){
           return done(err)
         }
 
-        res.body.username.should.equal('nick_fo')
+        res.body.username.should.equal('nick')
         res.body.access_token.should.exist
 
         access_token = res.body.access_token
@@ -27,15 +27,18 @@ describe('字体模块', function(){
       })
   })
 
-  after('清理', function(){
-    User.remove({username: 'nick_fo'}).exec()
-    Font.remove({owner: 'nick_fo'}).exec()
+  after('清理', function(done){
+    User.remove({username: 'nick'}).exec(function(){
+      Font.remove({owner: 'nick'}).exec(function(){
+        done()
+      })
+    })
   })
 
   describe('上传字体', function(){
     it('上传成功', function(done){
       request(app)
-        .post('/api/v1/fonts/nick_fo')
+        .post('/api/v1/fonts/nick')
         .set('x-access-token', access_token)
         .attach('aa', './test/fixtures/test.ttf')
         .expect(200)
@@ -43,9 +46,8 @@ describe('字体模块', function(){
           if(err){
             return done(err)
           }
-          console.log(res.body)
 
-          res.body.owner.should.equal('nick_fo')
+          res.body.owner.should.equal('nick')
           res.body.fontname.should.equal('Sketch Gothic School Regular')
           res.body.scope.should.equal('public')
 
@@ -55,7 +57,7 @@ describe('字体模块', function(){
 
     it('上传失败', function(done){
       request(app)
-        .post('/api/v1/fonts/nick_fo')
+        .post('/api/v1/fonts/nick')
         .set('x-access-token', access_token)
         .attach('aa', './test/fixtures/create.txt')
         .expect(400)
@@ -74,7 +76,7 @@ describe('字体模块', function(){
   describe('获取字体列表', function(){
     it('获取成功', function(done){
       request(app)
-        .get('/api/v1/fonts/nick_fo')
+        .get('/api/v1/fonts/nick')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res){
@@ -83,7 +85,6 @@ describe('字体模块', function(){
           }
 
           res.body[0].fontname.should.equal('Sketch Gothic School Regular')
-          console.log(res.body[0])
 
           done()
         })
@@ -91,22 +92,7 @@ describe('字体模块', function(){
 
     it('获取失败', function(done){
       request(app)
-        .get('/api/v1/fonts/nick_fo')
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
-
-    it('获取失败', function(done){
-      request(app)
-        .get('/api/v1/fonts/nick_fo')
+        .get('/api/v1/fonts/nick')
         .expect(401)
         .end(function(err, res){
           if(err){
@@ -123,7 +109,7 @@ describe('字体模块', function(){
   describe('获取字体状态', function(){
     it('请求成功', function(done){
       request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
+        .get(encodeURI('/api/v1/fonts/nick/Sketch Gothic School Regular'))
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res){
@@ -131,22 +117,7 @@ describe('字体模块', function(){
             return done(err)
           }
 
-          res.body.owner.should.equal('nick_fo')
-
-          done()
-        })
-    })
-
-    it('guest用户请求成功', function(done){
-      request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.owner.should.equal('nick_fo')
+          res.body.owner.should.equal('nick')
 
           done()
         })
@@ -154,7 +125,7 @@ describe('字体模块', function(){
 
     it('请求失败', function(done){
       request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/unexist_font'))
+        .get(encodeURI('/api/v1/fonts/nick/unexist_font'))
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res){
@@ -172,7 +143,7 @@ describe('字体模块', function(){
   describe('下载字体', function(){
     it('请求成功', function(done){
       request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular/0-255.pbf'))
+        .get(encodeURI('/api/v1/fonts/nick/Sketch Gothic School Regular/0-255.pbf'))
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res){
@@ -206,7 +177,7 @@ describe('字体模块', function(){
   describe('字体设为私有', function(){
     it('修改成功', function(done){
       request(app)
-        .patch(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
+        .patch(encodeURI('/api/v1/fonts/nick/Sketch Gothic School Regular'))
         .set('x-access-token', access_token)
         .send({ scope: 'private'})
         .expect(200)
@@ -220,27 +191,12 @@ describe('字体模块', function(){
           done()
         })
     })
-
-    it('获取失败', function(done){
-      request(app)
-        .get(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
   })
 
   describe('删除字体', function(){
     it('删除成功', function(done){
       request(app)
-        .delete(encodeURI('/api/v1/fonts/nick_fo/Sketch Gothic School Regular'))
+        .delete(encodeURI('/api/v1/fonts/nick/Sketch Gothic School Regular'))
         .set('x-access-token', access_token)
         .expect(204)
         .end(function(err, res){
