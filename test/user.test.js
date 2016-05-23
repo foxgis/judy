@@ -8,8 +8,10 @@ describe('用户管理模块', function() {
 
   var access_token
 
-  after('清除用户数据', function() {
-    User.remove({ username: 'nick' }).exec()
+  after('清除用户数据', function(done) {
+    User.remove({ username: 'nick' }).exec(function(){
+      done()
+    })
   })
 
   describe('注册', function() {

@@ -58,7 +58,7 @@ module.exports.create = function(req, res) {
               fontname: font.name,
               owner: req.params.username,
               is_deleted: false
-            }, { upsert: true, new: true }, function(err, font) {
+            }, { upsert: true, new: true, setDefaultsOnInsert: true}, function(err, font) {
               if (err) {
                 return res.status(500).json({ error: err })
               }

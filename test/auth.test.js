@@ -14,17 +14,17 @@ describe('权限模块', function(){
   var style_id
   var sprite_id
 
-  before('注册nick_au', function(done){
+  before('注册nick', function(done){
     request(app)
       .post('/api/v1/users')
-      .send({username: 'nick_au', password: '123456'})
+      .send({username: 'nick', password: '123456'})
       .expect(200)
       .end(function(err, res){
         if(err){
           return done(err)
         }
 
-        res.body.username.should.equal('nick_au')
+        res.body.username.should.equal('nick')
         res.body.access_token.should.exist
 
         access_token = res.body.access_token
@@ -33,7 +33,7 @@ describe('权限模块', function(){
       })
   })
 
-  before('注册nick_au', function(done){
+  before('注册nick', function(done){
     request(app)
       .post('/api/v1/users')
       .send({username: 'judy', password: '123456'})
@@ -54,7 +54,7 @@ describe('权限模块', function(){
 
   before('上传文件', function(done){
     request(app)
-      .post('/api/v1/uploads/nick_au')
+      .post('/api/v1/uploads/nick')
       .set('x-access-token', access_token)
       .attach('aa', './test/fixtures/create.txt')
       .expect(200)
@@ -63,7 +63,7 @@ describe('权限模块', function(){
           return done(err)
         }
 
-        res.body.owner.should.equal('nick_au')
+        res.body.owner.should.equal('nick')
         res.body.upload_id.should.exist
 
         done()
@@ -72,7 +72,7 @@ describe('权限模块', function(){
 
   before('新建样式', function(done){
     request(app)
-    .post('/api/v1/styles/nick_au')
+    .post('/api/v1/styles/nick')
     .set('x-access-token', access_token)
     .send({
       'version': 8,
@@ -103,7 +103,7 @@ describe('权限模块', function(){
         return done(err)
       }
 
-      res.body.owner.should.equal('nick_au')
+      res.body.owner.should.equal('nick')
 
       style_id = res.body.style_id
 
@@ -113,7 +113,7 @@ describe('权限模块', function(){
 
   before('创建符号库', function(done) {
     request(app)
-      .post('/api/v1/sprites/nick_au')
+      .post('/api/v1/sprites/nick')
       .set('x-access-token', access_token)
       .attach('aa', './test/fixtures/svg.zip')
       .expect(200)
@@ -122,7 +122,7 @@ describe('权限模块', function(){
           return done(err)
         }
 
-        res.body.owner.should.equal('nick_au')
+        res.body.owner.should.equal('nick')
         res.body.sprite_id.should.exist
 
         sprite_id = res.body.sprite_id
@@ -133,7 +133,7 @@ describe('权限模块', function(){
 
   before('上传字体', function(done) {
     request(app)
-      .post('/api/v1/fonts/nick_au')
+      .post('/api/v1/fonts/nick')
       .set('x-access-token', access_token)
       .attach('aa', './test/fixtures/test.ttf')
       .expect(200)
@@ -142,7 +142,7 @@ describe('权限模块', function(){
           return done(err)
         }
 
-        res.body.owner.should.equal('nick_au')
+        res.body.owner.should.equal('nick')
         res.body.fontname.should.equal('Sketch Gothic School Regular')
 
         done()
@@ -150,12 +150,12 @@ describe('权限模块', function(){
   })
 
   after('清理', function(done){
-    User.remove({username: 'nick_au'}).exec(function(){
-      Upload.remove({owner: 'nick_au'}).exec(function(){
-        Style.remove({owner: 'nick_au'}).exec(function(){
-          Sprite.remove({owner: 'nick_au'}).exec(function(){
+    User.remove({username: 'nick'}).exec(function(){
+      Upload.remove({owner: 'nick'}).exec(function(){
+        Style.remove({owner: 'nick'}).exec(function(){
+          Sprite.remove({owner: 'nick'}).exec(function(){
             User.remove({username: 'judy'}).exec(function(){
-              Font.remove({owner: 'nick_au'}).exec(function(){
+              Font.remove({owner: 'nick'}).exec(function(){
                 done()
               })
             })
@@ -169,7 +169,7 @@ describe('权限模块', function(){
     describe('获取用户信息', function(){
       it('获取信息成功', function(done){
         request(app)
-          .get('/api/v1/users/nick_au')
+          .get('/api/v1/users/nick')
           .set('x-access-token', judy_access_token)
           .expect(200)
           .end(function(err, res){
@@ -177,7 +177,7 @@ describe('权限模块', function(){
               return done(err)
             }
 
-            res.body.username.should.equal('nick_au')
+            res.body.username.should.equal('nick')
 
             done()
           })
@@ -201,7 +201,7 @@ describe('权限模块', function(){
 
       it('更新失败', function(done){
         request(app)
-          .patch('/api/v1/users/nick_au')
+          .patch('/api/v1/users/nick')
           .send({name: '张三'})
           .expect(401)
           .end(function(err, res){
@@ -219,7 +219,7 @@ describe('权限模块', function(){
     describe('获取上传文件', function(){
       it('获取失败', function(done){
         request(app)
-          .get('/api/v1/uploads/nick_au')
+          .get('/api/v1/uploads/nick')
           .set('x-access-token', judy_access_token)
           .expect(401)
           .end(function(err, res){
@@ -237,7 +237,7 @@ describe('权限模块', function(){
     describe('获取样式', function(){
       it('获取样式列表失败', function(done){
         request(app)
-          .get('/api/v1/styles/nick_au')
+          .get('/api/v1/styles/nick')
           .set('x-access-token', judy_access_token)
           .expect(401)
           .end(function(err, res) {
@@ -253,7 +253,7 @@ describe('权限模块', function(){
 
       it('获取私密样式失败', function(done){
         request(app)
-          .get('/api/v1/styles/nick_au/' + style_id)
+          .get('/api/v1/styles/nick/' + style_id)
           .set('x-access-token', judy_access_token)
           .expect(401)
           .end(function(err, res) {
@@ -270,7 +270,7 @@ describe('权限模块', function(){
       describe('获取公开样式', function(){
         before('公开分享样式', function(done){
           request(app)
-            .patch('/api/v1/styles/nick_au/' + style_id)
+            .patch('/api/v1/styles/nick/' + style_id)
             .set('x-access-token', access_token)
             .send({scope: 'public'})
             .expect(200)
@@ -287,7 +287,7 @@ describe('权限模块', function(){
 
         it('获取成功', function(done){
           request(app)
-            .get('/api/v1/styles/nick_au/' + style_id)
+            .get('/api/v1/styles/nick/' + style_id)
             .set('x-access-token', judy_access_token)
             .expect(200)
             .end(function(err, res) {
@@ -296,7 +296,7 @@ describe('权限模块', function(){
               }
 
               res.body.style_id.should.equal(style_id)
-              res.body.owner.should.equal('nick_au')
+              res.body.owner.should.equal('nick')
               should.not.exist(res.body.scopes)
 
               done()
@@ -305,7 +305,7 @@ describe('权限模块', function(){
 
         it('获取失败', function(done){
           request(app)
-            .get('/api/v1/styles/nick_au/bad_style_id')
+            .get('/api/v1/styles/nick/bad_style_id')
             .set('x-access-token', judy_access_token)
             .expect(401)
             .end(function(err, res) {
@@ -324,7 +324,7 @@ describe('权限模块', function(){
     describe('获取符号库', function(){
       it('获取符号库列表失败', function(done){
         request(app)
-          .get('/api/v1/sprites/nick_au')
+          .get('/api/v1/sprites/nick')
           .set('x-access-token', judy_access_token)
           .expect(401)
           .end(function(err, res) {
@@ -340,7 +340,7 @@ describe('权限模块', function(){
 
       it('获取私密符号库失败', function(done){
         request(app)
-          .get('/api/v1/sprites/nick_au/' + sprite_id)
+          .get('/api/v1/sprites/nick/' + sprite_id)
           .set('x-access-token', judy_access_token)
           .expect(200)
           .end(function(err, res) {
@@ -349,7 +349,7 @@ describe('权限模块', function(){
             }
 
             res.body.sprite_id.should.equal(sprite_id)
-            res.body.owner.should.equal('nick_au')
+            res.body.owner.should.equal('nick')
             should.not.exist(res.body.scopes)
 
             done()
@@ -359,7 +359,7 @@ describe('权限模块', function(){
       describe('获取公开符号库', function(){
         before('公开分享符号库', function(done){
           request(app)
-            .patch('/api/v1/sprites/nick_au/' + sprite_id)
+            .patch('/api/v1/sprites/nick/' + sprite_id)
             .set('x-access-token', access_token)
             .send({scope: 'public'})
             .expect(200)
@@ -376,7 +376,7 @@ describe('权限模块', function(){
 
         it('获取成功', function(done){
           request(app)
-            .get('/api/v1/sprites/nick_au/' + sprite_id)
+            .get('/api/v1/sprites/nick/' + sprite_id)
             .set('x-access-token', judy_access_token)
             .expect(200)
             .end(function(err, res) {
@@ -385,7 +385,7 @@ describe('权限模块', function(){
               }
 
               res.body.sprite_id.should.equal(sprite_id)
-              res.body.owner.should.equal('nick_au')
+              res.body.owner.should.equal('nick')
               should.not.exist(res.body.scopes)
 
               done()
@@ -394,7 +394,7 @@ describe('权限模块', function(){
 
         it('下载成功', function(done){
           request(app)
-            .get('/api/v1/sprites/nick_au/' + sprite_id +'/sprite@2x.json')
+            .get('/api/v1/sprites/nick/' + sprite_id +'/sprite@2x.json')
             .set('x-access-token', judy_access_token)
             .expect(200)
             .end(function(err, res) {
@@ -410,7 +410,7 @@ describe('权限模块', function(){
 
         it('获取失败', function(done){
           request(app)
-            .get('/api/v1/styles/nick_au/bad_style_id')
+            .get('/api/v1/styles/nick/bad_style_id')
             .set('x-access-token', judy_access_token)
             .expect(401)
             .end(function(err, res) {
@@ -429,7 +429,7 @@ describe('权限模块', function(){
     describe('获取字体', function(){
       it('获取列表失败', function(done){
         request(app)
-          .get('/api/v1/fonts/nick_au')
+          .get('/api/v1/fonts/nick')
           .set('x-access-token', judy_access_token)
           .expect(401)
           .end(function(err, res){
@@ -445,7 +445,7 @@ describe('权限模块', function(){
 
       it('获取字体成功', function(done){
         request(app)
-          .get('/api/v1/fonts/nick_au/Sketch Gothic School Regular')
+          .get('/api/v1/fonts/nick/Sketch Gothic School Regular')
           .set('x-access-token', judy_access_token)
           .expect(200)
           .end(function(err, res){
@@ -453,7 +453,7 @@ describe('权限模块', function(){
               return done(err)
             }
 
-            res.body.owner.should.equal('nick_au')
+            res.body.owner.should.equal('nick')
 
             done()
           })
