@@ -78,6 +78,8 @@ module.exports.create = function(req, res) {
           tileset.error = err.message
           tileset.save()
         }
+
+        fs.unlink(req.files[0].path)
       })
     })
   })

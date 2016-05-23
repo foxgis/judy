@@ -1,6 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 var _ = require('lodash')
+var async = require('async')
 var mkdirp = require('mkdirp')
 var fontmachine = require('fontmachine')
 var Font = require('../models/font')
@@ -44,25 +45,27 @@ module.exports.create = function(req, res) {
             return res.status(500).json({ error: err })
           }
 
-          font.stack.forEach(function(pbf) {
-            fs.writeFile(fontdir + '/' + pbf.name, pbf.data)
-          })
-
-
-          Font.findOneAndUpdate({
-            fontname: font.name,
-            owner: req.params.username
-          }, {
-            fontname: font.name,
-            owner: req.params.username,
-            // scope: 'public',
-            is_deleted: false
-          }, { upsert: true, new: true }, function(err, font) {
+          async.each(font.stack, function(pbf, callback) {
+            fs.writeFile(path.join(fontdir, pbf.name), pbf.data, callback)
+          }, function(err) {
             if (err) {
               return res.status(500).json({ error: err })
             }
 
-            res.status(200).json(font)
+            Font.findOneAndUpdate({
+              fontname: font.name,
+              owner: req.params.username
+            }, {
+              fontname: font.name,
+              owner: req.params.username,
+              is_deleted: false
+            }, { upsert: true, new: true }, function(err, font) {
+              if (err) {
+                return res.status(500).json({ error: err })
+              }
+
+              res.status(200).json(font)
+            })
           })
         })
       })
@@ -124,8 +127,7 @@ module.exports.delete = function(req, res) {
 
 
 module.exports.download = function(req, res) {
-  var filePath = path.join('fonts', req.params.username
-    , req.params.fontname, req.params.range + '.pbf')
+  var filePath = path.join('fonts', req.params.username, req.params.fontname, req.params.range + '.pbf')
 
   fs.readFile(filePath, function(err, pbf) {
     if (err) {
