@@ -111,8 +111,7 @@ module.exports.update = function(req, res) {
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.pick(escaper.escape(req.body), filter)
-  , { new: true, setDefaultsOnInsert: true }
+  }, _.pick(escaper.escape(req.body), filter), { new: true }
   , function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
