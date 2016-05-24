@@ -1,5 +1,4 @@
- /* eslint-disable quotes */
-module.exports = {
+{
   "pac": 156,
   "name": "中国",
   "sub_admins": [

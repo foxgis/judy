@@ -75,7 +75,4 @@ router.patch('/uploads/:username/:upload_id', auth, uploads.update)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
 
-// 行政区划
-router.get('/admin.json', admin.retrieve)
-
 module.exports = router

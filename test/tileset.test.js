@@ -39,7 +39,7 @@ describe('瓦片集模块', function(){
     afterEach('yes', function(done){
       setTimeout(function(){
         done()
-      },1000)
+      },1900)
     })
 
     it('上传成功', function(done){
