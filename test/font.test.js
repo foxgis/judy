@@ -59,7 +59,7 @@ describe('字体模块', function(){
       request(app)
         .post('/api/v1/fonts/nick')
         .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/create.txt')
+        .attach('aa', './test/fixtures/china.jpg')
         .expect(400)
         .end(function(err, res){
           if(err){

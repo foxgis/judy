@@ -38,7 +38,7 @@ describe('上传模块', function() {
       request(app)
         .post('/api/v1/uploads/nick')
         .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/create.txt')
+        .attach('aa', './test/fixtures/china.jpg')
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -46,10 +46,12 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('create.txt')
+          res.body.name.should.equal('china.jpg')
+          res.body.format.should.equal('jpg')
           res.body.upload_id.should.exist
           should.not.exist(res.body.file_id)
           should.not.exist(res.body.is_deleted)
+          should.not.exist(res.body.thumbnail)
 
           upload_id = res.body.upload_id
 
@@ -90,7 +92,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('create.txt')
+          res.body.name.should.equal('china.jpg')
 
           done()
         })
@@ -180,6 +182,24 @@ describe('上传模块', function() {
           }
 
           res.body.should.be.empty
+
+          done()
+        })
+    })
+  })
+
+  describe('缩略图预览', function(){
+    it('预览成功', function(done){
+      request(app)
+        .get('/api/v1/uploads/nick/' + upload_id + '/thumbnail')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if(err){
+            return done(err)
+          }
+
+          res.header['content-type'].should.equal('image/png')
 
           done()
         })

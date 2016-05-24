@@ -56,7 +56,7 @@ describe('权限模块', function(){
     request(app)
       .post('/api/v1/uploads/nick')
       .set('x-access-token', access_token)
-      .attach('aa', './test/fixtures/create.txt')
+      .attach('aa', './test/fixtures/svg.zip')
       .expect(200)
       .end(function(err, res){
         if(err){

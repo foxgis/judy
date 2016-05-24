@@ -192,5 +192,6 @@ module.exports.preview = function (req, res) {
 
     res.set({ 'Content-Type': 'image/png' })
     res.status(200).send(upload.thumbnail)
+    console.log(res)
   })
 }
