@@ -53,38 +53,18 @@ module.exports.create = function(req, res) {
         || newUpload.format === 'jpeg' || newUpload.format === 'JPEG'
         || newUpload.format === 'tiff' || newUpload.format === 'TIFF'
         ) {
-        fs.readFile(req.files[0].path, function(err, imageBuffer){
-          if (err) {
-            newUpload.error = err
-            newUpload.save()
-          }
-
+        fs.readFile(req.files[0].path, function(err, imageBuffer){  // eslint-disable-line no-unused-vars
           fs.unlink(req.files[0].path)
 
           var image = sharp(imageBuffer)
-          image.metadata(function(err, metaData){
-            if (err) {
-              newUpload.error = err
-              newUpload.save()
-            }
-
+          image.metadata(function(err, metaData){  // eslint-disable-line no-unused-vars
             if (metaData.width <= 1000) {
               image.png().toBuffer(function(err, buffer, info) {  // eslint-disable-line no-unused-vars
-                if (err) {
-                  newUpload.error = err
-                  newUpload.save()
-                }
-
                 newUpload.thumbnail = buffer
                 newUpload.save()
               })
             } else {
               image.resize(1000).png().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
-                if (err) {
-                  newUpload.error = err
-                  newUpload.save()
-                }
-
                 newUpload.thumbnail = buffer
                 newUpload.save()
               })
@@ -192,6 +172,5 @@ module.exports.preview = function (req, res) {
 
     res.set({ 'Content-Type': 'image/png' })
     res.status(200).send(upload.thumbnail)
-    console.log(res)
   })
 }

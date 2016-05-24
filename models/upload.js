@@ -14,9 +14,7 @@ var UploadSchema = new mongoose.Schema({
   name: String,
   description: String,
   size: Number,
-  format: String,
-
-  error:String
+  format: String
 }, { timestamps: true })
 
 
