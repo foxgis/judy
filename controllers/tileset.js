@@ -63,17 +63,16 @@ module.exports.create = function(req, res) {
       res.status(200).json(tileset)
 
       // 导入数据
+      var src = protocol + '//./' + req.files[0].path
       if (path.extname(req.files[0].originalname) === '.zip') {
         var zip = new AdmZip(req.files[0].path)
         zip.extractAllTo('./uploads/' + req.files[0].originalname, true)
         zip.getEntries().forEach(function(entry){
           if (path.extname(entry.entryName) === '.shp') {
             var shp = entry.entryName
-            src =  protocol + '//./uploads/' + req.files[0].originalname + '/' + shp
+            src = protocol +'//./uploads/'+ req.files[0].originalname +'/'+ shp
           }
         })
-      } else {
-        var src = protocol + '//./' + req.files[0].path
       }
       var dst = 'foxgis+' + config.db + '?tileset_id=' + tileset.tileset_id
       var report = function(stats, p) {
@@ -90,6 +89,7 @@ module.exports.create = function(req, res) {
 
       tilelive.copy(src, dst, opts, function(err) {
         if (err) {
+          console.log(err)
           tileset.error = err.message
           tileset.save()
         }
