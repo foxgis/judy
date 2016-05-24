@@ -8,7 +8,6 @@ var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
 var uploads = require('./controllers/upload')
-var admin = require('./controllers/admin')
 
 
 var router = express.Router()
