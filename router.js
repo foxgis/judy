@@ -73,5 +73,6 @@ router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.patch('/uploads/:username/:upload_id', auth, uploads.update)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 router.get('/uploads/:username/:upload_id/raw', auth, uploads.download)
+router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.preview)
 
 module.exports = router

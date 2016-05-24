@@ -1,6 +1,8 @@
 var _ = require('lodash')
 var fs = require('fs')
+var path = require('path')
 var mongoose = require('mongoose')
+var sharp = require('sharp')
 var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
 
@@ -9,7 +11,7 @@ module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,
     is_deleted: false
-  }, function(err, uploads) {
+  }, '-thumbnail', function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -33,7 +35,9 @@ module.exports.create = function(req, res) {
     var newUpload = new Upload({
       file_id: file._id,
       owner: req.params.username,
-      name: file.filename
+      name: file.filename,
+      size: req.files[0].size,
+      format: path.extname(req.files[0].originalname).replace('.', '')
     })
 
     newUpload.save(function(err) {
@@ -41,8 +45,53 @@ module.exports.create = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      fs.unlink(req.files[0].path)
       res.status(200).json(newUpload)
+
+      if (
+        newUpload.format === 'png' || newUpload.format === 'PNG'
+        || newUpload.format === 'jpg' || newUpload.format === 'JPG'
+        || newUpload.format === 'jpeg' || newUpload.format === 'JPEG'
+        || newUpload.format === 'tiff' || newUpload.format === 'TIFF'
+        ) {
+        fs.readFile(req.files[0].path, function(err, imageBuffer){
+          if (err) {
+            newUpload.error = err
+            newUpload.save()
+          }
+
+          fs.unlink(req.files[0].path)
+
+          var image = sharp(imageBuffer)
+          image.metadata(function(err, metaData){
+            if (err) {
+              newUpload.error = err
+              newUpload.save()
+            }
+
+            if (metaData.width <= 1000) {
+              image.png().toBuffer(function(err, buffer, info) {  // eslint-disable-line no-unused-vars
+                if (err) {
+                  newUpload.error = err
+                  newUpload.save()
+                }
+
+                newUpload.thumbnail = buffer
+                newUpload.save()
+              })
+            } else {
+              image.resize(1000).png().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
+                if (err) {
+                  newUpload.error = err
+                  newUpload.save()
+                }
+
+                newUpload.thumbnail = buffer
+                newUpload.save()
+              })
+            }
+          })
+        })
+      }
     })
   })
 }
@@ -52,7 +101,7 @@ module.exports.retrieve = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
     owner: req.params.username
-  }, function(err, upload) {
+  }, '-thumbnail', function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -124,5 +173,24 @@ module.exports.download = function(req, res) {
       'attachment; filename*=UTF-8\'\'' + fs.filename)
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' })
     readStream.pipe(res)
+  })
+}
+
+
+module.exports.preview = function (req, res) {
+  Upload.findOne({
+    upload_id: req.params.upload_id,
+    owner: req.params.username
+  }, function(err, upload) {
+    if (err) {
+      return res.status(500).json({ error: err})
+    }
+
+    if (!upload) {
+      return res.sendStatus(404)
+    }
+
+    res.set({ 'Content-Type': 'image/png' })
+    res.status(200).send(upload.thumbnail)
   })
 }
