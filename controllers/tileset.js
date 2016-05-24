@@ -7,6 +7,9 @@ var tilelive = require('tilelive')
 var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
 var fs = require('fs')
+var path = require('path')
+var AdmZip = require('adm-zip')
+var rimraf = require('rimraf')
 var config = require('../config')
 
 
@@ -60,7 +63,18 @@ module.exports.create = function(req, res) {
       res.status(200).json(tileset)
 
       // 导入数据
-      var src = protocol + '//./' + req.files[0].path
+      if (path.extname(req.files[0].originalname) === '.zip') {
+        var zip = new AdmZip(req.files[0].path)
+        zip.extractAllTo('./uploads/' + req.files[0].originalname, true)
+        zip.getEntries().forEach(function(entry){
+          if (path.extname(entry.entryName) === '.shp') {
+            var shp = entry.entryName
+            src =  protocol + '//./uploads/' + req.files[0].originalname + '/' + shp
+          }
+        })
+      } else {
+        var src = protocol + '//./' + req.files[0].path
+      }
       var dst = 'foxgis+' + config.db + '?tileset_id=' + tileset.tileset_id
       var report = function(stats, p) {
         tileset.progress = p.percentage
@@ -81,6 +95,7 @@ module.exports.create = function(req, res) {
         }
 
         fs.unlink(req.files[0].path)
+        rimraf('./uploads/' + req.files[0].originalname, function(){})
       })
     })
   })
