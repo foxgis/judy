@@ -89,7 +89,6 @@ module.exports.create = function(req, res) {
 
       tilelive.copy(src, dst, opts, function(err) {
         if (err) {
-          console.log(err)
           tileset.error = err.message
           tileset.save()
         }

@@ -1,6 +1,7 @@
 var express = require('express')
 var multipart = require('connect-multiparty')
 var util = require('util')
+var fs = require('fs')
 var auth = require('./controllers/auth')
 var users = require('./controllers/user')
 var styles = require('./controllers/style')
@@ -10,7 +11,12 @@ var sprites = require('./controllers/sprite')
 var uploads = require('./controllers/upload')
 
 
+
 var router = express.Router()
+
+if (!fs.existsSync('./uploads')){
+  fs.mkdirSync('./uploads')
+}
 var upload = multipart({
   uploadDir: 'uploads/',
   maxFilesSize: 200000000
