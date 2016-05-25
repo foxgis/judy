@@ -118,7 +118,7 @@ describe('上传模块', function() {
   describe('下载文件', function() {
     it('下载成功', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/' + upload_id + '/raw')
+        .get('/api/v1/uploads/nick/' + upload_id + '/file')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -134,7 +134,7 @@ describe('上传模块', function() {
 
     it('下载失败', function(done) {
       request(app)
-        .get('/api/v1/uploads/nick/bad_upload_id/raw')
+        .get('/api/v1/uploads/nick/bad_upload_id/file')
         .set('x-access-token', access_token)
         .expect(404)
         .end(function(err, res) {
