@@ -52,6 +52,7 @@ module.exports.create = function(req, res) {
         || newUpload.format === 'jpg' || newUpload.format === 'JPG'
         || newUpload.format === 'jpeg' || newUpload.format === 'JPEG'
         || newUpload.format === 'tiff' || newUpload.format === 'TIFF'
+        || newUpload.format === 'tif' || newUpload.format === 'TIF'
         ) {
         fs.readFile(req.files[0].path, function(err, imageBuffer){  // eslint-disable-line no-unused-vars
           fs.unlink(req.files[0].path)
@@ -101,8 +102,7 @@ module.exports.update = function(req, res) {
   Upload.findOneAndUpdate({
     upload_id: req.params.upload_id,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true, setDefaultsOnInsert: true }
-  ,function(err, upload) {
+  }, _.pick(req.body, filter), { new: true } ,function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -111,7 +111,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(upload)
+    res.status(200).json(_.omit(upload.toJSON(), ['thumbnail']))
   })
 }
 
