@@ -188,23 +188,23 @@ describe('上传模块', function() {
     })
   })
 
-  describe('缩略图预览', function(){
-    it('预览成功', function(done){
-      request(app)
-        .get('/api/v1/uploads/nick/' + upload_id + '/thumbnail')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res) {
-          if(err){
-            return done(err)
-          }
+  // describe('缩略图预览', function(){
+  //   it('预览成功', function(done){
+  //     request(app)
+  //       .get('/api/v1/uploads/nick/' + upload_id + '/thumbnail')
+  //       .set('x-access-token', access_token)
+  //       .expect(200)
+  //       .end(function(err, res) {
+  //         if(err){
+  //           return done(err)
+  //         }
 
-          res.header['content-type'].should.equal('image/png')
+  //         res.header['content-type'].should.equal('image/png')
 
-          done()
-        })
-    })
-  })
+  //         done()
+  //       })
+  //   })
+  // })
 
   describe('删除文件', function() {
     it('删除成功', function(done) {

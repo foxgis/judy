@@ -67,7 +67,6 @@ module.exports.create = function(req, res) {
             } else {
               image.resize(1000).png().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
                 newUpload.thumbnail = buffer
-                console.log(buffer)
                 newUpload.save()
               })
             }
