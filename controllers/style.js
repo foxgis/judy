@@ -86,8 +86,7 @@ module.exports.update = function(req, res) {
     style_id: req.params.style_id,
     owner: req.params.username
   }, _.omit(escaper.escape(req.body), filter)
-  , { new: true, setDefaultsOnInsert: true}
-  , function(err, style) {
+  , { new: true }, function(err, style) {
     if (err) {
       return res.status(500).json({ error: err })
     }

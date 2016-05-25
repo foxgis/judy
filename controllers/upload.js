@@ -67,6 +67,7 @@ module.exports.create = function(req, res) {
             } else {
               image.resize(1000).png().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
                 newUpload.thumbnail = buffer
+                console.log(buffer)
                 newUpload.save()
               })
             }
@@ -118,7 +119,7 @@ module.exports.update = function(req, res) {
 
 module.exports.delete = function(req, res) {
   Upload.findOneAndUpdate({
-    file_id: req.params.file_id,
+    upload_id: req.params.upload_id,
     owner: req.params.username
   }, { is_deleted: true }, function(err) {
     if (err) {
