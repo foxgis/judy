@@ -41,7 +41,7 @@ describe('字体模块', function(){
       request(app)
         .post('/api/v1/fonts/nick')
         .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/test.ttf')
+        .attach('upload', './test/fixtures/test.ttf')
         .expect(200)
         .end(function(err, res){
           if(err){
@@ -60,7 +60,7 @@ describe('字体模块', function(){
       request(app)
         .post('/api/v1/fonts/nick')
         .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/china.jpg')
+        .attach('upload', './test/fixtures/china.jpg')
         .expect(400)
         .end(function(err, res){
           if(err){

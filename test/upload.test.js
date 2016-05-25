@@ -34,12 +34,18 @@ describe('上传模块', function() {
   })
 
   describe('上传文件', function() {
-    this.timeout(4000)
+    afterEach('yes', function(done){
+      setTimeout(function(){
+        done()
+      },1000)
+    })
+
     it('上传成功', function(done) {
+      this.timeout(4000)
       request(app)
         .post('/api/v1/uploads/nick')
         .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/svg.zip')
+        .attach('upload', './test/fixtures/china.jpg')
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -47,8 +53,8 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('svg')
-          res.body.format.should.equal('zip')
+          res.body.name.should.equal('china')
+          res.body.format.should.equal('jpg')
           res.body.upload_id.should.exist
           should.not.exist(res.body.file_id)
           should.not.exist(res.body.is_deleted)
@@ -93,7 +99,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('svg')
+          res.body.name.should.equal('china')
 
           done()
         })
@@ -152,6 +158,7 @@ describe('上传模块', function() {
 
   describe('修改文件', function() {
     it('修改成功', function(done) {
+      this.timeout(4000)
       request(app)
         .patch('/api/v1/uploads/nick/' + upload_id )
         .set('x-access-token', access_token)
@@ -189,23 +196,23 @@ describe('上传模块', function() {
     })
   })
 
-  // describe('缩略图预览', function(){
-  //   it('预览成功', function(done){
-  //     request(app)
-  //       .get('/api/v1/uploads/nick/' + upload_id + '/thumbnail')
-  //       .set('x-access-token', access_token)
-  //       .expect(200)
-  //       .end(function(err, res) {
-  //         if(err){
-  //           return done(err)
-  //         }
+  describe('缩略图预览', function(){
+    it('预览成功', function(done){
+      request(app)
+        .get('/api/v1/uploads/nick/' + upload_id + '/thumbnail')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if(err){
+            return done(err)
+          }
 
-  //         res.header['content-type'].should.equal('image/png')
+          res.header['content-type'].should.equal('image/png')
 
-  //         done()
-  //       })
-  //   })
-  // })
+          done()
+        })
+    })
+  })
 
   describe('删除文件', function() {
     it('删除成功', function(done) {

@@ -48,7 +48,7 @@ describe('瓦片集模块', function(){
       request(app)
         .post('/api/v1/tilesets/nick')
         .set('x-access-token', access_token)
-        .attach('aa', './test/fixtures/beijing.mbtiles')
+        .attach('upload', './test/fixtures/beijing.mbtiles')
         .expect(200)
         .end(function(err, res){
           if(err){

@@ -46,7 +46,7 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  filesniffer.quaff(req.files[0].path, true, function(err, protocol) {
+  filesniffer.quaff(req.files.upload.path, true, function(err, protocol) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -63,14 +63,14 @@ module.exports.create = function(req, res) {
       res.status(200).json(tileset)
 
       // 导入数据
-      var src = protocol + '//./' + req.files[0].path
-      if (path.extname(req.files[0].originalname) === '.zip') {
-        var zip = new AdmZip(req.files[0].path)
-        zip.extractAllTo('./uploads/' + req.files[0].originalname, true)
+      var src = protocol + '//./' + req.files.upload.path
+      if (path.extname(req.files.upload.originalname) === '.zip') {
+        var zip = new AdmZip(req.files.upload.path)
+        zip.extractAllTo('./uploads/' + req.files.upload.originalname, true)
         zip.getEntries().forEach(function(entry){
           if (path.extname(entry.entryName) === '.shp') {
             var shp = entry.entryName
-            src = protocol +'//./uploads/'+ req.files[0].originalname +'/'+ shp
+            src = protocol +'//./uploads/'+ req.files.upload.originalname +'/'+ shp
           }
         })
       }
@@ -94,8 +94,8 @@ module.exports.create = function(req, res) {
           tileset.save()
         }
 
-        fs.unlink(req.files[0].path)
-        rimraf('./uploads/' + req.files[0].originalname, function(){})
+        fs.unlink(req.files.upload.path)
+        rimraf('./uploads/' + req.files.upload.originalname, function(){})
       })
     })
   })

@@ -22,17 +22,17 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  var ext = path.extname(req.files[0].originalname)
+  var ext = path.extname(req.files.upload.originalFilename)
   if (ext !== '.ttf' && ext !== '.otf') {
     return res.status(400).json({ error: '仅支持ttf、otf字体文件' })
 
   } else {
-    fs.readFile(req.files[0].path, function(err, buffer) {
+    fs.readFile(req.files.upload.path, function(err, buffer) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      fs.unlink(req.files[0].path)
+      fs.unlink(req.files.upload.path)
 
       fontmachine.makeGlyphs({ font: buffer, filetype: ext }, function(err, font) {
         if (err) {

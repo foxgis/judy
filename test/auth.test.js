@@ -57,7 +57,7 @@ describe('权限模块', function(){
     request(app)
       .post('/api/v1/uploads/nick')
       .set('x-access-token', access_token)
-      .attach('aa', './test/fixtures/svg.zip')
+      .attach('upload', './test/fixtures/svg.zip')
       .expect(200)
       .end(function(err, res){
         if(err){
@@ -117,7 +117,7 @@ describe('权限模块', function(){
     request(app)
       .post('/api/v1/sprites/nick')
       .set('x-access-token', access_token)
-      .attach('aa', './test/fixtures/svg.zip')
+      .attach('upload', './test/fixtures/svg.zip')
       .expect(200)
       .end(function(err, res) {
         if (err) {
@@ -138,7 +138,7 @@ describe('权限模块', function(){
     request(app)
       .post('/api/v1/fonts/nick')
       .set('x-access-token', access_token)
-      .attach('aa', './test/fixtures/test.ttf')
+      .attach('upload', './test/fixtures/test.ttf')
       .expect(200)
       .end(function(err, res) {
         if (err) {

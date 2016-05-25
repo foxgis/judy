@@ -23,11 +23,11 @@ module.exports.list = function(req, res) {
 
 module.exports.create = function(req, res) {
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
-  var writeStream = gfs.createWriteStream({ filename: req.files[0].originalname })
-  fs.createReadStream(req.files[0].path).pipe(writeStream)
+  var writeStream = gfs.createWriteStream({ filename: req.files.upload.originalFilename })
+  fs.createReadStream(req.files.upload.path).pipe(writeStream)
 
   writeStream.on('error', function(err) {
-    fs.unlink(req.files[0].path)
+    fs.unlink(req.files.upload.path)
     return res.status(500).json({ error: err })
   })
 
@@ -36,7 +36,7 @@ module.exports.create = function(req, res) {
       file_id: file._id,
       owner: req.params.username,
       name: path.basename(file.filename,path.extname(file.filename)),
-      size: req.files[0].size,
+      size: req.files.upload.size,
       format: path.extname(file.filename).replace('.', '')
     })
 
@@ -54,8 +54,8 @@ module.exports.create = function(req, res) {
         || newUpload.format === 'tiff' || newUpload.format === 'TIFF'
         || newUpload.format === 'tif' || newUpload.format === 'TIF'
         ) {
-        fs.readFile(req.files[0].path, function(err, imageBuffer){  // eslint-disable-line no-unused-vars
-          fs.unlink(req.files[0].path)
+        fs.readFile(req.files.upload.path, function(err, imageBuffer){  // eslint-disable-line no-unused-vars
+          fs.unlink(req.files.upload.path)
 
           var image = sharp(imageBuffer)
           image.metadata(function(err, metaData){  // eslint-disable-line no-unused-vars
