@@ -47,7 +47,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('svg.zip')
+          res.body.name.should.equal('svg')
           res.body.format.should.equal('zip')
           res.body.upload_id.should.exist
           should.not.exist(res.body.file_id)
@@ -93,7 +93,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('svg.zip')
+          res.body.name.should.equal('svg')
 
           done()
         })
