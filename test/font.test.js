@@ -37,6 +37,7 @@ describe('字体模块', function(){
 
   describe('上传字体', function(){
     it('上传成功', function(done){
+      this.timeout(6000)
       request(app)
         .post('/api/v1/fonts/nick')
         .set('x-access-token', access_token)

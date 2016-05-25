@@ -34,6 +34,7 @@ describe('上传模块', function() {
   })
 
   describe('上传文件', function() {
+    this.timeout(4000)
     it('上传成功', function(done) {
       request(app)
         .post('/api/v1/uploads/nick')

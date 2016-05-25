@@ -35,6 +35,7 @@ describe('符号库模块', function() {
   })
 
   describe('创建符号库', function(){
+    this.timeout(4000)
     it('创建成功', function(done) {
       request(app)
         .post('/api/v1/sprites/nick')

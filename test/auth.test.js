@@ -53,6 +53,7 @@ describe('权限模块', function(){
   })
 
   before('上传文件', function(done){
+    this.timeout(4000)
     request(app)
       .post('/api/v1/uploads/nick')
       .set('x-access-token', access_token)
@@ -112,6 +113,7 @@ describe('权限模块', function(){
   })
 
   before('创建符号库', function(done) {
+    this.timeout(4000)
     request(app)
       .post('/api/v1/sprites/nick')
       .set('x-access-token', access_token)
@@ -132,6 +134,7 @@ describe('权限模块', function(){
   })
 
   before('上传字体', function(done) {
+    this.timeout(6000)
     request(app)
       .post('/api/v1/fonts/nick')
       .set('x-access-token', access_token)

@@ -37,9 +37,10 @@ describe('瓦片集模块', function(){
 
   describe('上传瓦片集', function(){
     afterEach('yes', function(done){
+      this.timeout(4100)
       setTimeout(function(){
         done()
-      },1900)
+      },4000)
     })
 
     it('上传成功', function(done){
