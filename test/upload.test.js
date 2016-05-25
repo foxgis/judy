@@ -133,7 +133,7 @@ describe('上传模块', function() {
             return done(err)
           }
 
-          res.header['content-type'].should.equal('application/octet-stream')
+          res.header['content-type'].should.equal('image/jpeg')
 
           done()
         })
