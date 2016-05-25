@@ -10,9 +10,6 @@ var tilelive = require('tilelive')
 var tileliveLoader = require('tilelive-modules/loader')
 var config = require('./config')
 var router = require('./router')
-// var omnivore = require('tilelive-omnivore')
-
-// omnivore.registerProtocols(tilelive)
 
 // 连接数据库
 require('./db')
