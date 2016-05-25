@@ -63,14 +63,13 @@ module.exports.create = function(req, res) {
       res.status(200).json(tileset)
 
       // 导入数据
-      var src = protocol + '//./' + req.files.upload.path
+      var src = protocol + '//' + req.files.upload.path
       if (path.extname(req.files.upload.originalname) === '.zip') {
         var zip = new AdmZip(req.files.upload.path)
-        zip.extractAllTo('./uploads/' + req.files.upload.originalname, true)
+        zip.extractAllTo('./uploads/' + tileset.tileset_id, true)
         zip.getEntries().forEach(function(entry){
           if (path.extname(entry.entryName) === '.shp') {
-            var shp = entry.entryName
-            src = protocol +'//./uploads/'+ req.files.upload.originalname +'/'+ shp
+            src = protocol +'//./uploads/'+ tileset.tileset_id +'/'+ entry.entryName
           }
         })
       }
@@ -94,7 +93,7 @@ module.exports.create = function(req, res) {
         }
 
         fs.unlink(req.files.upload.path)
-        rimraf('./uploads/' + req.files.upload.originalname, function(){})
+        rimraf('./uploads/' + tileset.tileset_id, function(){})
       })
     })
   })
