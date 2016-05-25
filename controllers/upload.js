@@ -150,7 +150,7 @@ module.exports.download = function(req, res) {
     })
 
     res.setHeader('Content-disposition',
-      'attachment; filename*=UTF-8\'\'' + fs.filename)
+      'attachment; filename*=UTF-8\'\'' + upload.name)
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' })
     readStream.pipe(res)
   })
