@@ -97,7 +97,7 @@ module.exports.update = function(req, res) {
   Font.findOneAndUpdate({
     fontname: req.params.fontname,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true, setDefaultsOnInsert: true }, function(err, font) {
+  }, _.pick(req.body, filter), { new: true }, function(err, font) {
     if (err) {
       return res.status(500).json({ error: err })
     }
