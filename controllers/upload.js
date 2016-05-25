@@ -35,9 +35,9 @@ module.exports.create = function(req, res) {
     var newUpload = new Upload({
       file_id: file._id,
       owner: req.params.username,
-      name: file.filename,
+      name: path.basename(file.filename,path.extname(file.filename)),
       size: req.files[0].size,
-      format: path.extname(req.files[0].originalname).replace('.', '')
+      format: path.extname(file.filename).replace('.', '')
     })
 
     newUpload.save(function(err) {
@@ -150,7 +150,7 @@ module.exports.download = function(req, res) {
     })
 
     res.setHeader('Content-disposition',
-      'attachment; filename*=UTF-8\'\'' + upload.name)
+      'attachment; filename*=UTF-8\'\'' + upload.name + '.' + upload.format)
     res.writeHead(200, { 'Content-Type': 'application/octet-stream' })
     readStream.pipe(res)
   })

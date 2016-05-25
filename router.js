@@ -13,7 +13,7 @@ var uploads = require('./controllers/upload')
 var router = express.Router()
 var upload = multipart({
   uploadDir: 'uploads/',
-  maxFilesSize:200000000
+  maxFilesSize: 200000000
 })
 
 var floatPattern = '[+-]?(?:\\d+|\\d+\.?\\d+)'
