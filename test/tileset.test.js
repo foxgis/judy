@@ -147,6 +147,7 @@ describe('瓦片集模块', function(){
   })
 
   describe('获取瓦片', function(){
+    this.timeout(6000)
     it('获取成功', function(done){
       request(app)
         .get('/api/v1/tilesets/nick/' + tileset_id + '/6/52/24.vector.pbf')

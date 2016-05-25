@@ -75,4 +75,9 @@ router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 router.get('/uploads/:username/:upload_id/file', auth, uploads.download)
 router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.preview)
 
+router.post('/testupload', upload.any(), function(req, res) {
+  console.log(req.files[0].path)
+  res.status(200).json({path: req.files[0].path})
+})
+
 module.exports = router
