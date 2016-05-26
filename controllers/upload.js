@@ -60,12 +60,12 @@ module.exports.create = function(req, res) {
           var image = sharp(imageBuffer)
           image.metadata(function(err, metaData){  // eslint-disable-line no-unused-vars
             if (metaData.width <= 1000) {
-              image.png().toBuffer(function(err, buffer, info) {  // eslint-disable-line no-unused-vars
+              image.quality(50).jpeg().toBuffer(function(err, buffer, info) {  // eslint-disable-line no-unused-vars
                 newUpload.thumbnail = buffer
                 newUpload.save()
               })
             } else {
-              image.resize(1000).png().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
+              image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
                 newUpload.thumbnail = buffer
                 newUpload.save()
               })
@@ -170,7 +170,7 @@ module.exports.preview = function (req, res) {
       return res.sendStatus(404)
     }
 
-    res.set({ 'Content-Type': 'image/png' })
+    res.set({ 'Content-Type': 'image/jpeg' })
     res.status(200).send(upload.thumbnail)
   })
 }

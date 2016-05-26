@@ -207,7 +207,7 @@ describe('上传模块', function() {
             return done(err)
           }
 
-          res.header['content-type'].should.equal('image/png')
+          res.header['content-type'].should.equal('image/jpeg')
 
           done()
         })

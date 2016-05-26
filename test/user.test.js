@@ -9,7 +9,7 @@ describe('用户管理模块', function() {
   var access_token
 
   after('清除用户数据', function(done) {
-    User.remove({ username: 'nick' }).exec(function(){
+    User.remove({ username: '未被注册的%2+Nick' }).exec(function(){
       done()
     })
   })
@@ -18,14 +18,14 @@ describe('用户管理模块', function() {
     it('注册成功', function(done) {
       request(app)
         .post('/api/v1/users')
-        .send({ username: 'nick', password: '123456' })
+        .send({ username: '未被注册的%2+Nick', password: '123456' })
         .expect(200)
         .end(function(err, res) {
           if (err) {
             return done(err)
           }
 
-          res.body.username.should.equal('nick')
+          res.body.username.should.equal('未被注册的%2+Nick')
           res.body.access_token.should.exist
 
           access_token = res.body.access_token
@@ -37,7 +37,7 @@ describe('用户管理模块', function() {
     it('密码长度过短', function(done) {
       request(app)
         .post('/api/v1/users')
-        .send({ username: 'nick', password: '12345' })
+        .send({ username: '未被注册的%2+Nick', password: '12345' })
         .expect(400)
         .end(function(err, res) {
           if (err) {
@@ -69,7 +69,7 @@ describe('用户管理模块', function() {
     it('密码为空', function(done) {
       request(app)
         .post('/api/v1/users')
-        .send({ username: 'nick', password: '' })
+        .send({ username: '未被注册的%2+Nick', password: '' })
         .expect(400)
         .end(function(err, res) {
           if (err) {
@@ -85,7 +85,7 @@ describe('用户管理模块', function() {
     it('用户名已经被注册', function(done) {
       request(app)
         .post('/api/v1/users')
-        .send({ username: 'nick', password: '123423' })
+        .send({ username: '未被注册的%2+Nick', password: '123423' })
         .expect(400)
         .end(function(err, res) {
           if (err) {
@@ -102,7 +102,7 @@ describe('用户管理模块', function() {
   describe('获取用户信息', function() {
     it('获取成功', function(done) {
       request(app)
-        .get('/api/v1/users/nick')
+        .get(encodeURI('/api/v1/users/未被注册的%2+Nick'))
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
@@ -110,7 +110,7 @@ describe('用户管理模块', function() {
             return done(err)
           }
 
-          res.body.username.should.equal('nick')
+          res.body.username.should.equal('未被注册的%2+Nick')
 
           done()
         })
@@ -118,7 +118,7 @@ describe('用户管理模块', function() {
 
     it('获取失败', function(done) {
       request(app)
-        .get('/api/v1/users/nick')
+        .get(encodeURI('/api/v1/users/未被注册的%2+Nick'))
         .set('x-access-token', 'bad_access_token')
         .expect(401)
         .end(function(err, res) {
@@ -137,7 +137,7 @@ describe('用户管理模块', function() {
   describe('更新用户信息', function() {
     it('更新名称', function(done) {
       request(app)
-        .patch('/api/v1/users/nick')
+        .patch(encodeURI('/api/v1/users/未被注册的%2+Nick'))
         .set('x-access-token', access_token)
         .send({ name: '张三' })
         .expect(200)
@@ -156,7 +156,7 @@ describe('用户管理模块', function() {
   describe('登录', function() {
     it('密码登录成功', function(done) {
       request(app)
-        .post('/api/v1/users/nick')
+        .post(encodeURI('/api/v1/users/未被注册的%2+Nick'))
         .send({password: '123456' })
         .expect(200)
         .end(function(err, res) {
@@ -164,7 +164,7 @@ describe('用户管理模块', function() {
             return done(err)
           }
 
-          res.body.username.should.equal('nick')
+          res.body.username.should.equal('未被注册的%2+Nick')
           res.body.access_token.should.exist
 
           done()
@@ -173,7 +173,7 @@ describe('用户管理模块', function() {
 
     it('密码缺失', function(done) {
       request(app)
-        .post('/api/v1/users/nick')
+        .post(encodeURI('/api/v1/users/未被注册的%2+Nick'))
         .expect(400)
         .end(function(err, res){
           if(err){
@@ -188,7 +188,7 @@ describe('用户管理模块', function() {
 
     it('用户名或密码错误', function(done) {
       request(app)
-        .post('/api/v1/users/nick')
+        .post(encodeURI('/api/v1/users/未被注册的%2+Nick'))
         .send({password: '12345' })
         .expect(401)
         .end(function(err, res){
