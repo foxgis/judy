@@ -33,7 +33,7 @@ module.exports.create = function(req, res) {
 
       User.findOneAndUpdate({
         username: req.body.username
-      }, _.omit(req.body, ['username','password']), { new: true },
+      }, _.omit(req.body, ['username', 'password', 'is_verified']), { new: true },
       function(err, updatedUser){
         if (err) {
           return res.status(500).json({ error: err })

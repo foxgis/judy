@@ -11,7 +11,6 @@ var sprites = require('./controllers/sprite')
 var uploads = require('./controllers/upload')
 
 
-
 var router = express.Router()
 
 // if (!fs.existsSync('./uploads')){

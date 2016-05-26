@@ -10,6 +10,7 @@ var UserSchema = new mongoose.Schema({
   salt: String,
   hash: String,
   access_token: String,
+  is_verified: Boolean,
 
   // profile
   name: String,
