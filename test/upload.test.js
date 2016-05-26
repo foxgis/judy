@@ -45,7 +45,7 @@ describe('上传模块', function() {
       request(app)
         .post('/api/v1/uploads/nick')
         .set('x-access-token', access_token)
-        .attach('upload', './test/fixtures/china.jpg')
+        .attach('upload', './test/fixtures/中国.jpg')
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -53,7 +53,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('china')
+          res.body.name.should.equal('中国')
           res.body.format.should.equal('jpg')
           res.body.upload_id.should.exist
           should.not.exist(res.body.file_id)
@@ -99,7 +99,7 @@ describe('上传模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('china')
+          res.body.name.should.equal('中国')
 
           done()
         })
