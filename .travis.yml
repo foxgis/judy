@@ -14,13 +14,11 @@ addons:
 cache:
   directories:
     - node_modules
-script:
-  - npm run test
-after_script:
-  - npm install coveralls && cat ./coverage/lcov.info | coveralls
 before_install:
   - openssl aes-256-cbc -K $encrypted_02ebef9cfc9c_key -iv $encrypted_02ebef9cfc9c_iv
     -in id_rsa.enc -out ~/.ssh/id_rsa -d
+script:
+  - npm run test
 after_success:
   - chmod 600 ~/.ssh/id_rsa
   - echo -e "Host bygis.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
@@ -28,3 +26,6 @@ after_success:
   - tar -jcf judy.tar.bz2 judy
   - scp judy.tar.bz2 bygis@bygis.com:~/
   - ssh bygis@bygis.com 'tar -jxf judy.tar.bz2'
+  - cd judy
+after_script:
+  - npm install coveralls && cat ./coverage/lcov.info | coveralls
