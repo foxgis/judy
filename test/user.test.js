@@ -18,7 +18,14 @@ describe('用户管理模块', function() {
     it('注册成功', function(done) {
       request(app)
         .post('/api/v1/users')
-        .send({ username: '未被注册的%2+Nick', password: '123456' })
+        .send({
+          username: '未被注册的%2+Nick',
+          password: '123456',
+          name: 'nick',
+          email: 'nick@gmail.com',
+          phone: 121221222,
+          noThis: 'no'
+        })
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -26,6 +33,9 @@ describe('用户管理模块', function() {
           }
 
           res.body.username.should.equal('未被注册的%2+Nick')
+          res.body.email.should.equal('nick@gmail.com')
+          res.body.phone.should.equal('121221222')
+          should.not.exist(res.body.noThis)
           res.body.access_token.should.exist
 
           access_token = res.body.access_token

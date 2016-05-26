@@ -31,7 +31,20 @@ module.exports.create = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      res.status(200).json(newUser)
+      User.findOneAndUpdate({
+        username: req.body.username
+      }, _.omit(req.body, ['username','password']), { new: true },
+      function(err, updatedUser){
+        if (err) {
+          return res.status(500).json({ error: err })
+        }
+
+        if (!updatedUser) {
+          return res.status(400).json({ error: '注册失败'})
+        }
+
+        res.status(200).json(updatedUser)
+      })
     })
   })
 }
