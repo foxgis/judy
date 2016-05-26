@@ -25,26 +25,20 @@ module.exports.create = function(req, res) {
       password: req.body.password
     })
 
-    newUser.updateAccessToken()
+    if (req.body.scope) newUser.scope = req.body.scope
+    if (req.body.name) newUser.name = req.body.name
+    if (req.body.email) newUser.email = req.body.email
+    if (req.body.phone) newUser.phone = req.body.phone
+    if (req.body.location) newUser.location = req.body.location
+    if (req.body.organization) newUser.organization = req.body.organization
+
     newUser.save(function(err) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      User.findOneAndUpdate({
-        username: req.body.username
-      }, _.omit(req.body, ['username','password']), { new: true },
-      function(err, updatedUser){
-        if (err) {
-          return res.status(500).json({ error: err })
-        }
-
-        if (!updatedUser) {
-          return res.status(400).json({ error: '注册失败'})
-        }
-
-        res.status(200).json(updatedUser)
-      })
+      newUser.access_token = newUser.generateAccessToken()
+      res.status(200).json(newUser)
     })
   })
 }
@@ -57,16 +51,16 @@ module.exports.retrieve = function(req, res) {
     }
 
     if (!user) {
-      return res.status(404).json({ error: '用户不存在'})
+      return res.status(404).json({ error: '用户不存在' })
     }
 
-    res.status(200).json(_.omit(user.toJSON(), 'access_token'))
+    res.status(200).json(user)
   })
 }
 
 
 module.exports.update = function(req, res) {
-  var filter = ['name', 'email', 'phone', 'location', 'organization']
+  var filter = ['scope', 'name', 'email', 'phone', 'location', 'organization']
 
   User.findOneAndUpdate({ username: req.params.username },
     _.pick(req.body, filter), { new: true },
@@ -75,7 +69,11 @@ module.exports.update = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      res.status(200).json(_.omit(user.toJSON(), 'access_token'))
+      if (!user) {
+        return res.status(404).json({ error: '用户不存在' })
+      }
+
+      res.status(200).json(user)
     })
 }
 
@@ -94,13 +92,7 @@ module.exports.login = function(req, res) {
       return res.status(401).json({ error: '用户名或密码错误' })
     }
 
-    // user.updateAccessToken()
-    user.save(function(err) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      return res.status(200).json(user)
-    })
+    user.access_token = user.generateAccessToken()
+    res.status(200).json(user)
   })
 }

@@ -1,5 +1,4 @@
 var jwt = require('jsonwebtoken')
-var config = require('../config')
 var User = require('../models/user')
 var Style = require('../models/style')
 var Sprite = require('../models/sprite')
@@ -17,24 +16,26 @@ module.exports = function(req, res, next) {
 
 var authAccessToken = function(req, res, next) {
   var access_token = req.query.access_token ||
-    req.cookies.access_token || req.headers['x-access-token']
+    req.cookies.access_token ||
+    req.headers['x-access-token']
 
   if (!access_token) {
-    return res.sendStatus(401)
+    return res.sendStatus(401).json(error: 'access_token缺失')
   }
 
-  jwt.verify(access_token, config.jwt_secret, function(err, decoded) {
+  var decoded = jwt.decode(access_token, { json: true })
+  User.findOne({ username: decoded.username }, function(err, user) {
     if (err) {
-      return res.status(401).json(err)
+      return res.status(500).json({ error: err })
     }
 
-    User.findOne({ username: decoded.username }, function(err, user) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+    if (user) {
+      return res.status(401).json('用户不存在')
+    }
 
-      if (!user || user.access_token !== access_token) {
-        return res.sendStatus(401)
+    jwt.verify(access_token, user.salt, function(err, decoded) {
+      if (err) {
+        return res.status(401).json(err)
       }
 
       req.user = user
@@ -64,11 +65,28 @@ var authResource = function(req, res, next) {
 
 
 var authUser = function(req, res, next) {
-  if (req.method !== 'GET' && req.user.username !== req.params.username) {
-    return res.sendStatus(401)
-  }
+  if (req.user.username === req.params.username) {
+    return next()
 
-  return next()
+  } else if (!req.params.username || req.method !== 'GET') {
+    return res.sendStatus(401)
+
+  } else {
+    User.findOne({
+      username: req.params.username,
+      scope: 'public'
+    }, function(err, user) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      if (!user) {
+        return res.sendStatus(401)
+      }
+
+      return next()
+    })
+  }
 }
 
 
@@ -109,13 +127,14 @@ var authTileset = function(req, res, next) {
   } else {
     Tileset.findOne({
       tileset_id: req.params.tileset_id,
-      owner: req.params.username
+      owner: req.params.username,
+      scope: 'public'
     }, function(err, tileset) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      if (!tileset ) {
+      if (!tileset) {
         return res.sendStatus(401)
       }
 

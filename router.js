@@ -11,13 +11,8 @@ var sprites = require('./controllers/sprite')
 var uploads = require('./controllers/upload')
 
 
-
 var router = express.Router()
-
-// if (!fs.existsSync('./uploads')){
-//   fs.mkdirSync('./uploads')
-// }
-var upload = multipart({})
+var upload = multipart()
 
 var floatPattern = '[+-]?(?:\\d+|\\d+\.?\\d+)'
 var staticPattern = '/static/%s:scale(@[23]x)?\.:format([\\w\\.]+)'
