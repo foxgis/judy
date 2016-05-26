@@ -23,7 +23,9 @@ module.exports.list = function(req, res) {
 
 module.exports.create = function(req, res) {
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
-  var writeStream = gfs.createWriteStream({ filename: req.files.upload.originalFilename })
+  var writeStream = gfs.createWriteStream({
+    filename: req.files.upload.originalFilename
+  })
   fs.createReadStream(req.files.upload.path).pipe(writeStream)
 
   writeStream.on('error', function(err) {
@@ -32,12 +34,13 @@ module.exports.create = function(req, res) {
   })
 
   writeStream.on('close', function(file) {
+    var format = path.extname(file.filename).replace('.', '').toLowerCase()
     var newUpload = new Upload({
       file_id: file._id,
       owner: req.params.username,
-      name: path.basename(file.filename,path.extname(file.filename)),
+      name: path.basename(file.filename, path.extname(file.filename)),
       size: req.files.upload.size,
-      format: path.extname(file.filename).replace('.', '')
+      format: format
     })
 
     newUpload.save(function(err) {
@@ -47,25 +50,19 @@ module.exports.create = function(req, res) {
 
       res.status(200).json(newUpload)
 
-      if (
-        newUpload.format === 'png' || newUpload.format === 'PNG'
-        || newUpload.format === 'jpg' || newUpload.format === 'JPG'
-        || newUpload.format === 'jpeg' || newUpload.format === 'JPEG'
-        || newUpload.format === 'tiff' || newUpload.format === 'TIFF'
-        || newUpload.format === 'tif' || newUpload.format === 'TIF'
-        ) {
-        fs.readFile(req.files.upload.path, function(err, imageBuffer){  // eslint-disable-line no-unused-vars
+      if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) > -1) {
+        fs.readFile(req.files.upload.path, function(err, imageBuffer) {
           fs.unlink(req.files.upload.path)
 
           var image = sharp(imageBuffer)
-          image.metadata(function(err, metaData){  // eslint-disable-line no-unused-vars
-            if (metaData.width <= 1000) {
-              image.quality(50).jpeg().toBuffer(function(err, buffer, info) {  // eslint-disable-line no-unused-vars
+          image.metadata(function(err, metadata) {
+            if (metadata.width <= 1000) {
+              image.quality(50).jpeg().toBuffer(function(err, buffer) {
                 newUpload.thumbnail = buffer
                 newUpload.save()
               })
             } else {
-              image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer, info) { // eslint-disable-line no-unused-vars
+              image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer) {
                 newUpload.thumbnail = buffer
                 newUpload.save()
               })
@@ -97,12 +94,12 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['tags', 'name', 'description']
+  var filter = ['scope', 'tags', 'name', 'description']
 
   Upload.findOneAndUpdate({
     upload_id: req.params.upload_id,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true } ,function(err, upload) {
+  }, _.pick(req.body, filter), { new: true }, function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -149,21 +146,21 @@ module.exports.download = function(req, res) {
       return res.status(500).json({ error: err })
     })
 
-    res.setHeader('Content-disposition', 'attachment; filename*=UTF-8\'\''
-      + encodeURIComponent(upload.name) + '.' + encodeURIComponent(upload.format))
+    res.setHeader('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
+      encodeURIComponent(upload.name) + '.' + encodeURIComponent(upload.format))
     res.type(upload.format)
     readStream.pipe(res)
   })
 }
 
 
-module.exports.preview = function (req, res) {
+module.exports.preview = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
     owner: req.params.username
   }, function(err, upload) {
     if (err) {
-      return res.status(500).json({ error: err})
+      return res.status(500).json({ error: err })
     }
 
     if (!upload) {
