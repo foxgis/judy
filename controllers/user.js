@@ -81,7 +81,7 @@ module.exports.login = function(req, res) {
       return res.status(401).json({ error: '用户名或密码错误' })
     }
 
-    user.updateAccessToken()
+    // user.updateAccessToken()
     user.save(function(err) {
       if (err) {
         return res.status(500).json({ error: err })
