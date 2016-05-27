@@ -12,13 +12,13 @@ module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,
     is_deleted: false
-  }, '-thumbnail', function(err, uploads) {
+  }, '-thumbnail -mini_thumbnail', function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
     res.status(200).json(uploads)
-  })
+  }).sort({ updatedAt: -1 })
 }
 
 
@@ -43,6 +43,9 @@ module.exports.create = function(req, res) {
       size: req.files.upload.size,
       format: format
     })
+
+    if (req.body.year) newUpload.year = req.body.year
+    if (req.body.location) newUpload.location = req.body.location
 
     if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) < 0 ) {
       return res.status(200).json(newUpload)
@@ -99,7 +102,7 @@ module.exports.retrieve = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
     owner: req.params.username
-  }, '-thumbnail', function(err, upload) {
+  }, '-thumbnail -mini_thumbnail', function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -189,5 +192,24 @@ module.exports.preview = function(req, res) {
 
     res.set({ 'Content-Type': 'image/jpeg' })
     res.status(200).send(upload.thumbnail)
+  })
+}
+
+
+module.exports.getAvater = function(req, res) {
+  Upload.findOne({
+    upload_id: req.params.upload_id,
+    owner: req.params.username
+  }, function(err, upload) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!upload) {
+      return res.sendStatus(404)
+    }
+
+    res.set({ 'Content-Type': 'image/jpeg' })
+    res.status(200).send(upload.mini_thumbnail)
   })
 }
