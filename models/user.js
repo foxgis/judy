@@ -2,7 +2,6 @@ var crypto = require('crypto')
 var mongoose = require('mongoose')
 var jwt = require('jsonwebtoken')
 var select = require('mongoose-json-select')
-var config = require('../config')
 
 
 var UserSchema = new mongoose.Schema({
@@ -10,7 +9,8 @@ var UserSchema = new mongoose.Schema({
   salt: String,
   hash: String,
   access_token: String,
-  is_verified: Boolean,
+  scope: { type: String, default: 'public' },
+  is_verified: { type: Boolean, default: false },
 
   // profile
   name: String,
@@ -21,7 +21,7 @@ var UserSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-UserSchema.plugin(select, '-_id -salt -hash -__v')
+UserSchema.plugin(select, '-_id -__v -salt -hash')
 
 
 UserSchema.virtual('password').set(function(password) {
@@ -31,7 +31,7 @@ UserSchema.virtual('password').set(function(password) {
 
 
 UserSchema.methods.updateAccessToken = function() {
-  this.access_token = jwt.sign({ username: this.username }, config.jwt_secret, { expiresIn: '30d' })
+  this.access_token = jwt.sign({ username: this.username }, this.salt, { expiresIn: '30d' })
 }
 
 

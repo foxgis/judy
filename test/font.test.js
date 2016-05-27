@@ -94,16 +94,7 @@ describe('字体模块', function(){
     it('获取失败', function(done){
       request(app)
         .get('/api/v1/fonts/nick')
-        .expect(401)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
+        .expect(401, done)
     })
   })
 

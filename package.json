@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "lint": "eslint *.js models/** controllers/** tools/** test/*",
+    "lint": "eslint *.js models/** controllers/** tools/** test/*.js",
     "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "bin": {
