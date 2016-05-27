@@ -53,7 +53,7 @@ describe('权限模块', function() {
   })
 
   before('上传文件', function(done) {
-    this.timeout(4000)
+    this.timeout(10000)
     request(app)
       .post('/api/v1/uploads/nick')
       .set('x-access-token', nick_access_token)

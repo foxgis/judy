@@ -2,6 +2,7 @@ var _ = require('lodash')
 var fs = require('fs')
 var path = require('path')
 var mongoose = require('mongoose')
+var async = require('async')
 var sharp = require('sharp')
 var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
@@ -43,34 +44,53 @@ module.exports.create = function(req, res) {
       format: format
     })
 
-    newUpload.save(function(err) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+    if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) < 0 ) {
+      return res.status(200).json(newUpload)
+    }
+    else{
+      fs.readFile(req.files.upload.path, function(err, imageBuffer) {
+        fs.unlink(req.files.upload.path)
+        var image = sharp(imageBuffer)
 
-      res.status(200).json(newUpload)
+        async.parallel([
+          function (callback) {
+            image.resize(100, 100).quality(50).jpeg().toBuffer(function(err, buffer) {
+              callback(err, buffer)
+            })
+          },
 
-      if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) > -1) {
-        fs.readFile(req.files.upload.path, function(err, imageBuffer) {
-          fs.unlink(req.files.upload.path)
+          function (callback) {
+            image.metadata(function(err, metadata) {
+              if (metadata.width <= 1000) {
+                image.quality(50).jpeg().toBuffer(function(err, buffer) {
+                  callback(err, buffer)
+                })
+              } else {
+                image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer) {
+                  callback(err, buffer)
+                })
+              }
+            })
+          }
+        ],
+        function(err, results){
+          if (err) {
+            return res.status(500).json({ error: err})
+          }
 
-          var image = sharp(imageBuffer)
-          image.metadata(function(err, metadata) {
-            if (metadata.width <= 1000) {
-              image.quality(50).jpeg().toBuffer(function(err, buffer) {
-                newUpload.thumbnail = buffer
-                newUpload.save()
-              })
-            } else {
-              image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer) {
-                newUpload.thumbnail = buffer
-                newUpload.save()
-              })
+          newUpload.mini_thumbnail = results[0]
+          newUpload.thumbnail = results[1]
+
+          newUpload.save(function(err){
+            if (err) {
+              return res.status(500).json({ error: err})
             }
+
+            return res.status(200).json(_.omit(newUpload.toJSON(), ['thumbnail', 'mini_thumbnail']))
           })
         })
-      }
-    })
+      })
+    }
   })
 }
 
