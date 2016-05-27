@@ -187,16 +187,7 @@ describe('瓦片集模块', function(){
       request(app)
         .delete('/api/v1/tilesets/nick/' + tileset_id)
         .set('x-access-token', access_token)
-        .expect(204)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
+        .expect(204, done)
     })
   })
 })
