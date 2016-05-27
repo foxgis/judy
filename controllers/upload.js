@@ -97,7 +97,7 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['tags', 'name', 'description']
+  var filter = ['tags', 'name', 'description', 'year', 'location']
 
   Upload.findOneAndUpdate({
     upload_id: req.params.upload_id,
