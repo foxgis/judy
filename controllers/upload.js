@@ -71,7 +71,7 @@ module.exports.create = function(req, res) {
           function (callback) {
             image.metadata(function(err, metadata) {
               if (metadata.width <= 1000) {
-                image.quality(50).jpeg().toBuffer(function(err, buffer) {
+                image.resize(metadata.width).quality(50).jpeg().toBuffer(function(err, buffer) {
                   callback(err, buffer)
                 })
               } else {
