@@ -34,9 +34,9 @@ var authAccessToken = function(req, res, next) {
       return res.status(401).json({ error: '用户不存在' })
     }
 
-    // if (!user.is_verified) {
-    //   return res.status(401).json({ error: '用户未认证' })
-    // }
+    if (!user.is_verified) {
+      return res.status(401).json({ error: '用户未认证' })
+    }
 
     jwt.verify(access_token, user.salt, function(err, decoded) { // eslint-disable-line no-unused-vars
       if (err) {

@@ -32,6 +32,13 @@ describe('用户管理模块', function() {
             return done(err)
           }
 
+          User.findOneAndUpdate({ username: '中文用户名' }, { is_verified: true }
+            , { new: true }, function(err) {
+              if (err) {
+                done()
+              }
+            })
+
           res.body.username.should.equal('中文用户名')
           res.body.email.should.equal('nick@gmail.com')
           res.body.phone.should.equal('121221222')

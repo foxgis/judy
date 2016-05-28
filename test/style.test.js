@@ -19,6 +19,13 @@ describe('样式管理模块', function() {
           return done(err)
         }
 
+        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }
+          , { new: true }, function(err) {
+            if (err) {
+              done()
+            }
+          })
+
         access_token = res.body.access_token
 
         done()

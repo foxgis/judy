@@ -18,8 +18,12 @@ describe('瓦片集模块', function(){
           return done(err)
         }
 
-        res.body.username.should.equal('nick')
-        res.body.access_token.should.exist
+        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }
+          , { new: true }, function(err) {
+            if (err) {
+              done()
+            }
+          })
 
         access_token = res.body.access_token
 
