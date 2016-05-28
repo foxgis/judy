@@ -48,7 +48,13 @@ module.exports.create = function(req, res) {
     if (req.body.location) newUpload.location = req.body.location
 
     if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) < 0 ) {
-      return res.status(200).json(newUpload)
+      newUpload.save(function(err){
+        if (err) {
+          return res.status(500).json({ error: err })
+        }
+
+        return res.status(200).json(newUpload)
+      })
     }
     else{
       fs.readFile(req.files.upload.path, function(err, imageBuffer) {
