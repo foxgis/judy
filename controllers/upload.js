@@ -192,7 +192,7 @@ module.exports.getThumbnail = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    if (!upload || upload.thumbnail) {
+    if (!upload || !upload.thumbnail) {
       return res.sendStatus(404)
     }
 
@@ -211,7 +211,7 @@ module.exports.getMiniThumbnail = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    if (!upload || upload.mini_thumbnail) {
+    if (!upload || !upload.mini_thumbnail) {
       return res.sendStatus(404)
     }
 
