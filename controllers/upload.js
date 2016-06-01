@@ -137,7 +137,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(_.omit(upload.toJSON(), ['thumbnail']))
+    res.status(200).json(_.omit(upload.toJSON(), ['thumbnail', 'mini_thumbnail']))
   })
 }
 
@@ -183,7 +183,7 @@ module.exports.download = function(req, res) {
 }
 
 
-module.exports.preview = function(req, res) {
+module.exports.getThumbnail = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
     owner: req.params.username
@@ -192,7 +192,7 @@ module.exports.preview = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    if (!upload) {
+    if (!upload || upload.thumbnail) {
       return res.sendStatus(404)
     }
 
@@ -202,7 +202,7 @@ module.exports.preview = function(req, res) {
 }
 
 
-module.exports.getAvater = function(req, res) {
+module.exports.getMiniThumbnail = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
     owner: req.params.username
@@ -211,7 +211,7 @@ module.exports.getAvater = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    if (!upload) {
+    if (!upload || upload.mini_thumbnail) {
       return res.sendStatus(404)
     }
 

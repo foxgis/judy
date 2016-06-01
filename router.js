@@ -71,8 +71,8 @@ router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.patch('/uploads/:username/:upload_id', auth, uploads.update)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 router.get('/uploads/:username/:upload_id/file', auth, uploads.download)
-router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.preview)
-router.get('/uploads/:username/:upload_id/mini_thumbnail', auth, uploads.getAvater)
+router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.getThumbnail)
+router.get('/uploads/:username/:upload_id/mini_thumbnail', auth, uploads.getMiniThumbnail)
 
 
 module.exports = router
