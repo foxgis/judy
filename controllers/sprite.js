@@ -1,6 +1,7 @@
 var _ = require('lodash')
 var fs = require('fs')
 var path = require('path')
+var async = require('async')
 var AdmZip = require('adm-zip')
 var spritezero = require('spritezero')
 var Sprite = require('../models/sprite')
@@ -10,7 +11,7 @@ module.exports.list = function(req, res) {
   Sprite.find({
     owner: req.params.username,
     is_deleted: false
-  }, '-image -json -image2x -json2x', function(err, sprites) {
+  }, function(err, sprites) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -42,53 +43,41 @@ module.exports.create = function(req, res) {
 
   fs.unlink(req.files[0].path)
 
-  spritezero.generateLayout(imgs, 2, false, function(err, layout2x) {
+  async.autoInject({
+    layout2x: function(callback) {
+      spritezero.generateLayout(imgs, 2, false, callback)
+    },
+    image2x: function(layout2x, callback) {
+      spritezero.generateImage(layout2x, callback)
+    },
+    json2x: function(callback) {
+      spritezero.generateLayout(imgs, 2, true, callback)
+    },
+    layout: function(callback) {
+      spritezero.generateLayout(imgs, 1, false, callback)
+    },
+    image: function(layout, callback) {
+      spritezero.generateImage(layout, callback)
+    },
+    json: function(callback) {
+      spritezero.generateLayout(imgs, 1, true, callback)
+    }
+  }, function(err, results) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    spritezero.generateImage(layout2x, function(err, image2x) {
+    sprite.image2x = results.image2x
+    sprite.json2x = JSON.stringify(results.json2x)
+    sprite.image = results.image
+    sprite.json = JSON.stringify(results.json)
+
+    sprite.save(function(err) {
       if (err) {
         return res.status(500).json({ error: err })
       }
-      sprite.image2x = image2x
 
-      spritezero.generateLayout(imgs, 2, true, function(err, json2x) {
-        if (err) {
-          return res.status(500).json({ error: err })
-        }
-        sprite.json2x = JSON.stringify(json2x)
-
-        spritezero.generateLayout(imgs, 1, false, function(err, layout) {
-          if (err) {
-            return res.status(500).json({ error: err })
-          }
-
-          spritezero.generateImage(layout, function(err, image) {
-            if (err) {
-              return res.status(500).json({ error: err })
-            }
-            sprite.image = image
-
-            spritezero.generateLayout(imgs, 1, true, function(err, json) {
-              if (err) {
-                return res.status(500).json({ error: err })
-              }
-
-              sprite.json = JSON.stringify(json)
-
-              sprite.save(function(err) {
-                if (err) {
-                  return res.status(500).json({ error: err })
-                }
-
-                var filter = ['sprite_id', 'owner', 'scope', 'name']
-                return res.status(200).json(_.pick(sprite.toJSON(), filter))
-              })
-            })
-          })
-        })
-      })
+      return res.status(200).json(sprite)
     })
   })
 }
@@ -98,7 +87,7 @@ module.exports.retrieve = function(req, res) {
   Sprite.findOne({
     sprite_id: req.params.sprite_id,
     owner: req.params.username
-  }, '-image -json -image2x -json2x', function(err, sprite) {
+  }, function(err, sprite) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -118,8 +107,7 @@ module.exports.update = function(req, res) {
   Sprite.findOneAndUpdate({
     sprite_id: req.params.sprite_id,
     owner: req.params.username
-  }, _.pick(req.body, filter), { new: true }
-  , function(err, sprite) {
+  }, _.pick(req.body, filter), { new: true }, function(err, sprite) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -128,8 +116,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    var filter2 = ['image', 'json', 'image2x', 'json2x']
-    res.status(200).json(_.omit(sprite.toJSON(), filter2))
+    res.status(200).json(sprite)
   })
 }
 
