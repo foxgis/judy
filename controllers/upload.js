@@ -12,7 +12,7 @@ module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,
     is_deleted: false
-  }, '-thumbnail -mini_thumbnail', function(err, uploads) {
+  }, function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -25,12 +25,12 @@ module.exports.list = function(req, res) {
 module.exports.create = function(req, res) {
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
   var writeStream = gfs.createWriteStream({
-    filename: req.files.upload.originalFilename
+    filename: req.files[0].originalname
   })
-  fs.createReadStream(req.files.upload.path).pipe(writeStream)
+  fs.createReadStream(req.files[0].path).pipe(writeStream)
 
   writeStream.on('error', function(err) {
-    fs.unlink(req.files.upload.path)
+    fs.unlink(req.files[0].path)
     return res.status(500).json({ error: err })
   })
 
@@ -40,7 +40,7 @@ module.exports.create = function(req, res) {
       file_id: file._id,
       owner: req.params.username,
       name: path.basename(file.filename, path.extname(file.filename)),
-      size: req.files.upload.size,
+      size: req.files[0].size,
       format: format
     })
 
@@ -57,8 +57,8 @@ module.exports.create = function(req, res) {
       })
     }
     else{
-      fs.readFile(req.files.upload.path, function(err, imageBuffer) {
-        fs.unlink(req.files.upload.path)
+      fs.readFile(req.files[0].path, function(err, imageBuffer) {
+        fs.unlink(req.files[0].path)
         var image = sharp(imageBuffer)
 
         async.parallel([
@@ -95,7 +95,7 @@ module.exports.create = function(req, res) {
               return res.status(500).json({ error: err})
             }
 
-            return res.status(200).json(_.omit(newUpload.toJSON(), ['thumbnail', 'mini_thumbnail']))
+            return res.status(200).json(newUpload)
           })
         })
       })
@@ -108,7 +108,7 @@ module.exports.retrieve = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
     owner: req.params.username
-  }, '-thumbnail -mini_thumbnail', function(err, upload) {
+  }, function(err, upload) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -137,7 +137,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(_.omit(upload.toJSON(), ['thumbnail', 'mini_thumbnail']))
+    res.status(200).json(upload)
   })
 }
 

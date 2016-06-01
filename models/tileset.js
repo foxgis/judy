@@ -40,7 +40,9 @@ var TilesetSchema = new mongoose.Schema({
     fields: [mongoose.Schema.Types.Mixed]
   }],
 
-  progress: Number
+  complete: { type: Boolean, default: false },
+  progress: { type: Number, default: 0 },
+  error: String
 }, { timestamps: true })
 
 

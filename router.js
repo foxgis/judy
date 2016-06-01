@@ -1,7 +1,6 @@
 var express = require('express')
-var multipart = require('connect-multiparty')
+var multer = require('multer')
 var util = require('util')
-// var fs = require('fs')
 var auth = require('./controllers/auth')
 var users = require('./controllers/user')
 var styles = require('./controllers/style')
@@ -12,7 +11,10 @@ var uploads = require('./controllers/upload')
 
 
 var router = express.Router()
-var upload = multipart()
+var upload = multer({
+  dest: 'uploads/',
+  limits: { fieldSize: 200000000, files: 1 }
+})
 
 var floatPattern = '[+-]?(?:\\d+|\\d+\.?\\d+)'
 var staticPattern = '/static/%s:scale(@[23]x)?\.:format([\\w\\.]+)'
@@ -40,7 +42,7 @@ router.get('/styles/:username/:tileset_id' + util.format(staticPattern, boundsPa
 // 瓦片集
 router.get('/tilesets', tilesets.search)
 router.get('/tilesets/:username', auth, tilesets.list)
-router.post('/tilesets/:username', upload, auth, tilesets.create)
+router.post('/tilesets/:username', auth, upload.any(), tilesets.create)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
@@ -50,7 +52,7 @@ router.get('/tilesets/:username/:tileset_id' + util.format(staticPattern, bounds
 
 // 字体
 router.get('/fonts/:username', auth, fonts.list)
-router.post('/fonts/:username', auth, upload, fonts.create)
+router.post('/fonts/:username', auth, upload.any(), fonts.create)
 router.get('/fonts/:username/:fontname', auth, fonts.retrieve)
 router.patch('/fonts/:username/:fontname', auth, fonts.update)
 router.delete('/fonts/:username/:fontname', auth, fonts.delete)
@@ -58,7 +60,7 @@ router.get('/fonts/:username/:fontname/:range.pbf', auth, fonts.download)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
-router.post('/sprites/:username', auth, upload, sprites.create)
+router.post('/sprites/:username', auth, upload.any(), sprites.create)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
@@ -66,7 +68,7 @@ router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+
 
 // 上传文件库
 router.get('/uploads/:username', auth, uploads.list)
-router.post('/uploads/:username', auth, upload, uploads.create)
+router.post('/uploads/:username', auth, upload.any(), uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.patch('/uploads/:username/:upload_id', auth, uploads.update)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)

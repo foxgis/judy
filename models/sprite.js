@@ -17,7 +17,7 @@ var SpriteSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-SpriteSchema.plugin(select, '-_id -__v -is_deleted')
+SpriteSchema.plugin(select, '-_id -__v -is_deleted -image -json -image2x -json2x')
 
 
 module.exports = mongoose.model('Sprite', SpriteSchema)

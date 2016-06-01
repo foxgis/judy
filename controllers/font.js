@@ -22,18 +22,18 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  var ext = path.extname(req.files.upload.originalFilename)
+  var ext = path.extname(req.files[0].originalname)
   if (ext !== '.ttf' && ext !== '.otf') {
-    fs.unlink(req.files.upload.path)
+    fs.unlink(req.files[0].path)
     return res.status(400).json({ error: '仅支持ttf、otf字体文件' })
 
   } else {
-    fs.readFile(req.files.upload.path, function(err, buffer) {
+    fs.readFile(req.files[0].path, function(err, buffer) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      fs.unlink(req.files.upload.path)
+      fs.unlink(req.files[0].path)
 
       fontmachine.makeGlyphs({ font: buffer, filetype: ext }, function(err, font) {
         if (err) {
@@ -127,7 +127,8 @@ module.exports.delete = function(req, res) {
 
 
 module.exports.download = function(req, res) {
-  var filePath = path.join('fonts', req.params.username, req.params.fontname, req.params.range + '.pbf')
+  var filePath = path.join('fonts', req.params.username,
+    req.params.fontname, req.params.range + '.pbf')
 
   fs.readFile(filePath, function(err, pbf) {
     if (err) {

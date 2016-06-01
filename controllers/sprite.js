@@ -26,7 +26,7 @@ module.exports.create = function(req, res) {
   })
 
   var imgs = []
-  var zip = new AdmZip(req.files.upload.path)
+  var zip = new AdmZip(req.files[0].path)
   zip.getEntries()
     .filter(function(entry) {
       return !entry.isDirectory && path.extname(entry.entryName) === '.svg'
@@ -40,7 +40,7 @@ module.exports.create = function(req, res) {
       imgs.push(img)
     })
 
-  fs.unlink(req.files.upload.path)
+  fs.unlink(req.files[0].path)
 
   spritezero.generateLayout(imgs, 2, false, function(err, layout2x) {
     if (err) {

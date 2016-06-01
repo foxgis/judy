@@ -22,7 +22,7 @@ var UploadSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-UploadSchema.plugin(select, '-_id -__v -file_id -is_deleted')
+UploadSchema.plugin(select, '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail')
 
 
 module.exports = mongoose.model('Upload', UploadSchema)
