@@ -40,13 +40,13 @@ var authAccessToken = function(req, res, next) {
 
     jwt.verify(access_token, user.salt, function(err, decoded) { // eslint-disable-line no-unused-vars
       if (err) {
-        return res.status(401).json(err)
+        return res.status(401).json({ error: err })
       }
 
       req.user = user
       next()
     })
-  }) 
+  })
 }
 
 

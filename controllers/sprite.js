@@ -128,8 +128,7 @@ module.exports.delete = function(req, res) {
     is_deleted: false
   }, { is_deleted: true }, function(err) {
     if (err) {
-      res.status(500).json({ error: err })
-      return
+      return res.status(500).json({ error: err })
     }
 
     res.sendStatus(204)
@@ -158,9 +157,8 @@ module.exports.download = function(req, res) {
         var json = JSON.parse(sprite.json)
         return res.status(200).json(json)
       }
-    }
 
-    if (req.params.format === 'png') {
+    } else if (req.params.format === 'png') {
       if (req.params.scale === '@2x') {
         res.attachment('sprite@2x.png')
         return res.send(sprite.image2x)
@@ -168,6 +166,9 @@ module.exports.download = function(req, res) {
         res.attachment('sprite.png')
         return res.send(sprite.image)
       }
+
+    } else {
+      return res.sendStatus(404)
     }
   })
 }

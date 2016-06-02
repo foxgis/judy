@@ -1,0 +1,13 @@
+{
+  "apps" : [{
+    "script": "./bin/www",
+    "instances": 0,
+    "exec_mode": "cluster",
+    "watch": true,
+    "ignore_watch" : ["uploads", "fonts", "sprites"],
+    "env": {
+      "NODE_ENV": "production",
+      "PORT": 80
+    }
+  }]
+}

@@ -45,6 +45,7 @@ module.exports.create = function(req, res) {
           if (err) {
             return res.status(500).json({ error: err })
           }
+
           async.each(font.stack, function(pbf, callback) {
             fs.writeFile(path.join(fontdir, pbf.name), pbf.data, callback)
           }, function(err) {
