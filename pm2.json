@@ -4,7 +4,7 @@
     "instances": 0,
     "exec_mode": "cluster",
     "watch": true,
-    "ignore_watch" : ["uploads", "fonts", "sprites"],
+    "ignore_watch" : ["node_modules", "uploads", "fonts", "sprites"],
     "env": {
       "NODE_ENV": "production",
       "PORT": 80
