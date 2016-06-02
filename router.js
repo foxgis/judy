@@ -30,7 +30,7 @@ router.patch('/users/:username', auth, users.update)
 router.post('/users/:username', users.login)
 
 // 样式
-router.get('/styles', styles.search)
+router.get('/styles', auth, styles.search)
 router.get('/styles/:username', auth, styles.list)
 router.post('/styles/:username', auth, styles.create)
 router.get('/styles/:username/:style_id', auth, styles.retrieve)
@@ -40,7 +40,7 @@ router.get('/styles/:username/:tileset_id' + util.format(staticPattern, centerPa
 router.get('/styles/:username/:tileset_id' + util.format(staticPattern, boundsPattern), auth, styles.preview)
 
 // 瓦片集
-router.get('/tilesets', tilesets.search)
+router.get('/tilesets', auth, tilesets.search)
 router.get('/tilesets/:username', auth, tilesets.list)
 router.post('/tilesets/:username', auth, upload.any(), tilesets.create)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
@@ -67,6 +67,7 @@ router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 
 // 上传文件库
+router.get('/uploads', auth, uploads.search)
 router.get('/uploads/:username', auth, uploads.list)
 router.post('/uploads/:username', auth, upload.any(), uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)

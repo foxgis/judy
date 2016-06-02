@@ -8,6 +8,11 @@ var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
 
 
+module.exports.search = function(req, res) {
+  res.sendStatus(200)
+}
+
+
 module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,

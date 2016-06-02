@@ -9,7 +9,8 @@ var UserSchema = new mongoose.Schema({
   salt: String,
   hash: String,
   access_token: String,
-  scope: { type: String, default: 'public' },
+  role: { type: String, default: 'user', enum: ['user', 'admin'] },
+  scope: { type: String, default: 'public', enum: ['private', 'public'] },
   is_verified: { type: Boolean, default: false },
 
   // profile
@@ -21,7 +22,7 @@ var UserSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-UserSchema.plugin(select, '-_id -__v -salt -hash')
+UserSchema.plugin(select, '-_id -__v -salt -hash -role')
 
 
 UserSchema.virtual('password').set(function(password) {
