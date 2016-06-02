@@ -21,7 +21,7 @@ describe('瓦片集模块', function(){
         User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }
           , { new: true }, function(err) {
             if (err) {
-              done()
+              return done(err)
             }
           })
 
@@ -130,26 +130,26 @@ describe('瓦片集模块', function(){
     })
   })
 
-  describe('瓦片集搜索', function(){
-    it('搜索成功', function(done){
-      request(app)
-        .get('/api/v1/tilesets?search=nick&page=1')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
+  // describe('瓦片集搜索', function(){
+  //   it('搜索成功', function(done){
+  //     request(app)
+  //       .get('/api/v1/tilesets?search=nick&page=1')
+  //       .set('x-access-token', access_token)
+  //       .expect(200)
+  //       .end(function(err, res){
+  //         if(err){
+  //           return done(err)
+  //         }
 
-          res.body[0].owner.should.equal('nick')
-          res.body[0].name.should.equal('newname')
-          res.body[0].scope.should.equal('public')
-          res.body[0].tags[0].should.equal('nick')
+  //         res.body[0].owner.should.equal('nick')
+  //         res.body[0].name.should.equal('newname')
+  //         res.body[0].scope.should.equal('public')
+  //         res.body[0].tags[0].should.equal('nick')
 
-          done()
-        })
-    })
-  })
+  //         done()
+  //       })
+  //   })
+  // })
 
   describe('获取瓦片', function(){
     this.timeout(6000)

@@ -68,7 +68,7 @@ module.exports.create = function(req, res) {
 
         async.parallel([
           function (callback) {
-            image.resize(100, 100).quality(50).jpeg().toBuffer(function(err, buffer) {
+            image.resize(300, 300).quality(50).jpeg().toBuffer(function(err, buffer) {
               callback(err, buffer)
             })
           },
@@ -76,7 +76,7 @@ module.exports.create = function(req, res) {
           function (callback) {
             image.metadata(function(err, metadata) {
               if (metadata.width <= 1000) {
-                image.resize(metadata.width).quality(50).jpeg().toBuffer(function(err, buffer) {
+                image.quality(50).jpeg().toBuffer(function(err, buffer) {
                   callback(err, buffer)
                 })
               } else {
