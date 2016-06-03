@@ -8,32 +8,6 @@ var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
 
 
-module.exports.search = function(req, res) {
-  var limit = +req.query.limit || 0
-  var skip = +req.query.skip || 0
-  var sort = req.query.sort
-
-  var query = {}
-
-  if (req.query.search) {
-    query.$text = { $search: req.query.search }
-  }
-
-  if (!req.user.role || req.user.role !== 'admin') {
-    query.scope = 'public'
-    query.is_deleted = false
-  }
-
-  Upload.find(query, function(err, uploads) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    res.status(200).json(uploads)
-  }).limit(limit).skip(skip).sort(sort)
-}
-
-
 module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,
@@ -242,4 +216,30 @@ module.exports.getMiniThumbnail = function(req, res) {
     res.set({ 'Content-Type': 'image/jpeg' })
     res.status(200).send(upload.mini_thumbnail)
   })
+}
+
+
+module.exports.search = function(req, res) {
+  var limit = +req.query.limit || 0
+  var skip = +req.query.skip || 0
+  var sort = req.query.sort
+
+  var query = {}
+
+  if (req.query.search) {
+    query.$text = { $search: req.query.search }
+  }
+
+  if (!req.user.role || req.user.role !== 'admin') {
+    query.scope = 'public'
+    query.is_deleted = false
+  }
+
+  Upload.find(query, function(err, uploads) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.status(200).json(uploads)
+  }).limit(limit).skip(skip).sort(sort)
 }
