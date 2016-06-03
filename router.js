@@ -30,7 +30,6 @@ router.patch('/users/:username', auth, users.update)
 router.post('/users/:username', users.login)
 
 // 样式
-router.get('/styles', auth, styles.search)
 router.get('/styles/:username', auth, styles.list)
 router.post('/styles/:username', auth, styles.create)
 router.get('/styles/:username/:style_id', auth, styles.retrieve)
@@ -38,9 +37,9 @@ router.patch('/styles/:username/:style_id', auth, styles.update)
 router.delete('/styles/:username/:style_id', auth, styles.delete)
 router.get('/styles/:username/:tileset_id' + util.format(staticPattern, centerPattern), auth, styles.preview)
 router.get('/styles/:username/:tileset_id' + util.format(staticPattern, boundsPattern), auth, styles.preview)
+router.get('/styles', auth, styles.search)
 
 // 瓦片集
-router.get('/tilesets', auth, tilesets.search)
 router.get('/tilesets/:username', auth, tilesets.list)
 router.post('/tilesets/:username', auth, upload.any(), tilesets.create)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
@@ -49,6 +48,7 @@ router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
 router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, tilesets.getTile)
 router.get('/tilesets/:username/:tileset_id' + util.format(staticPattern, centerPattern), auth, tilesets.preview)
 router.get('/tilesets/:username/:tileset_id' + util.format(staticPattern, boundsPattern), auth, tilesets.preview)
+router.get('/tilesets', auth, tilesets.search)
 
 // 字体
 router.get('/fonts/:username', auth, fonts.list)
@@ -67,7 +67,6 @@ router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 
 // 上传文件库
-router.get('/uploads', auth, uploads.search)
 router.get('/uploads/:username', auth, uploads.list)
 router.post('/uploads/:username', auth, upload.any(), uploads.create)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
@@ -76,6 +75,7 @@ router.delete('/uploads/:username/:upload_id', auth, uploads.delete)
 router.get('/uploads/:username/:upload_id/file', auth, uploads.download)
 router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.getThumbnail)
 router.get('/uploads/:username/:upload_id/mini_thumbnail', auth, uploads.getMiniThumbnail)
+router.get('/uploads', auth, uploads.search)
 
 
 module.exports = router

@@ -9,7 +9,28 @@ var Upload = require('../models/upload')
 
 
 module.exports.search = function(req, res) {
-  res.sendStatus(200)
+  var limit = +req.query.limit || 0
+  var skip = +req.query.skip || 0
+  var sort = req.query.sort
+
+  var query = {}
+
+  if (req.query.search) {
+    query.$text = { $search: req.query.search }
+  }
+
+  if (!req.user.role || req.user.role !== 'admin') {
+    query.scope = 'public'
+    query.is_deleted = false
+  }
+
+  Upload.find(query, function(err, uploads) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.status(200).json(uploads)
+  }).limit(limit).skip(skip).sort(sort)
 }
 
 
@@ -52,28 +73,27 @@ module.exports.create = function(req, res) {
     if (req.body.year) newUpload.year = req.body.year
     if (req.body.location) newUpload.location = req.body.location
 
-    if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) < 0 ) {
-      newUpload.save(function(err){
+    if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) < 0) {
+      newUpload.save(function(err) {
         if (err) {
           return res.status(500).json({ error: err })
         }
 
         return res.status(200).json(newUpload)
       })
-    }
-    else{
+    } else {
       fs.readFile(req.files[0].path, function(err, imageBuffer) {
         fs.unlink(req.files[0].path)
         var image = sharp(imageBuffer)
 
         async.parallel([
-          function (callback) {
+          function(callback) {
             image.resize(300, 300).quality(50).jpeg().toBuffer(function(err, buffer) {
               callback(err, buffer)
             })
           },
 
-          function (callback) {
+          function(callback) {
             image.metadata(function(err, metadata) {
               if (metadata.width <= 1000) {
                 image.quality(50).jpeg().toBuffer(function(err, buffer) {
@@ -86,18 +106,17 @@ module.exports.create = function(req, res) {
               }
             })
           }
-        ],
-        function(err, results){
+        ], function(err, results) {
           if (err) {
-            return res.status(500).json({ error: err})
+            return res.status(500).json({ error: err })
           }
 
           newUpload.mini_thumbnail = results[0]
           newUpload.thumbnail = results[1]
 
-          newUpload.save(function(err){
+          newUpload.save(function(err) {
             if (err) {
-              return res.status(500).json({ error: err})
+              return res.status(500).json({ error: err })
             }
 
             return res.status(200).json(newUpload)

@@ -51,7 +51,7 @@ var authAccessToken = function(req, res, next) {
 
 
 var authResource = function(req, res, next) {
-  var resourceType = req.url.split('/')[1]
+  var resourceType = req.url.split('/')[1].split('?')[0]
   switch (resourceType) {
     case 'users':
       return authUser(req, res, next)
@@ -96,7 +96,10 @@ var authUser = function(req, res, next) {
 
 
 var authStyle = function(req, res, next) {
-  if (req.user.username === req.params.username) {
+  if (req.route.path === '/styles') {
+    return next()
+
+  } else if (req.user.username === req.params.username) {
     return next()
 
   } else if (!req.params.style_id || req.method !== 'GET') {
@@ -123,7 +126,10 @@ var authStyle = function(req, res, next) {
 
 
 var authTileset = function(req, res, next) {
-  if (req.user.username === req.params.username) {
+  if (req.route.path === '/tilesets') {
+    return next()
+
+  } else if (req.user.username === req.params.username) {
     return next()
 
   } else if (!req.params.tileset_id || req.method !== 'GET') {
@@ -204,7 +210,10 @@ var authSprite = function(req, res, next) {
 
 
 var authUpload = function(req, res, next) {
-  if (req.user.username === req.params.username) {
+  if (req.route.path === '/uploads') {
+    return next()
+
+  } else if (req.user.username === req.params.username) {
     return next()
 
   } else if (!req.params.username || req.method !== 'GET') {

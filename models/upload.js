@@ -11,7 +11,7 @@ var UploadSchema = new mongoose.Schema({
   is_deleted: { type: String, default: false },
 
   name: String,
-  year: Number,
+  year: String,
   location: String,
   description: String,
   tags: [String],
@@ -23,6 +23,9 @@ var UploadSchema = new mongoose.Schema({
 
 
 UploadSchema.plugin(select, '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail')
+
+
+UploadSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
 
 
 module.exports = mongoose.model('Upload', UploadSchema)
