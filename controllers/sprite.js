@@ -11,13 +11,13 @@ module.exports.list = function(req, res) {
   Sprite.find({
     owner: req.params.username,
     is_deleted: false
-  }, function(err, sprites) {
+  }, '-_id -__v -is_deleted -image -json -image2x -json2x', function(err, sprites) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
     res.status(200).json(sprites)
-  })
+  }).sort({ updatedAt: -1 })
 }
 
 

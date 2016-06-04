@@ -12,7 +12,7 @@ module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,
     is_deleted: false
-  }, function(err, uploads) {
+  }, '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail', function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -235,11 +235,13 @@ module.exports.search = function(req, res) {
     query.is_deleted = false
   }
 
-  Upload.find(query, function(err, uploads) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
+  Upload.find(query,
+    '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail',
+    function(err, uploads) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
 
-    res.status(200).json(uploads)
-  }).limit(limit).skip(skip).sort(sort)
+      res.status(200).json(uploads)
+    }).limit(limit).skip(skip).sort(sort)
 }

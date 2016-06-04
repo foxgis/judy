@@ -26,6 +26,8 @@ UploadSchema.plugin(select, '-_id -__v -file_id -is_deleted -thumbnail -mini_thu
 
 
 UploadSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
+UploadSchema.index({ createdAt: -1 })
+UploadSchema.index({ updatedAt: -1 })
 
 
 module.exports = mongoose.model('Upload', UploadSchema)

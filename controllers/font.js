@@ -11,13 +11,13 @@ module.exports.list = function(req, res) {
   Font.find({
     owner: req.params.username,
     is_deleted: false
-  }, function(err, fonts) {
+  }, '-_id -__v -is_deleted', function(err, fonts) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
     res.status(200).json(fonts)
-  })
+  }).sort({ updatedAt: -1 })
 }
 
 
@@ -60,7 +60,7 @@ module.exports.create = function(req, res) {
               fontname: font.name,
               owner: req.params.username,
               is_deleted: false
-            }, { upsert: true, new: true, setDefaultsOnInsert: true}, function(err, font) {
+            }, { upsert: true, new: true, setDefaultsOnInsert: true }, function(err, font) {
               if (err) {
                 return res.status(500).json({ error: err })
               }

@@ -53,6 +53,8 @@ TilesetSchema.plugin(select, '-_id -__v -is_deleted')
 
 
 TilesetSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
+TilesetSchema.index({ createdAt: -1 })
+TilesetSchema.index({ updatedAt: -1 })
 
 
 module.exports = mongoose.model('Tileset', TilesetSchema)

@@ -9,7 +9,7 @@ var TileSchema = new mongoose.Schema({
 })
 
 
-TileSchema.index({zoom_level: 1, tile_column: 1, tile_row: 1})
+TileSchema.index({ zoom_level: 1, tile_column: 1, tile_row: 1 })
 
 
 module.exports = TileSchema

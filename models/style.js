@@ -35,6 +35,8 @@ StyleSchema.plugin(select, '-_id -__v -is_deleted')
 
 
 StyleSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
+StyleSchema.index({ createdAt: -1 })
+StyleSchema.index({ updatedAt: -1 })
 
 
 module.exports = mongoose.model('Style', StyleSchema)
