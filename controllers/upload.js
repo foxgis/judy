@@ -53,6 +53,7 @@ module.exports.create = function(req, res) {
           return res.status(500).json({ error: err })
         }
 
+        fs.unlink(req.files[0].path)
         return res.status(200).json(newUpload)
       })
     } else {
