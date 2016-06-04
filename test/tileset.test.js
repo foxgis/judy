@@ -113,7 +113,7 @@ describe('瓦片集模块', function(){
       request(app)
         .patch('/api/v1/tilesets/nick/' + tileset_id)
         .set('x-access-token', access_token)
-        .send({ name: 'newname', scope: 'public', tags: ['nick']})
+        .send({ name: 'newname', owner: 'newowner', scope: 'public', tags: ['tag1', 'tag2']})
         .expect(200)
         .end(function(err, res){
           if(err){
@@ -123,33 +123,29 @@ describe('瓦片集模块', function(){
           res.body.owner.should.equal('nick')
           res.body.name.should.equal('newname')
           res.body.scope.should.equal('public')
-          res.body.tags[0].should.equal('nick')
+          res.body.tags[0].should.equal('tag1')
 
           done()
         })
     })
   })
 
-  // describe('瓦片集搜索', function(){
-  //   it('搜索成功', function(done){
-  //     request(app)
-  //       .get('/api/v1/tilesets?search=nick&page=1')
-  //       .set('x-access-token', access_token)
-  //       .expect(200)
-  //       .end(function(err, res){
-  //         if(err){
-  //           return done(err)
-  //         }
+  describe('瓦片集搜索', function(){
+    it('搜索成功', function(done){
+      request(app)
+        .get('/api/v1/tilesets?search=tag1')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-  //         res.body[0].owner.should.equal('nick')
-  //         res.body[0].name.should.equal('newname')
-  //         res.body[0].scope.should.equal('public')
-  //         res.body[0].tags[0].should.equal('nick')
-
-  //         done()
-  //       })
-  //   })
-  // })
+          res.body.length.should.above(0)
+          done()
+        })
+    })
+  })
 
   describe('获取瓦片', function(){
     this.timeout(6000)

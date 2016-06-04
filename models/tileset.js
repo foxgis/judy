@@ -7,8 +7,11 @@ var TilesetSchema = new mongoose.Schema({
   tileset_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   scope: { type: String, default: 'private' },
-  tags: [String],
   is_deleted: { type: String, default: false },
+
+  location: String,
+  year: String,
+  tags: [String],
 
   // tilejson spec
   tilejson: { type: String, default: '2.1.0' },
@@ -47,6 +50,9 @@ var TilesetSchema = new mongoose.Schema({
 
 
 TilesetSchema.plugin(select, '-_id -__v -is_deleted')
+
+
+TilesetSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
 
 
 module.exports = mongoose.model('Tileset', TilesetSchema)

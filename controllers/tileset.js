@@ -13,24 +13,6 @@ var rimraf = require('rimraf')
 var config = require('../config')
 
 
-module.exports.search = function(req, res) {
-  var page = +req.query.page || 1
-
-  Tileset.find({
-    scope: 'public',
-    tags: req.query.search,
-    is_deleted: false
-  }, '-vector_layers', function(err, tilesets) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    res.status(200).json(tilesets)
-
-  }).limit(20).skip(20 * (page - 1))
-}
-
-
 module.exports.list = function(req, res) {
   Tileset.find({
     owner: req.params.username,
@@ -68,9 +50,9 @@ module.exports.create = function(req, res) {
         var zip = new AdmZip(req.files[0].path)
         var unzipDir = req.files[0].path + 'unzip'
         zip.extractAllTo(unzipDir, true)
-        zip.getEntries().forEach(function(entry){
+        zip.getEntries().forEach(function(entry) {
           if (path.extname(entry.entryName) === '.shp') {
-            src = protocol +'//./'+ unzipDir +'/'+ entry.entryName
+            src = protocol + '//./' + unzipDir + '/' + entry.entryName
           }
         })
       }
@@ -100,7 +82,7 @@ module.exports.create = function(req, res) {
 
         fs.unlink(req.files[0].path)
         if (unzipDir) {
-          rimraf(unzipDir, function(){})
+          rimraf(unzipDir, function() {})
         }
       })
     })
@@ -132,8 +114,7 @@ module.exports.update = function(req, res) {
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.pick(escaper.escape(req.body), filter), { new: true }
-  , function(err, tileset) {
+  }, _.pick(escaper.escape(req.body), filter), { new: true }, function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -203,4 +184,30 @@ module.exports.getTile = function(req, res) {
 
 module.exports.preview = function(req, res) {
   return res.sendStatus(200)
+}
+
+
+module.exports.search = function(req, res) {
+  var limit = +req.query.limit || 0
+  var skip = +req.query.skip || 0
+  var sort = req.query.sort
+
+  var query = {}
+
+  if (req.query.search) {
+    query.$text = { $search: req.query.search }
+  }
+
+  if (!req.user.role || req.user.role !== 'admin') {
+    query.scope = 'public'
+    query.is_deleted = false
+  }
+
+  Tileset.find(query, '-vector_layers', function(err, tilesets) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.status(200).json(tilesets)
+  }).limit(limit).skip(skip).sort(sort)
 }

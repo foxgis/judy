@@ -1,35 +1,17 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
-// var mbgl = require('mapbox-gl-native')
-// var request = require('request')
-// var sharp = require('sharp')
+  // var mbgl = require('mapbox-gl-native')
+  // var request = require('request')
+  // var sharp = require('sharp')
 var escaper = require('mongo-key-escaper')
 var Style = require('../models/style')
-
-
-module.exports.search = function(req, res) {
-  var page = +req.query.page || 1
-
-  Style.find({
-    scope: 'public',
-    tags: req.query.search,
-    is_deleted: false
-  }, 'style_id owner scope tags version name createdAt updatedAt', function(err, styles) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    res.status(200).json(styles)
-
-  }).limit(20).skip(20 * (page - 1))
-}
 
 
 module.exports.list = function(req, res) {
   Style.find({
     owner: req.params.username,
     is_deleted: false
-  }, 'style_id owner scope tags version name createdAt updatedAt', function(err, styles) {
+  }, 'style_id owner scope name location year tags createdAt updatedAt', function(err, styles) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -85,8 +67,7 @@ module.exports.update = function(req, res) {
   Style.findOneAndUpdate({
     style_id: req.params.style_id,
     owner: req.params.username
-  }, _.omit(escaper.escape(req.body), filter)
-  , { new: true }, function(err, style) {
+  }, _.omit(escaper.escape(req.body), filter), { new: true }, function(err, style) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -116,13 +97,13 @@ module.exports.delete = function(req, res) {
 
 module.exports.preview = function(req, res) {
   return res.sendStatus(200)
-  // Style.findOne({
-  //   style_id: req.params.style_id,
-  //   owner: req.params.username
-  // }, function(err, style) {
-  //   if (err) {
-  //     return res.status(500).json({ error: err })
-  //   }
+    // Style.findOne({
+    //   style_id: req.params.style_id,
+    //   owner: req.params.username
+    // }, function(err, style) {
+    //   if (err) {
+    //     return res.status(500).json({ error: err })
+    //   }
 
   //   if (!style) {
   //     return res.sendStatus(404)
@@ -183,4 +164,32 @@ module.exports.preview = function(req, res) {
   //     })
   //   })
   // })
+}
+
+
+module.exports.search = function(req, res) {
+  var limit = +req.query.limit || 0
+  var skip = +req.query.skip || 0
+  var sort = req.query.sort
+
+  var query = {}
+
+  if (req.query.search) {
+    query.$text = { $search: req.query.search }
+  }
+
+  if (!req.user.role || req.user.role !== 'admin') {
+    query.scope = 'public'
+    query.is_deleted = false
+  }
+
+  Style.find(query,
+    'style_id owner scope name location year tags createdAt updatedAt',
+    function(err, styles) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      res.status(200).json(styles)
+    }).limit(limit).skip(skip).sort(sort)
 }

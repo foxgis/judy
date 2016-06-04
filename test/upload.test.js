@@ -9,7 +9,7 @@ describe('上传模块', function() {
   var access_token
   var upload_id
 
-  before('注册用户',function(done){
+  before('注册用户', function(done) {
     request(app)
       .post('/api/v1/users')
       .send({ username: 'nick', password: '123456' })
@@ -19,12 +19,11 @@ describe('上传模块', function() {
           return done(err)
         }
 
-        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }
-          , { new: true }, function(err) {
-            if (err) {
-              done()
-            }
-          })
+        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }, { new: true }, function(err) {
+          if (err) {
+            done()
+          }
+        })
 
         access_token = res.body.access_token
 
@@ -33,18 +32,18 @@ describe('上传模块', function() {
   })
 
   after('清理', function(done) {
-    User.remove({ username: 'nick' }).exec(function(){
-      Upload.remove({ owner: 'nick' }).exec(function(){
+    User.remove({ username: 'nick' }).exec(function() {
+      Upload.remove({ owner: 'nick' }).exec(function() {
         done()
       })
     })
   })
 
   describe('上传文件', function() {
-    afterEach('yes', function(done){
-      setTimeout(function(){
+    afterEach('yes', function(done) {
+      setTimeout(function() {
         done()
-      },1000)
+      }, 1000)
     })
 
     it('上传成功', function(done) {
@@ -167,19 +166,20 @@ describe('上传模块', function() {
     it('修改成功', function(done) {
       this.timeout(4000)
       request(app)
-        .patch('/api/v1/uploads/nick/' + upload_id )
+        .patch('/api/v1/uploads/nick/' + upload_id)
         .set('x-access-token', access_token)
-        .send({tags: ['nick'], name: 'newName', description: 'a txt', owner: 'judy'})
+        .send({ scope: 'public', tags: ['tag1', 'tag2'], name: 'newName', description: 'desc', owner: 'judy' })
         .expect(200)
         .end(function(err, res) {
           if (err) {
             return done(err)
           }
 
+          res.body.scope.should.equal('public')
           res.body.owner.should.equal('nick')
-          res.body.tags[0].should.equal('nick')
+          res.body.tags[0].should.equal('tag1')
           res.body.name.should.equal('newName')
-          res.body.description.should.equal('a txt')
+          res.body.description.should.equal('desc')
 
           done()
         })
@@ -189,7 +189,7 @@ describe('上传模块', function() {
       request(app)
         .patch('/api/v1/uploads/nick/bad_upload_id')
         .set('x-access-token', access_token)
-        .send({tags: ['nick']})
+        .send({ tags: ['nick'] })
         .expect(404)
         .end(function(err, res) {
           if (err) {
@@ -203,14 +203,14 @@ describe('上传模块', function() {
     })
   })
 
-  describe('缩略图预览', function(){
-    it('预览成功', function(done){
+  describe('缩略图预览', function() {
+    it('预览成功', function(done) {
       request(app)
         .get('/api/v1/uploads/nick/' + upload_id + '/thumbnail')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res) {
-          if(err){
+          if (err) {
             return done(err)
           }
 
@@ -221,8 +221,26 @@ describe('上传模块', function() {
     })
   })
 
+  describe('搜索上传文件', function() {
+    it('搜索成功', function(done) {
+      request(app)
+        .get('/api/v1/uploads?search=tag1')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.length.should.above(0)
+
+          done()
+        })
+    })
+  })
+
   describe('删除文件', function() {
-    after('检查是否删除', function(done){
+    after('检查是否删除', function(done) {
       request(app)
         .get('/api/v1/uploads/nick')
         .set('x-access-token', access_token)
@@ -237,14 +255,14 @@ describe('上传模块', function() {
           done()
         })
     })
-    
+
     it('删除成功', function(done) {
       request(app)
         .delete('/api/v1/uploads/nick/' + upload_id)
         .set('x-access-token', access_token)
         .expect(204)
-        .end(function(err, res){
-          if(err){
+        .end(function(err, res) {
+          if (err) {
             return done(err)
           }
 

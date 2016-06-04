@@ -11,10 +11,10 @@ var UploadSchema = new mongoose.Schema({
   is_deleted: { type: String, default: false },
 
   name: String,
-  year: String,
   location: String,
-  description: String,
+  year: String,
   tags: [String],
+  description: String,
   size: Number,
   format: String,
   thumbnail: Buffer,

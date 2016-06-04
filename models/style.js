@@ -7,8 +7,11 @@ var StyleSchema = new mongoose.Schema({
   style_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   scope: { type: String, default: 'private' },
-  tags: [String],
   is_deleted: { type: Boolean, default: false },
+
+  location: String,
+  year: String,
+  tags: [String],
 
   version: { type: Number, default: 8 },
   name: String,
@@ -29,6 +32,9 @@ var StyleSchema = new mongoose.Schema({
 
 
 StyleSchema.plugin(select, '-_id -__v -is_deleted')
+
+
+StyleSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
 
 
 module.exports = mongoose.model('Style', StyleSchema)

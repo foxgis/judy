@@ -65,6 +65,8 @@ var authResource = function(req, res, next) {
       return authSprite(req, res, next)
     case 'uploads':
       return authUpload(req, res, next)
+    case 'status':
+      return authStatus(req, res, next)
   }
 }
 
@@ -236,4 +238,9 @@ var authUpload = function(req, res, next) {
       return next()
     })
   }
+}
+
+
+var authStatus = function(req, res, next) {
+  return next()
 }

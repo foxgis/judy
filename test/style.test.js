@@ -167,7 +167,7 @@ describe('样式管理模块', function() {
         .set('x-access-token', access_token)
         .send({
           'scope': 'public',
-          'tags': ['nick'],
+          'tags': ['tag1', 'tag2'],
           'style_id': 'abcd',
           'owner': 'judy',
           'name': 'test2',
@@ -186,6 +186,7 @@ describe('样式管理模块', function() {
 
           res.body.style_id.should.equal(style_id)
           res.body.scope.should.equal('public')
+          res.body.tags[0].should.equal('tag1')
           res.body.owner.should.equal('nick')
           res.body.name.should.equal('test2')
           res.body.center[0].should.equal(50)
@@ -212,25 +213,23 @@ describe('样式管理模块', function() {
     })
   })
 
-  // describe('搜索样式', function(){
-  //   it('搜索成功', function(done){
-  //     request(app)
-  //       .get('/api/v1/styles?search=nick&page=1')
-  //       .set('x-access-token', access_token)
-  //       .expect(200)
-  //       .end(function(err, res){
-  //         if(err){
-  //           return done(err)
-  //         }
+  describe('搜索样式', function(){
+    it('搜索成功', function(done){
+      request(app)
+        .get('/api/v1/styles?search=tag1')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res){
+          if(err){
+            return done(err)
+          }
 
-  //         res.body[0].owner.should.equal('nick')
-  //         res.body[0].style_id.should.equal(style_id)
-  //         res.body[0].tags[0].should.equal('nick')
+          res.body.length.should.above(0)
 
-  //         done()
-  //       })
-  //   })
-  // })
+          done()
+        })
+    })
+  })
 
   describe('删除样式', function() {
     after('检查是否删除', function(done) {
