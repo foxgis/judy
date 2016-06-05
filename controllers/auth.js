@@ -65,8 +65,6 @@ var authResource = function(req, res, next) {
       return authSprite(req, res, next)
     case 'uploads':
       return authUpload(req, res, next)
-    case 'status':
-      return authStatus(req, res, next)
   }
 }
 
@@ -215,6 +213,9 @@ var authUpload = function(req, res, next) {
   if (req.route.path === '/uploads') {
     return next()
 
+  } else if (req.route.path === '/uploads/stat') {
+    return next()
+
   } else if (req.user.username === req.params.username) {
     return next()
 
@@ -238,9 +239,4 @@ var authUpload = function(req, res, next) {
       return next()
     })
   }
-}
-
-
-var authStatus = function(req, res, next) {
-  return next()
 }
