@@ -7,7 +7,7 @@ var TilesetSchema = new mongoose.Schema({
   tileset_id: { type: String, default: shortid.generate, index: true },
   owner: String,
   scope: { type: String, default: 'private' },
-  is_deleted: { type: String, default: false },
+  is_deleted: { type: Boolean, default: false },
 
   location: String,
   year: String,

@@ -8,7 +8,7 @@ var UploadSchema = new mongoose.Schema({
   file_id: mongoose.Schema.Types.ObjectId,
   owner: String,
   scope: { type: String, default: 'private' },
-  is_deleted: { type: String, default: false },
+  is_deleted: { type: Boolean, default: false },
 
   name: String,
   location: String,
