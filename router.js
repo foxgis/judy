@@ -8,7 +8,7 @@ var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
 var uploads = require('./controllers/upload')
-var status = require('./controllers/status')
+var stat = require('./controllers/stat')
 
 
 var router = express.Router()
@@ -78,8 +78,8 @@ router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.getThumbnail
 router.get('/uploads/:username/:upload_id/mini_thumbnail', auth, uploads.getMiniThumbnail)
 router.get('/uploads', auth, uploads.search)
 
-// 系统状态
-router.get('/status', auth, status.retrieve)
+// 统计信息
+router.get('/stat/uploads', auth, stat.uploads)
 
 
 module.exports = router

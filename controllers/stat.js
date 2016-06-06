@@ -1,7 +1,7 @@
 var Upload = require('../models/upload')
 
 
-module.exports.retrieve = function(req, res) {
+module.exports.uploads = function(req, res) {
   var pipeline = [{
     $match: { is_deleted: false }
   }, {
@@ -12,10 +12,10 @@ module.exports.retrieve = function(req, res) {
     $project: {
       _id: 0,
       total: 1,
-      owner: "$_id",
-      name: { $arrayElemAt: ["$users.name", 0] },
-      location: { $arrayElemAt: ["$users.location", 0] },
-      organization: { $arrayElemAt: ["$users.organization", 0] },
+      owner: '$_id',
+      name: { $arrayElemAt: ['$users.name', 0] },
+      location: { $arrayElemAt: ['$users.location', 0] },
+      organization: { $arrayElemAt: ['$users.organization', 0] }
     }
   }, {
     $sort: { total: -1 }
