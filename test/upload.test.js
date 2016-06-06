@@ -239,6 +239,24 @@ describe('上传模块', function() {
     })
   })
 
+  describe('统计上传文件', function() {
+    it('成功', function(done) {
+      request(app)
+        .get('/api/v1/stats/uploads')
+        .set('x-access-token', access_token)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.length.should.above(0)
+
+          done()
+        })
+    })
+  })
+
   describe('删除文件', function() {
     after('检查是否删除', function(done) {
       request(app)

@@ -8,7 +8,7 @@ var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
 var uploads = require('./controllers/upload')
-var stat = require('./controllers/stat')
+var stats = require('./controllers/stat')
 
 
 var router = express.Router()
@@ -79,7 +79,7 @@ router.get('/uploads/:username/:upload_id/mini_thumbnail', auth, uploads.getMini
 router.get('/uploads', auth, uploads.search)
 
 // 统计信息
-router.get('/stat/uploads', auth, stat.uploads)
+router.get('/stats/uploads', auth, stats.uploads)
 
 
 module.exports = router
