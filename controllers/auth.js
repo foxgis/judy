@@ -51,7 +51,7 @@ var authAccessToken = function(req, res, next) {
 
 
 var authResource = function(req, res, next) {
-  var resourceType = req.url.split('/')[1].split('?')[0]
+  var resourceType = req.route.path.split('/')[1]
   switch (resourceType) {
     case 'users':
       return authUser(req, res, next)
@@ -72,175 +72,298 @@ var authResource = function(req, res, next) {
 
 
 var authUser = function(req, res, next) {
-  if (req.user.username === req.params.username) {
-    return next()
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /users/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        User.findOne({
+          username: req.params.username,
+          scope: 'public'
+        }, function(err, user) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
 
-  } else if (!req.params.username || req.method !== 'GET') {
-    return res.sendStatus(401)
+          if (!user) {
+            return res.sendStatus(401)
+          }
 
-  } else {
-    User.findOne({
-      username: req.params.username,
-      scope: 'public'
-    }, function(err, user) {
-      if (err) {
-        return res.status(500).json({ error: err })
+          return next()
+        })
+
+        return
       }
 
-      if (!user) {
+    case 'PATCH /users/:username':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
         return res.sendStatus(401)
       }
 
-      return next()
-    })
+    default:
+      return res.sendStatus(401)
   }
 }
 
 
 var authStyle = function(req, res, next) {
-  if (req.route.path === '/styles') {
-    return next()
-
-  } else if (req.user.username === req.params.username) {
-    return next()
-
-  } else if (!req.params.style_id || req.method !== 'GET') {
-    return res.sendStatus(401)
-
-  } else {
-    Style.findOne({
-      style_id: req.params.style_id,
-      owner: req.params.username,
-      scope: 'public'
-    }, function(err, style) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      if (!style) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /styles/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
         return res.sendStatus(401)
       }
 
+    case 'GET /styles/:username/:style_id':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        Style.findOne({
+          style_id: req.params.style_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, style) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!style) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /styles/:username':
+    case 'PATCH /styles/:username/:style_id':
+    case 'DELETE /styles/:username/:style_id':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    case 'GET /styles':
       return next()
-    })
+
+    default:
+      return res.sendStatus(401)
   }
 }
 
 
 var authTileset = function(req, res, next) {
-  if (req.route.path === '/tilesets') {
-    return next()
-
-  } else if (req.user.username === req.params.username) {
-    return next()
-
-  } else if (!req.params.tileset_id || req.method !== 'GET') {
-    return res.sendStatus(401)
-
-  } else {
-    Tileset.findOne({
-      tileset_id: req.params.tileset_id,
-      owner: req.params.username,
-      scope: 'public'
-    }, function(err, tileset) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      if (!tileset) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /tilesets/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
         return res.sendStatus(401)
       }
 
+    case 'GET /tilesets/:username/:tileset_id':
+    case 'GET /tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        Tileset.findOne({
+          tileset_id: req.params.tileset_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, tileset) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!tileset) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /tilesets/:username':
+    case 'PATCH /tilesets/:username/:tileset_id':
+    case 'DELETE /tilesets/:username/:tileset_id':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    case 'GET /tilesets':
       return next()
-    })
+
+    default:
+      return res.sendStatus(401)
   }
 }
 
 
 var authFont = function(req, res, next) {
-  if (req.user.username === req.params.username) {
-    return next()
-
-  } else if (!req.params.fontname || req.method !== 'GET') {
-    return res.sendStatus(401)
-
-  } else {
-    Font.findOne({
-      fontname: req.params.fontname,
-      owner: req.params.username,
-      scope: 'public'
-    }, function(err, font) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      if (!font) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /fonts/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
         return res.sendStatus(401)
       }
 
-      return next()
-    })
+    case 'GET /fonts/:username/:fontname':
+    case 'GET /fonts/:username/:fontname/:range.pbf':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        Font.findOne({
+          fontname: req.params.fontname,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, font) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!font) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /fonts/:username':
+    case 'PATCH /fonts/:username/:fontname':
+    case 'DELETE /fonts/:username/:fontname':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    default:
+      return res.sendStatus(401)
   }
 }
 
 
 var authSprite = function(req, res, next) {
-  if (req.user.username === req.params.username) {
-    return next()
-
-  } else if (!req.params.username || req.method !== 'GET') {
-    return res.sendStatus(401)
-
-  } else {
-    Sprite.findOne({
-      sprite_id: req.params.sprite_id,
-      owner: req.params.username,
-      scope: 'public'
-    }, function(err, sprite) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      if (!sprite) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /sprites/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
         return res.sendStatus(401)
       }
 
-      return next()
-    })
+    case 'GET /sprites/:username/:sprite_id':
+    case 'GET /sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        Sprite.findOne({
+          sprite_id: req.params.sprite_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, sprite) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!sprite) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /sprites/:username':
+    case 'PATCH /sprites/:username/:sprite_id':
+    case 'DELETE /sprites/:username/:sprite_id':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    default:
+      return res.sendStatus(401)
   }
 }
 
 
 var authUpload = function(req, res, next) {
-  if (req.route.path === '/uploads') {
-    return next()
-
-  } else if (req.user.username === req.params.username) {
-    return next()
-
-  } else if (!req.params.username || req.method !== 'GET') {
-    return res.sendStatus(401)
-
-  } else {
-    Upload.findOne({
-      upload_id: req.params.upload_id,
-      owner: req.params.username,
-      scope: 'public'
-    }, function(err, upload) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      if (!upload) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /uploads/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
         return res.sendStatus(401)
       }
 
+    case 'GET /uploads/:username/:upload_id':
+    case 'GET /uploads/:username/:upload_id/file':
+    case 'GET /uploads/:username/:upload_id/thumbnail':
+    case 'GET /uploads/:username/:upload_id/mini_thumbnail':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        Upload.findOne({
+          upload_id: req.params.upload_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, upload) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!upload) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /uploads/:username':
+    case 'PATCH /uploads/:username/:upload_id':
+    case 'DELETE /uploads/:username/:upload_id':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    case 'GET /uploads':
       return next()
-    })
+
+    default:
+      return res.sendStatus(401)
   }
 }
 
 
 var authStat = function(req, res, next) {
-  return next()
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /stats/uploads':
+      return next()
+
+    default:
+      return res.sendStatus(401)
+  }
 }
