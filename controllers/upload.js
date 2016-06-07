@@ -73,15 +73,21 @@ module.exports.create = function(req, res) {
           },
 
           function(callback) {
-            image.resize(300, 300).quality(50).jpeg().toBuffer(callback)
+            image.resize(300, 300).quality(50).jpeg().toBuffer(function(err, buffer) {
+              callback(err, buffer)
+            })
           },
 
           function(callback) {
             image.metadata(function(err, metadata) {
               if (metadata.width <= 1000) {
-                image.quality(50).jpeg().toBuffer(callback)
+                image.quality(50).jpeg().toBuffer(function(err, buffer) {
+                  callback(err, buffer)
+                })
               } else {
-                image.resize(1000).quality(50).jpeg().toBuffer(callback)
+                image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer) {
+                  callback(err, buffer)
+                })
               }
             })
           }
