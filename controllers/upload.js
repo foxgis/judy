@@ -63,21 +63,25 @@ module.exports.create = function(req, res) {
 
         async.parallel([
           function(callback) {
-            image.resize(300, 300).quality(50).jpeg().toBuffer(function(err, buffer) {
-              callback(err, buffer)
+            image.metadata(function(err, metadata) {
+              var dpi = metadata.density || 72
+              var width = Math.round(metadata.width / dpi * 25.4)
+              var height = Math.round(metadata.height / dpi * 25.4)
+
+              callback(err, [height, width])
             })
+          },
+
+          function(callback) {
+            image.resize(300, 300).quality(50).jpeg().toBuffer(callback)
           },
 
           function(callback) {
             image.metadata(function(err, metadata) {
               if (metadata.width <= 1000) {
-                image.quality(50).jpeg().toBuffer(function(err, buffer) {
-                  callback(err, buffer)
-                })
+                image.quality(50).jpeg().toBuffer(callback)
               } else {
-                image.resize(1000).quality(50).jpeg().toBuffer(function(err, buffer) {
-                  callback(err, buffer)
-                })
+                image.resize(1000).quality(50).jpeg().toBuffer(callback)
               }
             })
           }
@@ -86,8 +90,9 @@ module.exports.create = function(req, res) {
             return res.status(500).json({ error: err })
           }
 
-          newUpload.mini_thumbnail = results[0]
-          newUpload.thumbnail = results[1]
+          newUpload.dimension = results[0]
+          newUpload.mini_thumbnail = results[1]
+          newUpload.thumbnail = results[2]
 
           newUpload.save(function(err) {
             if (err) {
