@@ -13,7 +13,7 @@ var UploadSchema = new mongoose.Schema({
   name: String,
   location: String,
   scale: Number,
-  dimension: [Number],
+  dimensions: [Number],
   year: String,
   tags: [String],
   description: String,

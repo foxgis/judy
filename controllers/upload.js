@@ -90,7 +90,7 @@ module.exports.create = function(req, res) {
             return res.status(500).json({ error: err })
           }
 
-          newUpload.dimension = results[0]
+          newUpload.dimensions = results[0]
           newUpload.mini_thumbnail = results[1]
           newUpload.thumbnail = results[2]
 
@@ -127,7 +127,7 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'name', 'description', 'tags', 'year', 'location']
+  var filter = ['scope', 'name', 'location', 'scale', 'dimensions', 'year', 'tags', 'description']
 
   Upload.findOneAndUpdate({
     upload_id: req.params.upload_id,
