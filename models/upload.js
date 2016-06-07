@@ -24,7 +24,7 @@ var UploadSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-UploadSchema.plugin(select, '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail')
+UploadSchema.plugin(select, '-_id -__v -file_id -thumbnail -mini_thumbnail')
 
 
 UploadSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })

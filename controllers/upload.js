@@ -242,7 +242,7 @@ module.exports.search = function(req, res) {
   }
 
   Upload.find(query,
-    '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail',
+    '-_id -__v -file_id -thumbnail -mini_thumbnail',
     function(err, uploads) {
       if (err) {
         return res.status(500).json({ error: err })

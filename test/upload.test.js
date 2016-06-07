@@ -65,7 +65,6 @@ describe('上传模块', function() {
           res.body.dimensions[0].should.equal(218)
           res.body.dimensions[1].should.equal(321)
           should.not.exist(res.body.file_id)
-          should.not.exist(res.body.is_deleted)
           should.not.exist(res.body.thumbnail)
 
           upload_id = res.body.upload_id
