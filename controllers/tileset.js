@@ -23,7 +23,7 @@ module.exports.list = function(req, res) {
     }
 
     res.status(200).json(tilesets)
-  })
+  }).sort({ createdAt: -1 })
 }
 
 

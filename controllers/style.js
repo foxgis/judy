@@ -17,7 +17,7 @@ module.exports.list = function(req, res) {
     }
 
     res.status(200).json(styles)
-  })
+  }).sort({ createdAt: -1 })
 }
 
 

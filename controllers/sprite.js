@@ -17,7 +17,7 @@ module.exports.list = function(req, res) {
     }
 
     res.status(200).json(sprites)
-  }).sort({ updatedAt: -1 })
+  }).sort({ createdAt: -1 })
 }
 
 
