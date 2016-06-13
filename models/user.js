@@ -15,10 +15,12 @@ var UserSchema = new mongoose.Schema({
 
   // profile
   name: String,
-  email: String,
-  phone: String,
   location: String,
-  organization: String
+  organization: String,
+  position: String,
+  telephone: String,
+  mobile: String,
+  email: String
 }, { timestamps: true })
 
 

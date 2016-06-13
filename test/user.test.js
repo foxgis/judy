@@ -23,7 +23,7 @@ describe('用户管理模块', function() {
           password: '123456',
           name: 'nick',
           email: 'nick@gmail.com',
-          phone: 121221222,
+          telephone: 121221222,
           noThisField: 'no'
         })
         .expect(200)
@@ -41,7 +41,7 @@ describe('用户管理模块', function() {
 
           res.body.username.should.equal('中文用户名')
           res.body.email.should.equal('nick@gmail.com')
-          res.body.phone.should.equal('121221222')
+          res.body.telephone.should.equal('121221222')
           should.not.exist(res.body.password)
           should.not.exist(res.body.noThisField)
           res.body.access_token.should.exist

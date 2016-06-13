@@ -27,10 +27,12 @@ module.exports.create = function(req, res) {
 
     if (req.body.scope) newUser.scope = req.body.scope
     if (req.body.name) newUser.name = req.body.name
-    if (req.body.email) newUser.email = req.body.email
-    if (req.body.phone) newUser.phone = req.body.phone
     if (req.body.location) newUser.location = req.body.location
     if (req.body.organization) newUser.organization = req.body.organization
+    if (req.body.position) newUser.position = req.body.position
+    if (req.body.telephone) newUser.telephone = req.body.telephone
+    if (req.body.mobile) newUser.mobile = req.body.mobile
+    if (req.body.email) newUser.email = req.body.email
 
     newUser.save(function(err) {
       if (err) {
@@ -51,7 +53,7 @@ module.exports.retrieve = function(req, res) {
     }
 
     if (!user) {
-      return res.status(404).json({ error: '用户不存在'})
+      return res.status(404).json({ error: '用户不存在' })
     }
 
     res.status(200).json(_.omit(user.toJSON(), 'access_token'))
@@ -60,7 +62,7 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'name', 'email', 'phone', 'location', 'organization']
+  var filter = ['scope', 'name', 'location', 'organization', 'position', 'telephone', 'mobile', 'email']
 
   User.findOneAndUpdate({ username: req.params.username },
     _.pick(req.body, filter), { new: true },

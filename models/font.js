@@ -6,7 +6,10 @@ var FontSchema = new mongoose.Schema({
   fontname: { type: String, index: { unique: true } },
   owner: String,
   scope: { type: String, default: 'public' },
-  is_deleted: {type: Boolean, default: false}
+  is_deleted: {type: Boolean, default: false},
+
+  family_name: String,
+  style_name: String
 }, { timestamps: true })
 
 
