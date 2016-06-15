@@ -18,6 +18,14 @@ module.exports.uploads = function(req, res) {
       organization: { $arrayElemAt: ['$users.organization', 0] }
     }
   }, {
+    $group: { _id: '$location', total: { $sum: '$total' } }
+  }, {
+    $project: {
+      _id: 0,
+      total: 1,
+      location: '$_id'
+    }
+  }, {
     $sort: { total: -1 }
   }]
 

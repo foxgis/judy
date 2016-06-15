@@ -22,7 +22,7 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  var ext = path.extname(req.files[0].originalname)
+  var ext = path.extname(req.files[0].originalname).toLowerCase()
   if (ext !== '.ttf' && ext !== '.otf') {
     fs.unlink(req.files[0].path)
     return res.status(400).json({ error: '仅支持ttf、otf字体文件' })
