@@ -115,7 +115,7 @@ module.exports.update = function(req, res) {
 
 module.exports.delete = function(req, res) {
   Font.findOneAndUpdate({
-    style_id: req.params.style_id,
+    fontname: req.params.fontname,
     owner: req.params.username
   }, { is_deleted: true }, function(err) {
     if (err) {
