@@ -185,7 +185,7 @@ module.exports.download = function(req, res) {
       return res.status(500).json({ error: err })
     })
 
-    res.setHeader('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
+    res.set('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
       encodeURIComponent(upload.name) + '.' + encodeURIComponent(upload.format))
     res.type(upload.format)
     readStream.pipe(res)

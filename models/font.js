@@ -3,19 +3,19 @@ var select = require('mongoose-json-select')
 
 
 var FontSchema = new mongoose.Schema({
-  fontname: { type: String, index: { unique: true } },
+  fontname: { type: String, index: true },
   owner: String,
   scope: { type: String, default: 'public' },
   is_deleted: { type: Boolean, default: false },
 
   family_name: String,
   style_name: String,
-  fontscope: [{
+  coverages: [{
     name: String,
     id: String,
-    coverages: [Number],
     count: Number,
-    total: Number
+    total: Number,
+    _id: false
   }]
 }, { timestamps: true })
 

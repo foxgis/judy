@@ -220,6 +220,8 @@ var authFont = function(req, res, next) {
 
     case 'GET /fonts/:username/:fontname':
     case 'GET /fonts/:username/:fontname/:range.pbf':
+    case 'GET /fonts/:username/:fontname/raw':
+    case 'GET /fonts/:username/:fontname/:color:scale(@[2]x)?':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
         return next()
       } else {
