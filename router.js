@@ -59,7 +59,7 @@ router.patch('/fonts/:username/:fontname', auth, fonts.update)
 router.delete('/fonts/:username/:fontname', auth, fonts.delete)
 router.get('/fonts/:username/:fontname/:range.pbf', auth, fonts.download)
 router.get('/fonts/:username/:fontname/raw', auth, fonts.downloadRaw)
-router.get('/fonts/:username/:fontname/:color:scale(@[2]x)?', auth, fonts.preview)
+router.get('/fonts/:username/:fontname/thumbnail', auth, fonts.preview)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)

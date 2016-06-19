@@ -13,10 +13,7 @@ addons:
     packages:
       - g++-4.9
       - mongodb-org-server
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libpango1.0-dev
-      - libgif-dev
+      - graphicsmagick
 cache:
   directories:
     - node_modules
