@@ -3,7 +3,10 @@ var fs = require('fs')
 var path = require('path')
 var async = require('async')
 var AdmZip = require('adm-zip')
+var rd = require('rd')
 var spritezero = require('spritezero')
+var mkdirp = require('mkdirp')
+var shortid = require('shortid')
 var Sprite = require('../models/sprite')
 
 
@@ -11,7 +14,7 @@ module.exports.list = function(req, res) {
   Sprite.find({
     owner: req.params.username,
     is_deleted: false
-  }, '-_id -__v -is_deleted -image -json -image2x -json2x', function(err, sprites) {
+  }, '-_id -__v -is_deleted', function(err, sprites) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -22,64 +25,119 @@ module.exports.list = function(req, res) {
 
 
 module.exports.create = function(req, res) {
-  var sprite = new Sprite({
-    owner: req.params.username
-  })
+  var username = req.params.username
+  var filePath = req.files[0].path
+  var name = path.basename(req.files[0].originalname, path.extname(req.files[0].originalname))
 
-  var imgs = []
-  var zip = new AdmZip(req.files[0].path)
-  zip.getEntries()
-    .filter(function(entry) {
-      return !entry.isDirectory && path.extname(entry.entryName) === '.svg'
-    })
-    .forEach(function(entry) {
-      var img = {
-        svg: zip.readFile(entry),
-        id: path.basename(entry.entryName, path.extname(entry.entryName))
+  var sprite_id = shortid.generate()
+  var spritedir = path.join('sprites', username, sprite_id)
+
+  async.series([
+    // mkdir
+    function(callback) {
+      mkdirp(spritedir, callback)
+    },
+
+    // unzip
+    function(callback) {
+      try {
+        var zip = new AdmZip(filePath)
+        zip.getEntries()
+          .filter(function(entry) {
+            return !entry.isDirectory && path.extname(entry.entryName) === '.svg'
+          })
+          .forEach(function(entry) {
+            zip.extractEntryTo(entry, spritedir, false, true)
+          })
+
+        callback()
+      } catch (err) {
+        callback(err)
       }
+    },
 
-      imgs.push(img)
-    })
+    // write to DB
+    function(callback) {
+      var newSprite = new Sprite({
+        sprite_id: sprite_id,
+        owner: username,
+        name: name
+      })
 
-  fs.unlink(req.files[0].path)
-
-  async.autoInject({
-    layout2x: function(callback) {
-      spritezero.generateLayout(imgs, 2, false, callback)
-    },
-    image2x: function(layout2x, callback) {
-      spritezero.generateImage(layout2x, callback)
-    },
-    json2x: function(callback) {
-      spritezero.generateLayout(imgs, 2, true, callback)
-    },
-    layout: function(callback) {
-      spritezero.generateLayout(imgs, 1, false, callback)
-    },
-    image: function(layout, callback) {
-      spritezero.generateImage(layout, callback)
-    },
-    json: function(callback) {
-      spritezero.generateLayout(imgs, 1, true, callback)
+      newSprite.save(function(err, sprite) {
+        callback(err, sprite)
+      })
     }
-  }, function(err, results) {
+  ], function(err, results) {
+    fs.unlink(filePath)
+
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    sprite.image2x = results.image2x
-    sprite.json2x = JSON.stringify(results.json2x)
-    sprite.image = results.image
-    sprite.json = JSON.stringify(results.json)
-
-    sprite.save(function(err) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      return res.status(200).json(sprite)
-    })
+    res.status(200).json(results[2])
   })
+
+
+
+  // var sprite = new Sprite({
+  //   owner: req.params.username
+  // })
+
+  // var imgs = []
+  // var zip = new AdmZip(req.files[0].path)
+  // zip.getEntries()
+  //   .filter(function(entry) {
+  //     return !entry.isDirectory && path.extname(entry.entryName) === '.svg'
+  //   })
+  //   .forEach(function(entry) {
+  //     var img = {
+  //       svg: zip.readFile(entry),
+  //       id: path.basename(entry.entryName, path.extname(entry.entryName))
+  //     }
+
+  //     imgs.push(img)
+  //   })
+
+  // fs.unlink(req.files[0].path)
+
+  // async.autoInject({
+  //   layout2x: function(callback) {
+  //     spritezero.generateLayout(imgs, 2, false, callback)
+  //   },
+  //   image2x: function(layout2x, callback) {
+  //     spritezero.generateImage(layout2x, callback)
+  //   },
+  //   json2x: function(callback) {
+  //     spritezero.generateLayout(imgs, 2, true, callback)
+  //   },
+  //   layout: function(callback) {
+  //     spritezero.generateLayout(imgs, 1, false, callback)
+  //   },
+  //   image: function(layout, callback) {
+  //     spritezero.generateImage(layout, callback)
+  //   },
+  //   json: function(callback) {
+  //     spritezero.generateLayout(imgs, 1, true, callback)
+  //   }
+  // }, function(err, results) {
+  //   if (err) {
+  //     return res.status(500).json({ error: err })
+  //   }
+
+  //   sprite.image2x = results.image2x
+  //   sprite.json2x = JSON.stringify(results.json2x)
+  //   sprite.image = results.image
+  //   sprite.json = JSON.stringify(results.json)
+
+  //   sprite.save(function(err) {
+  //     if (err) {
+  //       return res.status(500).json({ error: err })
+  //     }
+
+  //     return res.status(200).json(sprite)
+  //   })
+  // })
 }
 
 
@@ -102,7 +160,7 @@ module.exports.retrieve = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['name', 'scope']
+  var filter = ['scope', 'name']
 
   Sprite.findOneAndUpdate({
     sprite_id: req.params.sprite_id,
@@ -123,12 +181,15 @@ module.exports.update = function(req, res) {
 
 module.exports.delete = function(req, res) {
   Sprite.findOneAndUpdate({
-    owner: req.params.username,
     sprite_id: req.params.sprite_id,
-    is_deleted: false
-  }, { is_deleted: true }, function(err) {
+    owner: req.params.username
+  }, { is_deleted: true }, { new: true }, function(err, sprite) {
     if (err) {
       return res.status(500).json({ error: err })
+    }
+
+    if (!sprite) {
+      return res.sendStatus(404)
     }
 
     res.sendStatus(204)
@@ -137,9 +198,60 @@ module.exports.delete = function(req, res) {
 
 
 module.exports.download = function(req, res) {
+  var scale = +(req.params.scale || '@1x').slice(1, 2)
+  var format = req.params.format || 'json'
+  var spritedir = path.join('sprites', req.params.username, req.params.sprite_id)
+
+  async.autoInject({
+    files: function(callback) {
+      rd.readFileFilter(spritedir, /\.svg$/i, callback)
+    },
+    svgs: function(files, callback) {
+      async.map(files, function(file, next) {
+        fs.readFile(file, function(err, buffer) {
+          if (err) return next(err)
+          next(null, {
+            id: path.basename(file, path.extname(file)),
+            svg: buffer
+          })
+        })
+      }, callback)
+    },
+    json: function(svgs, callback) {
+      spritezero.generateLayout(svgs, scale, true, callback)
+    },
+    layout: function(svgs, callback) {
+      spritezero.generateLayout(svgs, scale, false, callback)
+    },
+    image: function(layout, callback) {
+      spritezero.generateImage(layout, callback)
+    }
+  }, function(err, results) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    switch (format) {
+      case 'json':
+        return res.json(results.json)
+      case 'png':
+        res.type('png')
+        return res.send(results.image)
+      default:
+        return res.sendStatus(404)
+    }
+  })
+}
+
+
+module.exports.downloadRaw = function(req, res) {
+  var username = req.params.username
+  var sprite_id = req.params.sprite_id
+  var spritedir = path.join('sprites', username, sprite_id)
+
   Sprite.findOne({
-    sprite_id: req.params.sprite_id,
-    owner: req.params.username
+    sprite_id: sprite_id,
+    owner: username
   }, function(err, sprite) {
     if (err) {
       return res.status(500).json({ error: err })
@@ -149,26 +261,10 @@ module.exports.download = function(req, res) {
       return res.sendStatus(404)
     }
 
-    if (!req.params.format || req.params.format === 'json') {
-      if (req.params.scale === '@2x') {
-        var json2x = JSON.parse(sprite.json2x)
-        return res.status(200).json(json2x)
-      } else {
-        var json = JSON.parse(sprite.json)
-        return res.status(200).json(json)
-      }
+    var zip = new AdmZip()
+    zip.addLocalFolder(spritedir)
 
-    } else if (req.params.format === 'png') {
-      if (req.params.scale === '@2x') {
-        res.attachment('sprite@2x.png')
-        return res.send(sprite.image2x)
-      } else {
-        res.attachment('sprite.png')
-        return res.send(sprite.image)
-      }
-
-    } else {
-      return res.sendStatus(404)
-    }
+    res.attachment(sprite.name + '.zip')
+    res.send(zip.toBuffer())
   })
 }

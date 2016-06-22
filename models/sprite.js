@@ -9,16 +9,11 @@ var SpriteSchema = new mongoose.Schema({
   scope: { type: String, default: 'public' },
   is_deleted: { type: Boolean, default: false },
 
-  name: { type: String, default: 'sprite'},
-  count: Number,
-  image: Buffer,
-  json: String,
-  image2x: Buffer,
-  json2x: String
+  name: { type: String, default: 'sprite'}
 }, { timestamps: true })
 
 
-SpriteSchema.plugin(select, '-_id -__v -is_deleted -image -json -image2x -json2x')
+SpriteSchema.plugin(select, '-_id -__v -is_deleted')
 
 
 module.exports = mongoose.model('Sprite', SpriteSchema)

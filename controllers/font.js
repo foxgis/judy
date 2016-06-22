@@ -47,14 +47,14 @@ module.exports.create = function(req, res) {
         })
       },
       writePbf: function(font, fontdir, callback) {
-        async.each(font.stack, function(pbf, callback2) {
-          fs.writeFile(path.join(fontdir, pbf.name), pbf.data, callback2)
+        async.each(font.stack, function(pbf, next) {
+          fs.writeFile(path.join(fontdir, pbf.name), pbf.data, next)
         }, callback)
       },
       writeFile: function(buffer, font, fontdir, callback) {
         fs.writeFile(path.join(fontdir, font.name + ext), buffer, callback)
       },
-      writeDB: function(font, callback) {
+      writeDB: function(writePbf, writeFile, font, callback) {
         var newFont = {
           fontname: font.name,
           owner: username,

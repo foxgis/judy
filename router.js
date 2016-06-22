@@ -67,7 +67,8 @@ router.post('/sprites/:username', auth, upload.any(), sprites.create)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
-router.get('/sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?', auth, sprites.download)
+router.get('/sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?', auth, sprites.download)
+router.get('/sprites/:username/:sprite_id/raw', auth, sprites.downloadRaw)
 
 // 上传文件库
 router.get('/uploads/:username', auth, uploads.list)

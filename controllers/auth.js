@@ -269,7 +269,8 @@ var authSprite = function(req, res, next) {
       }
 
     case 'GET /sprites/:username/:sprite_id':
-    case 'GET /sprites/:username/:sprite_id/sprite:scale(@[2]x)?.:format([\\w\\.]+)?':
+    case 'GET /sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?':
+    case 'GET /sprites/:username/:sprite_id/raw':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
         return next()
       } else {
