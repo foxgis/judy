@@ -77,67 +77,6 @@ module.exports.create = function(req, res) {
 
     res.status(200).json(results[2])
   })
-
-
-
-  // var sprite = new Sprite({
-  //   owner: req.params.username
-  // })
-
-  // var imgs = []
-  // var zip = new AdmZip(req.files[0].path)
-  // zip.getEntries()
-  //   .filter(function(entry) {
-  //     return !entry.isDirectory && path.extname(entry.entryName) === '.svg'
-  //   })
-  //   .forEach(function(entry) {
-  //     var img = {
-  //       svg: zip.readFile(entry),
-  //       id: path.basename(entry.entryName, path.extname(entry.entryName))
-  //     }
-
-  //     imgs.push(img)
-  //   })
-
-  // fs.unlink(req.files[0].path)
-
-  // async.autoInject({
-  //   layout2x: function(callback) {
-  //     spritezero.generateLayout(imgs, 2, false, callback)
-  //   },
-  //   image2x: function(layout2x, callback) {
-  //     spritezero.generateImage(layout2x, callback)
-  //   },
-  //   json2x: function(callback) {
-  //     spritezero.generateLayout(imgs, 2, true, callback)
-  //   },
-  //   layout: function(callback) {
-  //     spritezero.generateLayout(imgs, 1, false, callback)
-  //   },
-  //   image: function(layout, callback) {
-  //     spritezero.generateImage(layout, callback)
-  //   },
-  //   json: function(callback) {
-  //     spritezero.generateLayout(imgs, 1, true, callback)
-  //   }
-  // }, function(err, results) {
-  //   if (err) {
-  //     return res.status(500).json({ error: err })
-  //   }
-
-  //   sprite.image2x = results.image2x
-  //   sprite.json2x = JSON.stringify(results.json2x)
-  //   sprite.image = results.image
-  //   sprite.json = JSON.stringify(results.json)
-
-  //   sprite.save(function(err) {
-  //     if (err) {
-  //       return res.status(500).json({ error: err })
-  //     }
-
-  //     return res.status(200).json(sprite)
-  //   })
-  // })
 }
 
 
