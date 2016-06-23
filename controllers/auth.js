@@ -271,6 +271,7 @@ var authSprite = function(req, res, next) {
     case 'GET /sprites/:username/:sprite_id':
     case 'GET /sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?':
     case 'GET /sprites/:username/:sprite_id/raw':
+    case 'GET /sprites/:username/:sprite_id/:icon':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
         return next()
       } else {
@@ -294,8 +295,10 @@ var authSprite = function(req, res, next) {
       }
 
     case 'POST /sprites/:username':
+    case 'POST /sprites/:username/:sprite_id':
     case 'PATCH /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id':
+    case 'DELETE /sprites/:username/:sprite_id/:icon':
       if (req.user.username === req.params.username) {
         return next()
       } else {

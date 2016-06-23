@@ -24,7 +24,7 @@ module.exports.list = function(req, res) {
 }
 
 
-module.exports.create = function(req, res) {
+module.exports.upload = function(req, res) {
   var username = req.params.username
   var filePath = req.files[0].path
   var name = path.basename(req.files[0].originalname, path.extname(req.files[0].originalname))
@@ -76,6 +76,29 @@ module.exports.create = function(req, res) {
     }
 
     res.status(200).json(results[2])
+  })
+}
+
+
+module.exports.uploadIcon = function(req, res) {
+  var spritedir = path.join('sprites', req.params.username, req.params.sprite_id)
+  var filePath = req.files[0].path
+  var originalname = req.files[0].originalname
+
+  if (path.extname(originalname) !== '.svg') {
+    return res.status(400).json({ error: '仅支持svg格式' })
+  }
+
+  fs.rename(filePath, path.join(spritedir, originalname), function(err) {
+    if (err && err.code === 'ENOENT') {
+      return res.sendStatus(404)
+    }
+
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.sendStatus(204)
   })
 }
 
@@ -136,6 +159,24 @@ module.exports.delete = function(req, res) {
 }
 
 
+module.exports.deleteIcon = function(req, res) {
+  var spritedir = path.join('sprites', req.params.username, req.params.sprite_id)
+  var iconPath = path.join(spritedir, req.params.icon + '.svg')
+
+  fs.unlink(iconPath, function(err) {
+    if (err && err.code === 'ENOENT') {
+      return res.sendStatus(404)
+    }
+
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.sendStatus(204)
+  })
+}
+
+
 module.exports.download = function(req, res) {
   var scale = +(req.params.scale || '@1x').slice(1, 2)
   var format = req.params.format || 'json'
@@ -166,6 +207,10 @@ module.exports.download = function(req, res) {
       spritezero.generateImage(layout, callback)
     }
   }, function(err, results) {
+    if (err && err.code === 'ENOENT') {
+      return res.sendStatus(404)
+    }
+
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -205,5 +250,17 @@ module.exports.downloadRaw = function(req, res) {
 
     res.attachment(sprite.name + '.zip')
     res.send(zip.toBuffer())
+  })
+}
+
+
+module.exports.downloadIcon = function(req, res) {
+  var spritedir = path.join('sprites', req.params.username, req.params.sprite_id)
+  var iconPath = path.join(spritedir, req.params.icon + '.svg')
+
+  res.sendFile(path.resolve(iconPath), function(err) {
+    if (err) {
+      return res.status(err.status).end()
+    }
   })
 }

@@ -23,7 +23,7 @@ module.exports.list = function(req, res) {
 }
 
 
-module.exports.create = function(req, res) {
+module.exports.upload = function(req, res) {
   var username = req.params.username
   var filePath = req.files[0].path
   var ext = path.extname(req.files[0].originalname).toLowerCase()
@@ -52,7 +52,7 @@ module.exports.create = function(req, res) {
         }, callback)
       },
       writeFile: function(buffer, font, fontdir, callback) {
-        fs.writeFile(path.join(fontdir, font.name + ext), buffer, callback)
+        fs.writeFile(fontdir + ext, buffer, callback)
       },
       writeDB: function(writePbf, writeFile, font, callback) {
         var newFont = {
@@ -162,8 +162,8 @@ module.exports.download = function(req, res) {
 
 module.exports.downloadRaw = function(req, res) {
   var fontdir = path.join('fonts', req.params.username, req.params.fontname)
-  var ttf = path.join(fontdir, req.params.fontname + '.ttf')
-  var otf = path.join(fontdir, req.params.fontname + '.otf')
+  var ttf = fontdir + '.ttf'
+  var otf = fontdir + '.otf'
 
   fs.readFile(ttf, function(err, font) {
     if (!err) {
@@ -186,8 +186,8 @@ module.exports.downloadRaw = function(req, res) {
 module.exports.preview = function(req, res) {
   var fontname = req.params.fontname
   var fontdir = path.join('fonts', req.params.username, fontname)
-  var ttf = path.join(fontdir, fontname + '.ttf')
-  var otf = path.join(fontdir, fontname + '.otf')
+  var ttf = fontdir + '.ttf'
+  var otf = fontdir + '.otf'
 
   fs.access(ttf, fs.R_OK, function(err) {
     if (!err) {

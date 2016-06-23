@@ -53,7 +53,7 @@ router.get('/tilesets', auth, tilesets.search)
 
 // 字体
 router.get('/fonts/:username', auth, fonts.list)
-router.post('/fonts/:username', auth, upload.any(), fonts.create)
+router.post('/fonts/:username', auth, upload.any(), fonts.upload)
 router.get('/fonts/:username/:fontname', auth, fonts.retrieve)
 router.patch('/fonts/:username/:fontname', auth, fonts.update)
 router.delete('/fonts/:username/:fontname', auth, fonts.delete)
@@ -63,16 +63,19 @@ router.get('/fonts/:username/:fontname/thumbnail', auth, fonts.preview)
 
 // 符号库
 router.get('/sprites/:username', auth, sprites.list)
-router.post('/sprites/:username', auth, upload.any(), sprites.create)
+router.post('/sprites/:username', auth, upload.any(), sprites.upload)
+router.post('/sprites/:username/:sprite_id', auth, upload.any(), sprites.uploadIcon)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
+router.delete('/sprites/:username/:sprite_id/:icon', auth, sprites.deleteIcon)
 router.get('/sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?', auth, sprites.download)
 router.get('/sprites/:username/:sprite_id/raw', auth, sprites.downloadRaw)
+router.get('/sprites/:username/:sprite_id/:icon', auth, sprites.downloadIcon)
 
 // 上传文件库
 router.get('/uploads/:username', auth, uploads.list)
-router.post('/uploads/:username', auth, upload.any(), uploads.create)
+router.post('/uploads/:username', auth, upload.any(), uploads.upload)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.patch('/uploads/:username/:upload_id', auth, uploads.update)
 router.delete('/uploads/:username/:upload_id', auth, uploads.delete)

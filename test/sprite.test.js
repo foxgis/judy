@@ -221,7 +221,7 @@ describe('符号库模块', function() {
       request(app)
         .get('/api/v1/sprites/nick/un_existed_sprite_id/sprite')
         .set('x-access-token', access_token)
-        .expect(500)
+        .expect(404)
         .end(done)
     })
   })

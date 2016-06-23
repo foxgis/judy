@@ -22,7 +22,7 @@ module.exports.list = function(req, res) {
 }
 
 
-module.exports.create = function(req, res) {
+module.exports.upload = function(req, res) {
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
   var writeStream = gfs.createWriteStream({
     filename: req.files[0].originalname
