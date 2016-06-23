@@ -19,7 +19,7 @@ module.exports.list = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    res.status(200).json(sprites)
+    res.json(sprites)
   }).sort({ createdAt: -1 })
 }
 
@@ -75,7 +75,7 @@ module.exports.upload = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    res.status(200).json(results[2])
+    res.json(results[2])
   })
 }
 
@@ -116,7 +116,7 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(sprite)
+    res.json(sprite)
   })
 }
 
@@ -136,7 +136,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(sprite)
+    res.json(sprite)
   })
 }
 

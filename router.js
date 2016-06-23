@@ -13,7 +13,7 @@ var stats = require('./controllers/stat')
 
 var router = express.Router()
 var upload = multer({
-  dest: 'uploads/',
+  dest: 'tmp/',
   limits: { fieldSize: 200000000, files: 1 }
 })
 

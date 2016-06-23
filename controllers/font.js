@@ -18,7 +18,7 @@ module.exports.list = function(req, res) {
       return res.status(500).json({ error: err })
     }
 
-    res.status(200).json(fonts)
+    res.json(fonts)
   }).sort({ createdAt: -1 })
 }
 
@@ -83,7 +83,7 @@ module.exports.upload = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      res.status(200).json(results.writeDB)
+      res.json(results.writeDB)
     })
   }
 }
@@ -102,7 +102,7 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(font)
+    res.json(font)
   })
 }
 
@@ -122,7 +122,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(font)
+    res.json(font)
   })
 }
 
