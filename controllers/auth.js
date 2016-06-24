@@ -4,6 +4,7 @@ var Style = require('../models/style')
 var Sprite = require('../models/sprite')
 var Tileset = require('../models/tileset')
 var Font = require('../models/font')
+var File = require('../models/file')
 var Upload = require('../models/upload')
 
 
@@ -63,6 +64,8 @@ var authResource = function(req, res, next) {
       return authFont(req, res, next)
     case 'sprites':
       return authSprite(req, res, next)
+    case 'files':
+      return authFile(req, res, next)
     case 'uploads':
       return authUpload(req, res, next)
     case 'stats':
@@ -299,6 +302,59 @@ var authSprite = function(req, res, next) {
     case 'PATCH /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id/:icon':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    default:
+      return res.sendStatus(401)
+  }
+}
+
+
+var authFile = function(req, res, next) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /files/stats':
+    case 'GET /files/search':
+      return next()
+
+    case 'GET /files/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    case 'GET /files/:username/:file_id':
+    case 'GET /files/:username/:file_id/raw':
+    case 'GET /files/:username/:file_id/thumbnail':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        File.findOne({
+          file_id: req.params.file_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, file) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!file) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /files/:username':
+    case 'PATCH /files/:username/:file_id':
+    case 'DELETE /files/:username/:file_id':
       if (req.user.username === req.params.username) {
         return next()
       } else {

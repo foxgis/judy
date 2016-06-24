@@ -36,8 +36,9 @@ public/uploads/*
 
 # Config file
 
-uploads/
-fonts/
-sprites/
 .vscode/
 .idea/
+fonts/
+sprites/
+files/
+uploads/

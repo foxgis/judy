@@ -40,19 +40,19 @@ module.exports.upload = function(req, res) {
       font: function(buffer, callback) {
         fontmachine.makeGlyphs({ font: buffer, filetype: ext }, callback)
       },
-      fontdir: function(font, callback) {
-        var fontdir = path.join('fonts', username, font.name)
-        mkdirp(fontdir, function(err) {
-          callback(err, fontdir)
+      fontDir: function(font, callback) {
+        var fontDir = path.join('fonts', username, font.name)
+        mkdirp(fontDir, function(err) {
+          callback(err, fontDir)
         })
       },
-      writePbf: function(font, fontdir, callback) {
+      writePbf: function(font, fontDir, callback) {
         async.each(font.stack, function(pbf, next) {
-          fs.writeFile(path.join(fontdir, pbf.name), pbf.data, next)
+          fs.writeFile(path.join(fontDir, pbf.name), pbf.data, next)
         }, callback)
       },
-      writeFile: function(buffer, font, fontdir, callback) {
-        fs.writeFile(fontdir + ext, buffer, callback)
+      writeFile: function(buffer, font, fontDir, callback) {
+        fs.writeFile(fontDir + ext, buffer, callback)
       },
       writeDB: function(writePbf, writeFile, font, callback) {
         var newFont = {
@@ -71,13 +71,20 @@ module.exports.upload = function(req, res) {
           })
         }
 
+        var keys = ['scope']
+        keys.forEach(function(key) {
+          if (req.body[key]) {
+            newFont[key] = req.body[key]
+          }
+        })
+
         Font.findOneAndUpdate({
           fontname: newFont.fontname,
           owner: newFont.owner
         }, newFont, { upsert: true, new: true, setDefaultsOnInsert: true }, callback)
       }
     }, function(err, results) {
-      fs.unlink(filePath)
+      fs.unlink(filePath, function() {})
 
       if (err) {
         return res.status(500).json({ error: err })
@@ -152,7 +159,8 @@ module.exports.download = function(req, res) {
   fs.readFile(filePath, function(err, pbf) {
     if (!err) {
       res.set('Content-Encoding', 'gzip')
-      return res.status(200).send(pbf)
+      res.set('Content-Type', 'application/x-protobuf')
+      return res.send(pbf)
     }
 
     return res.sendStatus(404)
@@ -161,9 +169,9 @@ module.exports.download = function(req, res) {
 
 
 module.exports.downloadRaw = function(req, res) {
-  var fontdir = path.join('fonts', req.params.username, req.params.fontname)
-  var ttf = fontdir + '.ttf'
-  var otf = fontdir + '.otf'
+  var fontDir = path.join('fonts', req.params.username, req.params.fontname)
+  var ttf = fontDir + '.ttf'
+  var otf = fontDir + '.otf'
 
   fs.readFile(ttf, function(err, font) {
     if (!err) {
@@ -185,9 +193,9 @@ module.exports.downloadRaw = function(req, res) {
 
 module.exports.preview = function(req, res) {
   var fontname = req.params.fontname
-  var fontdir = path.join('fonts', req.params.username, fontname)
-  var ttf = fontdir + '.ttf'
-  var otf = fontdir + '.otf'
+  var fontDir = path.join('fonts', req.params.username, fontname)
+  var ttf = fontDir + '.ttf'
+  var otf = fontDir + '.otf'
 
   fs.access(ttf, fs.R_OK, function(err) {
     if (!err) {
