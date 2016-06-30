@@ -8,7 +8,6 @@ var UserSchema = new mongoose.Schema({
   username: { type: String, index: { unique: true } },
   salt: String,
   hash: String,
-  access_token: String,
   role: { type: String, default: 'user'},
   scope: { type: String, default: 'public'},
   is_verified: { type: Boolean, default: false },
@@ -20,13 +19,11 @@ var UserSchema = new mongoose.Schema({
   position: String,
   telephone: String,
   mobile: String,
-  email: String,
-  signature: String,
-  avatar: Buffer
+  email: String
 }, { timestamps: true })
 
 
-UserSchema.plugin(select, '-_id -__v -salt -hash -role -avatar')
+UserSchema.plugin(select, '-_id -__v -salt -hash -role')
 
 
 UserSchema.virtual('password').set(function(password) {
@@ -35,9 +32,9 @@ UserSchema.virtual('password').set(function(password) {
 })
 
 
-UserSchema.methods.updateAccessToken = function() {
-  this.access_token = jwt.sign({ username: this.username }, this.salt, { expiresIn: '7d' })
-}
+UserSchema.virtual('access_token').get(function() {
+  return jwt.sign({ username: this.username }, this.salt, { expiresIn: '7d' })
+})
 
 
 UserSchema.methods.validPassword = function(password) {

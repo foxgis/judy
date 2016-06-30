@@ -99,6 +99,7 @@ describe('瓦片集模块', function(){
           }
 
           res.body.owner.should.equal('nick')
+          res.body.tileset_id.should.equal(tileset_id)
 
           done()
         })

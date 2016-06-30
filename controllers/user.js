@@ -39,8 +39,7 @@ module.exports.create = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      newUser.updateAccessToken()
-      res.json(newUser)
+      res.json(newUser.toJSON({ virtuals: true }))
     })
   })
 }
@@ -56,7 +55,7 @@ module.exports.retrieve = function(req, res) {
       return res.status(404).json({ error: '用户不存在' })
     }
 
-    res.json(_.omit(user.toJSON(), 'access_token'))
+    res.json(user)
   })
 }
 
@@ -64,19 +63,19 @@ module.exports.retrieve = function(req, res) {
 module.exports.update = function(req, res) {
   var filter = ['scope', 'name', 'location', 'organization', 'position', 'telephone', 'mobile', 'email']
 
-  User.findOneAndUpdate({ username: req.params.username },
-    _.pick(req.body, filter), { new: true },
-    function(err, user) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
+  User.findOneAndUpdate({
+    username: req.params.username
+  }, _.pick(req.body, filter), { new: true }, function(err, user) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
 
-      if (!user) {
-        return res.status(404).json({ error: '用户不存在' })
-      }
+    if (!user) {
+      return res.status(404).json({ error: '用户不存在' })
+    }
 
-      res.json(user)
-    })
+    res.json(user)
+  })
 }
 
 
@@ -94,7 +93,6 @@ module.exports.login = function(req, res) {
       return res.status(401).json({ error: '用户名或密码错误' })
     }
 
-    user.updateAccessToken()
-    res.json(user)
+    res.json(user.toJSON({ virtuals: true }))
   })
 }
