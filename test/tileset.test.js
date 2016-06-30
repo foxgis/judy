@@ -80,7 +80,7 @@ describe('瓦片集模块', function(){
             return done(err)
           }
 
-          res.body[0].owner.should.equal('nick')
+          res.body.length.should.above(0)
 
           done()
         })

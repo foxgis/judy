@@ -16,8 +16,7 @@ module.exports = function(req, res, next) {
 
 
 var authAccessToken = function(req, res, next) {
-  var access_token = req.query.access_token ||
-    req.cookies.access_token ||
+  var access_token = req.query.access_token || req.cookies.access_token ||
     req.headers['x-access-token']
 
   if (!access_token) {

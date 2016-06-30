@@ -101,9 +101,6 @@ module.exports.upload = function(req, res) {
         return callback(null, protocol + '//' + shpPath)
       })
     },
-    tilejson: function(source, callback) {
-      tilelive.info(source, callback)
-    },
     copy: function(source, callback) {
       var dst = 'foxgis+' + config.DB + '?tileset_id=' + tileset_id + '&owner=' + username
       var opts = {
@@ -115,12 +112,12 @@ module.exports.upload = function(req, res) {
 
       tilelive.copy(source, dst, opts, callback)
     },
-    writeDB: function(tilejson, copy, callback) {
+    writeDB: function(copy, callback) {
       var newTileset = {
         tileset_id: tileset_id,
         owner: username,
+        is_deleted: false,
         name: path.basename(originalname, path.extname(originalname)),
-        tilejson: JSON.stringify(tilejson),
         filename: originalname,
         filesize: size
       }
@@ -218,7 +215,8 @@ module.exports.downloadTile = function(req, res) {
 module.exports.downloadTilejson = function(req, res) {
   var tileset_id = req.params.tileset_id
   var username = req.params.username
-  var access_token = req.query.access_token
+  var access_token = req.query.access_token || req.cookies.access_token ||
+    req.headers['x-access-token']
 
   Tileset.findOne({
     tileset_id: tileset_id,
@@ -235,7 +233,8 @@ module.exports.downloadTilejson = function(req, res) {
     var tilejson = JSON.parse(tileset.tilejson)
     var format = tilejson.format || 'png'
     tilejson.tiles = [config.API_URL + '/tilesets/' + username + '/' + tileset_id +
-    '/{z}/{x}/{y}.' + format + '?access_token=' + access_token]
+      '/{z}/{x}/{y}.' + format + '?access_token=' + access_token
+    ]
 
     res.json(tilejson)
   })
