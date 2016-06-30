@@ -16,7 +16,10 @@ var FontSchema = new mongoose.Schema({
     count: Number,
     total: Number,
     _id: false
-  }]
+  }],
+
+  filename: String,
+  filesize: Number
 }, { timestamps: true })
 
 

@@ -20,11 +20,13 @@ var UserSchema = new mongoose.Schema({
   position: String,
   telephone: String,
   mobile: String,
-  email: String
+  email: String,
+  signature: String,
+  avatar: Buffer
 }, { timestamps: true })
 
 
-UserSchema.plugin(select, '-_id -__v -salt -hash -role')
+UserSchema.plugin(select, '-_id -__v -salt -hash -role -avatar')
 
 
 UserSchema.virtual('password').set(function(password) {

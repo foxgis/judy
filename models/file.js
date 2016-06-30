@@ -17,8 +17,8 @@ var FileSchema = new mongoose.Schema({
   scale: Number,
   dimensions: [Number],
 
-  format: String,
-  size: Number
+  filename: String,
+  filesize: Number
 }, { timestamps: true })
 
 

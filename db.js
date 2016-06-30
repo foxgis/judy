@@ -2,11 +2,11 @@ var mongoose = require('mongoose')
 var config = require('./config')
 
 
-mongoose.connect(config.db)
+mongoose.connect(config.DB)
 
 /* eslint-disable no-console */
 mongoose.connection.on('connected', function() {
-  console.log('Mongoose connected to ' + config.db)
+  console.log('Mongoose connected to ' + config.DB)
 })
 
 

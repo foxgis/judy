@@ -60,7 +60,6 @@ describe('瓦片集模块', function(){
           }
 
           res.body.owner.should.equal('nick')
-          res.body.scheme.should.equal('xyz')
           res.body.tileset_id.should.exist
 
           tileset_id = res.body.tileset_id
@@ -82,7 +81,6 @@ describe('瓦片集模块', function(){
           }
 
           res.body[0].owner.should.equal('nick')
-          res.body[0].name.should.equal('Open Streets')
 
           done()
         })
@@ -101,7 +99,6 @@ describe('瓦片集模块', function(){
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('Open Streets')
 
           done()
         })
@@ -130,23 +127,6 @@ describe('瓦片集模块', function(){
     })
   })
 
-  describe('瓦片集搜索', function(){
-    it('搜索成功', function(done){
-      request(app)
-        .get('/api/v1/tilesets?search=tag1')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.length.should.above(0)
-          done()
-        })
-    })
-  })
-
   describe('获取瓦片', function(){
     this.timeout(6000)
     it('获取成功', function(done){
@@ -167,22 +147,6 @@ describe('瓦片集模块', function(){
   })
 
   describe('删除瓦片集', function(){
-    after('检查是否删除', function(done){
-      request(app)
-        .get('/api/v1/tilesets/nick')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
-
     it('删除成功', function(done){
       request(app)
         .delete('/api/v1/tilesets/nick/' + tileset_id)

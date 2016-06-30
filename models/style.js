@@ -9,9 +9,8 @@ var StyleSchema = new mongoose.Schema({
   scope: { type: String, default: 'private' },
   is_deleted: { type: Boolean, default: false },
 
-  location: String,
-  year: String,
   tags: [String],
+  description: String,
 
   version: { type: Number, default: 8 },
   name: String,
@@ -34,7 +33,6 @@ var StyleSchema = new mongoose.Schema({
 StyleSchema.plugin(select, '-_id -__v -is_deleted')
 
 
-StyleSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' })
 StyleSchema.index({ createdAt: -1 })
 StyleSchema.index({ updatedAt: -1 })
 

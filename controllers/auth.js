@@ -121,6 +121,8 @@ var authStyle = function(req, res, next) {
       }
 
     case 'GET /styles/:username/:style_id':
+    case 'GET /styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)':
+    case 'GET /styles/:username/:style_id/thumbnail':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
         return next()
       } else {
@@ -152,9 +154,6 @@ var authStyle = function(req, res, next) {
         return res.sendStatus(401)
       }
 
-    case 'GET /styles':
-      return next()
-
     default:
       return res.sendStatus(401)
   }
@@ -172,6 +171,9 @@ var authTileset = function(req, res, next) {
 
     case 'GET /tilesets/:username/:tileset_id':
     case 'GET /tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)':
+    case 'GET /tilesets/:username/:tileset_id/tilejson':
+    case 'GET /tilesets/:username/:tileset_id/raw':
+    case 'GET /tilesets/:username/:tileset_id/thumbnail':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
         return next()
       } else {
@@ -202,9 +204,6 @@ var authTileset = function(req, res, next) {
       } else {
         return res.sendStatus(401)
       }
-
-    case 'GET /tilesets':
-      return next()
 
     default:
       return res.sendStatus(401)
@@ -298,7 +297,7 @@ var authSprite = function(req, res, next) {
       }
 
     case 'POST /sprites/:username':
-    case 'POST /sprites/:username/:sprite_id':
+    case 'PUT /sprites/:username/:sprite_id/:icon':
     case 'PATCH /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id/:icon':

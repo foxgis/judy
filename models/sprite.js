@@ -9,7 +9,10 @@ var SpriteSchema = new mongoose.Schema({
   scope: { type: String, default: 'public' },
   is_deleted: { type: Boolean, default: false },
 
-  name: { type: String, default: 'sprite'}
+  name: { type: String, default: 'sprite'},
+
+  filename: String,
+  filesize: Number
 }, { timestamps: true })
 
 

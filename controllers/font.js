@@ -26,7 +26,10 @@ module.exports.list = function(req, res) {
 module.exports.upload = function(req, res) {
   var username = req.params.username
   var filePath = req.files[0].path
-  var ext = path.extname(req.files[0].originalname).toLowerCase()
+  var originalname = req.files[0].originalname
+  var size = req.files[0].size
+
+  var ext = path.extname(originalname).toLowerCase()
 
   if (ext !== '.ttf' && ext !== '.otf') {
     fs.unlink(filePath)
@@ -51,8 +54,8 @@ module.exports.upload = function(req, res) {
           fs.writeFile(path.join(fontDir, pbf.name), pbf.data, next)
         }, callback)
       },
-      writeFile: function(buffer, font, fontDir, callback) {
-        fs.writeFile(fontDir + ext, buffer, callback)
+      writeFile: function(buffer, fontDir, callback) {
+        fs.writeFile(fontDir + path.extname(originalname), buffer, callback)
       },
       writeDB: function(writePbf, writeFile, font, callback) {
         var newFont = {
@@ -68,7 +71,9 @@ module.exports.upload = function(req, res) {
               count: coverage.count,
               total: coverage.total
             }
-          })
+          }),
+          filename: originalname,
+          filesize: size
         }
 
         var keys = ['scope']
@@ -169,59 +174,59 @@ module.exports.download = function(req, res) {
 
 
 module.exports.downloadRaw = function(req, res) {
-  var fontDir = path.join('fonts', req.params.username, req.params.fontname)
-  var ttf = fontDir + '.ttf'
-  var otf = fontDir + '.otf'
-
-  fs.readFile(ttf, function(err, font) {
-    if (!err) {
-      res.attachment(ttf)
-      return res.send(font)
+  Font.findOne({
+    fontname: req.params.fontname,
+    owner: req.params.username
+  }, function(err, font) {
+    if (err) {
+      return res.status(500).json({ error: err })
     }
 
-    fs.readFile(otf, function(err, font) {
-      if (!err) {
-        res.attachment(otf)
-        return res.send(font)
-      }
-
+    if (!font) {
       return res.sendStatus(404)
+    }
+
+    var filename = font.fontname + path.extname(font.filename)
+    var filePath = path.join('fonts', req.params.username, filename)
+
+    res.download(path.resolve(filePath), filename, function(err) {
+      if (err) {
+        return res.status(err.status).end()
+      }
     })
   })
 }
 
 
 module.exports.preview = function(req, res) {
-  var fontname = req.params.fontname
-  var fontDir = path.join('fonts', req.params.username, fontname)
-  var ttf = fontDir + '.ttf'
-  var otf = fontDir + '.otf'
-
-  fs.access(ttf, fs.R_OK, function(err) {
-    if (!err) {
-      res.set('Content-Type', 'image/png')
-      return gm(620, 60, '#FFFFFFFF')
-        .font(ttf)
-        .fontSize(40)
-        .fill('#404040')
-        .drawText(0, 45, fontname)
-        .stream('png')
-        .pipe(res)
+  Font.findOne({
+    fontname: req.params.fontname,
+    owner: req.params.username
+  }, function(err, font) {
+    if (err) {
+      return res.status(500).json({ error: err })
     }
 
-    fs.access(otf, fs.R_OK, function(err) {
-      if (!err) {
-        res.set('Content-Type', 'image/png')
-        return gm(620, 60, '#FFFFFFFF')
-          .font(otf)
-          .fontSize(40)
-          .fill('#404040')
-          .drawText(0, 45, fontname)
-          .stream('png')
-          .pipe(res)
+    if (!font) {
+      return res.sendStatus(404)
+    }
+
+    var filename = font.fontname + path.extname(font.filename)
+    var filePath = path.join('fonts', req.params.username, filename)
+
+    fs.access(filePath, fs.R_OK, function(err) {
+      if (err) {
+        return res.status(500).json({ error: err })
       }
 
-      res.sendStatus(404)
+      res.type('png')
+      gm(620, 60, '#FFFFFFFF')
+        .font(filePath)
+        .fontSize(40)
+        .fill('#404040')
+        .drawText(0, 45, font.fontname)
+        .stream('png')
+        .pipe(res)
     })
   })
 }

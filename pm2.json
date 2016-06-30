@@ -1,10 +1,19 @@
 {
-  "apps" : [{
+  "apps": [{
     "script": "./bin/www",
     "instances": 0,
     "exec_mode": "cluster",
     "watch": true,
-    "ignore_watch" : ["node_modules", ".git", "coverage", "fonts", "sprites", "files", "uploads"],
+    "ignore_watch": [
+      "node_modules",
+      ".git",
+      "coverage",
+      "tilesets",
+      "fonts",
+      "sprites",
+      "files",
+      "uploads"
+    ],
     "env": {
       "NODE_ENV": "production",
       "PORT": 80

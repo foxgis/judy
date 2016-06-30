@@ -147,7 +147,7 @@ describe('字体模块', function(){
             return done(err)
           }
 
-          res.header['content-type'].should.equal('application/octet-stream')
+          res.header['content-type'].should.equal('application/x-protobuf')
 
           done()
         })

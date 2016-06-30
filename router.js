@@ -1,14 +1,13 @@
 var express = require('express')
 var multer = require('multer')
-var util = require('util')
 var auth = require('./controllers/auth')
 var users = require('./controllers/user')
 var styles = require('./controllers/style')
 var tilesets = require('./controllers/tileset')
 var fonts = require('./controllers/font')
 var sprites = require('./controllers/sprite')
-var uploads = require('./controllers/upload')
 var files = require('./controllers/file')
+var uploads = require('./controllers/upload')
 var stats = require('./controllers/stat')
 
 
@@ -18,13 +17,6 @@ var upload = multer({
   limits: { fieldSize: 200000000, files: 1 }
 })
 
-var floatPattern = '[+-]?(?:\\d+|\\d+\.?\\d+)'
-var staticPattern = '/static/%s:scale(@[23]x)?\.:format([\\w\\.]+)'
-var centerPattern = util.format(':lon(%s),:lat(%s),:z(\\d+)/:width(\\d+)x:height(\\d+)',
-  floatPattern, floatPattern)
-var boundsPattern = util.format(':minx(%s),:miny(%s),:maxx(%s),:maxy(%s)/:z(\\d+)',
-  floatPattern, floatPattern, floatPattern, floatPattern)
-
 // 用户
 router.post('/users', users.create)
 router.get('/users/:username', auth, users.retrieve)
@@ -33,24 +25,23 @@ router.post('/users/:username', users.login)
 
 // 样式
 router.get('/styles/:username', auth, styles.list)
-router.post('/styles/:username', auth, styles.create)
 router.get('/styles/:username/:style_id', auth, styles.retrieve)
+router.post('/styles/:username', auth, styles.create)
 router.patch('/styles/:username/:style_id', auth, styles.update)
 router.delete('/styles/:username/:style_id', auth, styles.delete)
-router.get('/styles/:username/:tileset_id' + util.format(staticPattern, centerPattern), auth, styles.preview)
-router.get('/styles/:username/:tileset_id' + util.format(staticPattern, boundsPattern), auth, styles.preview)
-router.get('/styles', auth, styles.search)
+router.get('/styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, styles.downloadTile)
+router.get('/styles/:username/:style_id/thumbnail', auth, styles.preview)
 
 // 瓦片集
 router.get('/tilesets/:username', auth, tilesets.list)
-router.post('/tilesets/:username', auth, upload.any(), tilesets.create)
 router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
+router.post('/tilesets/:username', auth, upload.any(), tilesets.upload)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
-router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, tilesets.getTile)
-router.get('/tilesets/:username/:tileset_id' + util.format(staticPattern, centerPattern), auth, tilesets.preview)
-router.get('/tilesets/:username/:tileset_id' + util.format(staticPattern, boundsPattern), auth, tilesets.preview)
-router.get('/tilesets', auth, tilesets.search)
+router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, tilesets.downloadTile)
+router.get('/tilesets/:username/:tileset_id/tilejson', auth, tilesets.downloadTilejson)
+router.get('/tilesets/:username/:tileset_id/raw', auth, tilesets.downloadRaw)
+router.get('/tilesets/:username/:tileset_id/thumbnail', auth, tilesets.preview)
 
 // 字体
 router.get('/fonts/:username', auth, fonts.list)
@@ -66,7 +57,7 @@ router.get('/fonts/:username/:fontname/thumbnail', auth, fonts.preview)
 router.get('/sprites/:username', auth, sprites.list)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.post('/sprites/:username', auth, upload.any(), sprites.upload)
-router.post('/sprites/:username/:sprite_id', auth, upload.any(), sprites.uploadIcon)
+router.put('/sprites/:username/:sprite_id/:icon', auth, upload.any(), sprites.uploadIcon)
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.delete('/sprites/:username/:sprite_id/:icon', auth, sprites.deleteIcon)

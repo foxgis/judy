@@ -38,6 +38,7 @@ public/uploads/*
 
 .vscode/
 .idea/
+tilesets/
 fonts/
 sprites/
 files/

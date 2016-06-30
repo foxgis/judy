@@ -1,92 +1,30 @@
-var _ = require('lodash')
-var mongoose = require('mongoose')
-var tiletype = require('tiletype')
-var escaper = require('mongo-key-escaper')
-var filesniffer = require('mapbox-file-sniff')
-var tilelive = require('tilelive')
-var TileSchema = require('../models/tile')
-var Tileset = require('../models/tileset')
 var fs = require('fs')
 var path = require('path')
+var _ = require('lodash')
+var async = require('async')
+var mongoose = require('mongoose')
+var shortid = require('shortid')
+var filesniffer = require('mapbox-file-sniff')
+var tilelive = require('tilelive')
+var tiletype = require('tiletype')
 var AdmZip = require('adm-zip')
-var rimraf = require('rimraf')
+var mkdirp = require('mkdirp')
 var config = require('../config')
+var TileSchema = require('../models/tile')
+var Tileset = require('../models/tileset')
 
 
 module.exports.list = function(req, res) {
   Tileset.find({
     owner: req.params.username,
     is_deleted: false
-  }, '-vector_layers', function(err, tilesets) {
+  }, '-_id -__v -is_deleted -tilejson', function(err, tilesets) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    res.status(200).json(tilesets)
+    res.json(tilesets)
   }).sort({ createdAt: -1 })
-}
-
-
-module.exports.create = function(req, res) {
-  filesniffer.quaff(req.files[0].path, true, function(err, protocol) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    var tileset = new Tileset({
-      owner: req.params.username
-    })
-
-    tileset.save(function(err) {
-      if (err) {
-        return res.status(500).json({ error: err })
-      }
-
-      res.status(200).json(tileset)
-
-      // 导入数据
-      var src = protocol + '//./' + req.files[0].path
-      if (path.extname(req.files[0].originalname) === '.zip') {
-        var zip = new AdmZip(req.files[0].path)
-        var unzipDir = req.files[0].path + 'unzip'
-        zip.extractAllTo(unzipDir, true)
-        zip.getEntries().forEach(function(entry) {
-          if (path.extname(entry.entryName) === '.shp') {
-            src = protocol + '//./' + unzipDir + '/' + entry.entryName
-          }
-        })
-      }
-
-      var dst = 'foxgis+' + config.db + '?tileset_id=' + tileset.tileset_id
-
-      var report = function(stats, p) {
-        tileset.progress = p.percentage
-        tileset.save()
-      }
-      var opts = {
-        type: 'scanline',
-        retry: 2,
-        timeout: 3600000,
-        progress: report,
-        close: true
-      }
-
-      tilelive.copy(src, dst, opts, function(err) {
-        if (err) {
-          tileset.error = err.message
-          tileset.save()
-        }
-
-        tileset.complete = true
-        tileset.save()
-
-        fs.unlink(req.files[0].path)
-        if (unzipDir) {
-          rimraf(unzipDir, function() {})
-        }
-      })
-    })
-  })
 }
 
 
@@ -103,18 +41,121 @@ module.exports.retrieve = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(escaper.unescape(tileset.toJSON()))
+    res.json(tileset)
+  })
+}
+
+
+module.exports.upload = function(req, res) {
+  var username = req.params.username
+  var filePath = req.files[0].path
+  var originalname = req.files[0].originalname
+  var size = req.files[0].size
+
+  var tileset_id = shortid.generate()
+
+  async.autoInject({
+    protocol: function(callback) {
+      filesniffer.quaff(filePath, true, callback)
+    },
+    filetype: function(callback) {
+      filesniffer.quaff(filePath, false, callback)
+    },
+    tilesetDir: function(protocol, callback) {
+      var tilesetDir = path.join('tilesets', username)
+      mkdirp(tilesetDir, function(err) {
+        callback(err, tilesetDir)
+      })
+    },
+    newPath: function(tilesetDir, callback) {
+      var newPath = path.join(tilesetDir, tileset_id)
+      fs.rename(filePath, newPath, function(err) {
+        callback(err, path.resolve(newPath))
+      })
+    },
+    source: function(protocol, filetype, newPath, callback) {
+      if (filetype !== '.zip') {
+        return callback(null, protocol + '//' + newPath)
+      }
+
+      var unzipDir = newPath + 'unzip'
+      mkdirp(unzipDir, function(err) {
+        if (err) {
+          return callback(err)
+        }
+
+        var shpPath = ''
+        var zip = new AdmZip(newPath)
+        zip.getEntries()
+          .filter(function(entry) {
+            return !entry.isDirectory && ['.shp', '.shx', '.dbf', '.prj', '.index']
+              .indexOf(path.extname(entry.entryName).toLowerCase()) > -1
+          })
+          .forEach(function(entry) {
+            zip.extractEntryTo(entry, unzipDir, false, true)
+            if (path.extname(entry.entryName).toLowerCase() === '.shp') {
+              shpPath = path.join(unzipDir, path.basename(entry.entryName))
+            }
+          })
+
+        return callback(null, protocol + '//' + shpPath)
+      })
+    },
+    tilejson: function(source, callback) {
+      tilelive.info(source, callback)
+    },
+    copy: function(source, callback) {
+      var dst = 'foxgis+' + config.DB + '?tileset_id=' + tileset_id + '&owner=' + username
+      var opts = {
+        type: 'scanline',
+        retry: 2,
+        timeout: 3600000,
+        close: true
+      }
+
+      tilelive.copy(source, dst, opts, callback)
+    },
+    writeDB: function(tilejson, copy, callback) {
+      var newTileset = {
+        tileset_id: tileset_id,
+        owner: username,
+        name: path.basename(originalname, path.extname(originalname)),
+        tilejson: JSON.stringify(tilejson),
+        filename: originalname,
+        filesize: size
+      }
+
+      var keys = ['scope', 'name', 'tags', 'description']
+      keys.forEach(function(key) {
+        if (req.body[key]) {
+          newTileset[key] = req.body[key]
+        }
+      })
+
+      Tileset.findOneAndUpdate({
+        tileset_id: tileset_id,
+        owner: username
+      }, newTileset, { upsert: true, new: true, setDefaultsOnInsert: true }, callback)
+    }
+  }, function(err, results) {
+    fs.unlink(filePath, function() {})
+
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.json(results.writeDB)
   })
 }
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'tags', 'name', 'description', 'vector_layers']
+  var filter = ['scope', 'name', 'tags', 'description']
 
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, _.pick(escaper.escape(req.body), filter), { new: true }, function(err, tileset) {
+  }, _.pick(req.body, filter), { new: true }, function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -123,7 +164,7 @@ module.exports.update = function(req, res) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(escaper.unescape(tileset.toJSON()))
+    res.json(tileset)
   })
 }
 
@@ -132,9 +173,13 @@ module.exports.delete = function(req, res) {
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
-  }, { is_deleted: true }, function(err) {
+  }, { is_deleted: true }, { new: true }, function(err, tileset) {
     if (err) {
       return res.status(500).json({ error: err })
+    }
+
+    if (!tileset) {
+      return res.sendStatus(404)
     }
 
     res.sendStatus(204)
@@ -142,7 +187,64 @@ module.exports.delete = function(req, res) {
 }
 
 
-module.exports.getTile = function(req, res) {
+module.exports.downloadTile = function(req, res) {
+  var z = +req.params.z || 0
+  var x = +req.params.x || 0
+  var y = +req.params.y || 0
+  var tileset_id = req.params.tileset_id
+
+  var tiles = 'tiles_' + tileset_id
+  var Tile = mongoose.model(tiles, TileSchema, tiles)
+
+  Tile.findOne({
+    zoom_level: z,
+    tile_column: x,
+    tile_row: y
+  }, function(err, tile) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!tile) {
+      return res.sendStatus(404)
+    }
+
+    res.set(tiletype.headers(tile.tile_data))
+    return res.send(tile.tile_data)
+  })
+}
+
+
+module.exports.downloadTilejson = function(req, res) {
+  var tileset_id = req.params.tileset_id
+  var username = req.params.username
+  var access_token = req.query.access_token
+
+  Tileset.findOne({
+    tileset_id: tileset_id,
+    owner: username
+  }, function(err, tileset) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!tileset) {
+      return res.sendStatus(404)
+    }
+
+    var tilejson = JSON.parse(tileset.tilejson)
+    var format = tilejson.format || 'png'
+    tilejson.tiles = [config.API_URL + '/tilesets/' + username + '/' + tileset_id +
+    '/{z}/{x}/{y}.' + format + '?access_token=' + access_token]
+
+    res.json(tilejson)
+  })
+}
+
+
+module.exports.downloadRaw = function(req, res) {
+  var filePath = path.join('tilesets', req.params.username, req.params.tileset_id)
+
   Tileset.findOne({
     tileset_id: req.params.tileset_id,
     owner: req.params.username
@@ -155,28 +257,11 @@ module.exports.getTile = function(req, res) {
       return res.sendStatus(404)
     }
 
-    if (req.params.format !== 'vector.pbf') {
-      return res.sendStatus(404)
-    }
-
-    var tiles = 'tiles_' + req.params.tileset_id
-    var Tile = mongoose.model(tiles, TileSchema, tiles)
-
-    Tile.findOne({
-      zoom_level: +req.params.z,
-      tile_column: +req.params.x,
-      tile_row: +req.params.y
-    }, function(err, tile) {
+    var filename = tileset.name + path.extname(tileset.filename)
+    res.download(filePath, filename, function(err) {
       if (err) {
-        return res.status(500).json({ error: err })
+        return res.status(err.status).end()
       }
-
-      if (!tile) {
-        return res.sendStatus(404)
-      }
-
-      res.set(tiletype.headers(tile.tile_data))
-      return res.status(200).send(tile.tile_data)
     })
   })
 }
@@ -184,30 +269,4 @@ module.exports.getTile = function(req, res) {
 
 module.exports.preview = function(req, res) {
   return res.sendStatus(200)
-}
-
-
-module.exports.search = function(req, res) {
-  var limit = +req.query.limit || 0
-  var skip = +req.query.skip || 0
-  var sort = req.query.sort
-
-  var query = {}
-
-  if (req.query.search) {
-    query.$text = { $search: req.query.search }
-  }
-
-  if (!req.user.role || req.user.role !== 'admin') {
-    query.scope = 'public'
-    query.is_deleted = false
-  }
-
-  Tileset.find(query, '-vector_layers', function(err, tilesets) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    res.status(200).json(tilesets)
-  }).limit(limit).skip(skip).sort(sort)
 }

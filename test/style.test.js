@@ -213,55 +213,12 @@ describe('样式管理模块', function() {
     })
   })
 
-  describe('搜索样式', function(){
-    it('搜索成功', function(done){
-      request(app)
-        .get('/api/v1/styles?search=tag1')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.length.should.above(0)
-
-          done()
-        })
-    })
-  })
-
   describe('删除样式', function() {
-    after('检查是否删除', function(done) {
-      request(app)
-        .get('/api/v1/styles/nick')
-        .set('x-access-token', access_token)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
-    })
-
     it('删除成功', function(done) {
       request(app)
         .delete('/api/v1/styles/nick/' + style_id)
         .set('x-access-token', access_token)
-        .expect(204)
-        .end(function(err, res){
-          if(err){
-            return done(err)
-          }
-
-          res.body.should.be.empty
-
-          done()
-        })
+        .expect(204, done)
     })
   })
 })

@@ -106,8 +106,7 @@ module.exports.retrieve = function(req, res) {
 module.exports.upload = function(req, res) {
   var username = req.params.username
   var filePath = req.files[0].path
-  var ext = path.extname(req.files[0].originalname)
-  var name = path.basename(req.files[0].originalname, ext)
+  var originalname = req.files[0].originalname
   var size = req.files[0].size
 
   var file_id = shortid.generate()
@@ -126,7 +125,8 @@ module.exports.upload = function(req, res) {
       })
     },
     dimensions: function(newPath, callback) {
-      if (['.png', '.jpg', '.jpeg', '.gif', '.tiff', '.tif'].indexOf(ext.toLowerCase()) < 0) {
+      if (['.png', '.jpg', '.jpeg', '.gif', '.tiff', '.tif']
+        .indexOf(path.extname(originalname).toLowerCase()) < 0) {
         return callback()
       }
 
@@ -145,9 +145,9 @@ module.exports.upload = function(req, res) {
       var newFile = new File({
         file_id: file_id,
         owner: username,
-        name: name,
-        format: ext.substring(1).toLowerCase(),
-        size: size
+        name: path.basename(originalname, path.extname(originalname)),
+        filename: originalname,
+        filesize: size
       })
 
       if (dimensions) {
@@ -164,7 +164,6 @@ module.exports.upload = function(req, res) {
       newFile.save(function(err, file) {
         callback(err, file)
       })
-
     }
   }, function(err, results) {
     fs.unlink(filePath, function() {})
@@ -231,7 +230,7 @@ module.exports.downloadRaw = function(req, res) {
       return res.sendStatus(404)
     }
 
-    var filename = file.format ? file.name + '.' + file.format : file.name
+    var filename = file.name + path.extname(file.filename)
     res.download(path.resolve(filePath), filename, function(err) {
       if (err) {
         return res.status(err.status).end()

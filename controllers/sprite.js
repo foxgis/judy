@@ -45,7 +45,8 @@ module.exports.retrieve = function(req, res) {
 module.exports.upload = function(req, res) {
   var username = req.params.username
   var filePath = req.files[0].path
-  var name = path.basename(req.files[0].originalname, path.extname(req.files[0].originalname))
+  var originalname = req.files[0].originalname
+  var size = req.files[0].size
 
   var sprite_id = shortid.generate()
   var spriteDir = path.join('sprites', username, sprite_id)
@@ -79,7 +80,9 @@ module.exports.upload = function(req, res) {
       var newSprite = new Sprite({
         sprite_id: sprite_id,
         owner: username,
-        name: name
+        name: path.basename(originalname, path.extname(originalname)),
+        filename: originalname,
+        filesize: size
       })
 
       var keys = ['scope', 'name']
@@ -109,12 +112,13 @@ module.exports.uploadIcon = function(req, res) {
   var spriteDir = path.join('sprites', req.params.username, req.params.sprite_id)
   var filePath = req.files[0].path
   var originalname = req.files[0].originalname
+  var icon = req.params.icon
 
-  if (path.extname(originalname) !== '.svg') {
+  if (path.extname(originalname).toLowerCase() !== '.svg') {
     return res.status(400).json({ error: '仅支持svg格式的图标' })
   }
 
-  fs.rename(filePath, path.join(spriteDir, originalname), function(err) {
+  fs.rename(filePath, path.join(spriteDir, icon + '.svg'), function(err) {
     if (err && err.code === 'ENOENT') {
       return res.sendStatus(404)
     }
