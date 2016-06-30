@@ -39,7 +39,6 @@ router.post('/tilesets/:username', auth, upload.any(), tilesets.upload)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
 router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, tilesets.downloadTile)
-router.get('/tilesets/:username/:tileset_id/tilejson', auth, tilesets.downloadTilejson)
 router.get('/tilesets/:username/:tileset_id/raw', auth, tilesets.downloadRaw)
 router.get('/tilesets/:username/:tileset_id/thumbnail', auth, tilesets.preview)
 

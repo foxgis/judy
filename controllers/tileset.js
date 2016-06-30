@@ -18,7 +18,8 @@ module.exports.list = function(req, res) {
   Tileset.find({
     owner: req.params.username,
     is_deleted: false
-  }, '-_id -__v -is_deleted -tilejson', function(err, tilesets) {
+  }, 'tileset_id owner scope tags filename filesize name description \
+  createdAt updatedAt', function(err, tilesets) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -74,7 +75,7 @@ module.exports.upload = function(req, res) {
       })
     },
     source: function(protocol, filetype, newPath, callback) {
-      if (filetype !== '.zip') {
+      if (filetype !== 'zip') {
         return callback(null, protocol + '//' + newPath)
       }
 
@@ -116,13 +117,14 @@ module.exports.upload = function(req, res) {
       var newTileset = {
         tileset_id: tileset_id,
         owner: username,
+        scope: 'private',
         is_deleted: false,
-        name: path.basename(originalname, path.extname(originalname)),
         filename: originalname,
-        filesize: size
+        filesize: size,
+        name: path.basename(originalname, path.extname(originalname))
       }
 
-      var keys = ['scope', 'name', 'tags', 'description']
+      var keys = ['scope', 'tags', 'name', 'description', 'vector_layers']
       keys.forEach(function(key) {
         if (req.body[key]) {
           newTileset[key] = req.body[key]
@@ -147,7 +149,7 @@ module.exports.upload = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'name', 'tags', 'description']
+  var filter = ['scope', 'tags', 'name', 'description', 'vector_layers']
 
   Tileset.findOneAndUpdate({
     tileset_id: req.params.tileset_id,
@@ -208,35 +210,6 @@ module.exports.downloadTile = function(req, res) {
 
     res.set(tiletype.headers(tile.tile_data))
     return res.send(tile.tile_data)
-  })
-}
-
-
-module.exports.downloadTilejson = function(req, res) {
-  var tileset_id = req.params.tileset_id
-  var username = req.params.username
-  var access_token = req.query.access_token || req.cookies.access_token ||
-    req.headers['x-access-token']
-
-  Tileset.findOne({
-    tileset_id: tileset_id,
-    owner: username
-  }, function(err, tileset) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    if (!tileset) {
-      return res.sendStatus(404)
-    }
-
-    var tilejson = JSON.parse(tileset.tilejson)
-    var format = tilejson.format || 'png'
-    tilejson.tiles = [config.API_URL + '/tilesets/' + username + '/' + tileset_id +
-      '/{z}/{x}/{y}.' + format + '?access_token=' + access_token
-    ]
-
-    res.json(tilejson)
   })
 }
 

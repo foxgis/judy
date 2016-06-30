@@ -170,7 +170,6 @@ var authTileset = function(req, res, next) {
 
     case 'GET /tilesets/:username/:tileset_id':
     case 'GET /tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)':
-    case 'GET /tilesets/:username/:tileset_id/tilejson':
     case 'GET /tilesets/:username/:tileset_id/raw':
     case 'GET /tilesets/:username/:tileset_id/thumbnail':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
