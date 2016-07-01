@@ -48,12 +48,12 @@ module.exports.create = function(req, res) {
   var newStyle = new Style(style)
   newStyle.owner = req.params.username
 
-  newStyle.save(function(err, style2) {
+  newStyle.save(function(err, style) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    res.json(escaper.unescape(style2.toJSON()))
+    res.json(escaper.unescape(style.toJSON()))
   })
 }
 

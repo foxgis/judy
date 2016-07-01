@@ -25,21 +25,19 @@ module.exports.create = function(req, res) {
       password: req.body.password
     })
 
-    var keys = ['scope', 'name', 'location', 'organization', 'position',
-      'telephone', 'mobile', 'email', 'signature'
-    ]
+    var keys = ['scope', 'name', 'location', 'organization', 'position', 'telephone', 'mobile', 'email']
     keys.forEach(function(key) {
       if (req.body[key]) {
         newUser[key] = req.body[key]
       }
     })
 
-    newUser.save(function(err) {
+    newUser.save(function(err, user) {
       if (err) {
         return res.status(500).json({ error: err })
       }
 
-      res.json(newUser.toJSON({ virtuals: true }))
+      res.json(user.toJSON({ virtuals: true }))
     })
   })
 }

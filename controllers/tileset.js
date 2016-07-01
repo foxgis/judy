@@ -121,7 +121,8 @@ module.exports.upload = function(req, res) {
         is_deleted: false,
         filename: originalname,
         filesize: size,
-        name: path.basename(originalname, path.extname(originalname))
+        name: path.basename(originalname, path.extname(originalname)),
+        tiles: [config.API_URL + '/tilesets/' + username + '/' + tileset_id + '/{z}/{x}/{y}.vector.pbf']
       }
 
       var keys = ['scope', 'tags', 'name', 'description', 'vector_layers']

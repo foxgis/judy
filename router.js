@@ -34,11 +34,11 @@ router.get('/styles/:username/:style_id/thumbnail', auth, styles.preview)
 
 // 瓦片集
 router.get('/tilesets/:username', auth, tilesets.list)
-router.get('/tilesets/:username/:tileset_id', auth, tilesets.retrieve)
+router.get('/tilesets/:username/:tileset_id', tilesets.retrieve)
 router.post('/tilesets/:username', auth, upload.any(), tilesets.upload)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
-router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, tilesets.downloadTile)
+router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', tilesets.downloadTile)
 router.get('/tilesets/:username/:tileset_id/raw', auth, tilesets.downloadRaw)
 router.get('/tilesets/:username/:tileset_id/thumbnail', auth, tilesets.preview)
 
@@ -48,7 +48,7 @@ router.get('/fonts/:username/:fontname', auth, fonts.retrieve)
 router.post('/fonts/:username', auth, upload.any(), fonts.upload)
 router.patch('/fonts/:username/:fontname', auth, fonts.update)
 router.delete('/fonts/:username/:fontname', auth, fonts.delete)
-router.get('/fonts/:username/:fontname/:range.pbf', auth, fonts.download)
+router.get('/fonts/:username/:fontname/:range.pbf', fonts.download)
 router.get('/fonts/:username/:fontname/raw', auth, fonts.downloadRaw)
 router.get('/fonts/:username/:fontname/thumbnail', auth, fonts.preview)
 
@@ -60,7 +60,7 @@ router.put('/sprites/:username/:sprite_id/:icon', auth, upload.any(), sprites.up
 router.patch('/sprites/:username/:sprite_id', auth, sprites.update)
 router.delete('/sprites/:username/:sprite_id', auth, sprites.delete)
 router.delete('/sprites/:username/:sprite_id/:icon', auth, sprites.deleteIcon)
-router.get('/sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?', auth, sprites.download)
+router.get('/sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?', sprites.download)
 router.get('/sprites/:username/:sprite_id/raw', auth, sprites.downloadRaw)
 router.get('/sprites/:username/:sprite_id/:icon', auth, sprites.downloadIcon)
 
