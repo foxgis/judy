@@ -43,6 +43,7 @@
     "spritezero": "^3.5.0",
     "tilejson": "^1.0.1",
     "tilelive": "^5.12.2",
+    "tilelive-bridge": "^2.3.1",
     "tilelive-foxgis": "^0.3.0",
     "tilelive-modules": "^0.3.0",
     "tilelive-omnivore": "^3.0.0",
