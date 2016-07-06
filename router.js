@@ -19,9 +19,11 @@ var upload = multer({
 
 // 用户
 router.post('/users', users.create)
+router.post('/users/:username', users.login)
 router.get('/users/:username', auth, users.retrieve)
 router.patch('/users/:username', auth, users.update)
-router.post('/users/:username', users.login)
+router.put('/users/:username/avatar', auth, upload.any(), users.uploadAvatar)
+router.get('/users/:username/avatar', auth, users.downloadAvatar)
 
 // 样式
 router.get('/styles/:username', auth, styles.list)

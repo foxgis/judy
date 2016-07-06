@@ -38,6 +38,7 @@
     "morgan": "^1.7.0",
     "multer": "^1.1.0",
     "rd": "0.0.2",
+    "shapefile-fairy": "^0.3.4",
     "sharp": "^0.15.0",
     "shortid": "^2.2.6",
     "spritezero": "^3.5.0",
@@ -47,7 +48,10 @@
     "tilelive-foxgis": "^0.3.0",
     "tilelive-modules": "^0.3.0",
     "tilelive-omnivore": "^3.0.0",
-    "tiletype": "^0.3.0"
+    "tilelive-vector": "^3.9.3",
+    "tilelive-xray": "^0.2.0",
+    "tiletype": "^0.3.0",
+    "zipfile": "^0.5.9"
   },
   "devDependencies": {
     "chai": "^3.5.0",

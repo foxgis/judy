@@ -3,6 +3,7 @@ var fs = require('fs')
 var path = require('path')
 var async = require('async')
 var AdmZip = require('adm-zip')
+var zipfile = require('zipfile')
 var rd = require('rd')
 var spritezero = require('spritezero')
 var mkdirp = require('mkdirp')
@@ -49,34 +50,27 @@ module.exports.upload = function(req, res) {
   var size = req.files[0].size
 
   var sprite_id = shortid.generate()
-  var spriteDir = path.join('sprites', username, sprite_id)
 
-  async.series([
-    // mkdir
-    function(callback) {
-      mkdirp(spriteDir, callback)
+  async.autoInject({
+    spriteDir: function(callback) {
+      var spriteDir = path.join('sprites', username, sprite_id)
+      mkdirp(spriteDir, function(err) {
+        callback(err, spriteDir)
+      })
     },
-
-    // unzip
-    function(callback) {
+    unzip: function(spriteDir, callback) {
       try {
-        var zip = new AdmZip(filePath)
-        zip.getEntries()
-          .filter(function(entry) {
-            return !entry.isDirectory && path.extname(entry.entryName) === '.svg'
-          })
-          .forEach(function(entry) {
-            zip.extractEntryTo(entry, spriteDir, false, true)
-          })
+        var zip = new zipfile.ZipFile(filePath)
+        async.each(zip.names, function(name, next) {
+          if (path.extname(name) !== '.svg') return next()
+          zip.copyFile(name, path.join(spriteDir, path.basename(name)), next)
+        }, callback)
 
-        callback()
       } catch (err) {
-        callback(err)
+        return callback(err)
       }
     },
-
-    // write to DB
-    function(callback) {
+    writeDB: function(unzip, callback) {
       var newSprite = new Sprite({
         sprite_id: sprite_id,
         owner: username,
@@ -96,14 +90,14 @@ module.exports.upload = function(req, res) {
         callback(err, sprite)
       })
     }
-  ], function(err, results) {
+  }, function(err, results) {
     fs.unlink(filePath)
 
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    res.json(results[2])
+    res.json(results.writeDB)
   })
 }
 

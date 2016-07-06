@@ -1,4 +1,7 @@
 var _ = require('lodash')
+var fs = require('fs')
+var async = require('async')
+var gm = require('gm')
 var User = require('../models/user')
 
 
@@ -25,7 +28,9 @@ module.exports.create = function(req, res) {
       password: req.body.password
     })
 
-    var keys = ['scope', 'name', 'location', 'organization', 'position', 'telephone', 'mobile', 'email']
+    var keys = ['scope', 'name', 'location', 'organization', 'position',
+      'telephone', 'mobile', 'email', 'signature'
+    ]
     keys.forEach(function(key) {
       if (req.body[key]) {
         newUser[key] = req.body[key]
@@ -39,40 +44,6 @@ module.exports.create = function(req, res) {
 
       res.json(user.toJSON({ virtuals: true }))
     })
-  })
-}
-
-
-module.exports.retrieve = function(req, res) {
-  User.findOne({ username: req.params.username }, function(err, user) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    if (!user) {
-      return res.status(404).json({ error: '用户不存在' })
-    }
-
-    res.json(user)
-  })
-}
-
-
-module.exports.update = function(req, res) {
-  var filter = ['scope', 'name', 'location', 'organization', 'position', 'telephone', 'mobile', 'email']
-
-  User.findOneAndUpdate({
-    username: req.params.username
-  }, _.pick(req.body, filter), { new: true }, function(err, user) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    if (!user) {
-      return res.status(404).json({ error: '用户不存在' })
-    }
-
-    res.json(user)
   })
 }
 
@@ -92,5 +63,85 @@ module.exports.login = function(req, res) {
     }
 
     res.json(user.toJSON({ virtuals: true }))
+  })
+}
+
+
+module.exports.retrieve = function(req, res) {
+  User.findOne({ username: req.params.username }, function(err, user) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!user) {
+      return res.sendStatus(404)
+    }
+
+    res.json(user)
+  })
+}
+
+
+module.exports.update = function(req, res) {
+  var filter = ['scope', 'name', 'location', 'organization', 'position',
+    'telephone', 'mobile', 'email', 'signature'
+  ]
+
+  User.findOneAndUpdate({
+    username: req.params.username
+  }, _.pick(req.body, filter), { new: true }, function(err, user) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!user) {
+      return res.sendStatus(404)
+    }
+
+    res.json(user)
+  })
+}
+
+
+module.exports.uploadAvatar = function(req, res) {
+  var filePath = req.files[0].path
+  var username = req.params.username
+
+  async.autoInject({
+    avatar: function(callback) {
+      gm(filePath).resize(100, 100, '!').toBuffer('png', callback)
+    },
+    writeDB: function(avatar, callback) {
+      User.findOneAndUpdate({ username: username }, { avatar: avatar }, { new: true }, callback)
+    }
+  }, function(err, results) {
+    fs.unlink(filePath, function() {})
+
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!results.writeDB) {
+      return res.sendStatus(404)
+    }
+
+    res.type('png')
+    res.send(results.writeDB.avatar)
+  })
+}
+
+
+module.exports.downloadAvatar = function(req, res) {
+  User.findOne({ username: req.params.username }, function(err, user) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!user || !user.avatar) {
+      return res.sendStatus(404)
+    }
+
+    res.type('png')
+    res.send(user.avatar)
   })
 }

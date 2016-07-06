@@ -7,7 +7,7 @@ var shortid = require('shortid')
 var filesniffer = require('mapbox-file-sniff')
 var tilelive = require('tilelive')
 var tiletype = require('tiletype')
-var AdmZip = require('adm-zip')
+var shpFairy = require('shapefile-fairy')
 var mkdirp = require('mkdirp')
 var config = require('../config')
 var TileSchema = require('../models/tile')
@@ -52,6 +52,7 @@ module.exports.upload = function(req, res) {
   var filePath = req.files[0].path
   var originalname = req.files[0].originalname
   var size = req.files[0].size
+  var apiUrl = req.protocol + '://' + req.headers.host + req.baseUrl
 
   var tileset_id = shortid.generate()
 
@@ -79,27 +80,13 @@ module.exports.upload = function(req, res) {
         return callback(null, protocol + '//' + newPath)
       }
 
-      var unzipDir = newPath + 'unzip'
-      mkdirp(unzipDir, function(err) {
-        if (err) {
-          return callback(err)
-        }
-
-        var shpPath = ''
-        var zip = new AdmZip(newPath)
-        zip.getEntries()
-          .filter(function(entry) {
-            return !entry.isDirectory && ['.shp', '.shx', '.dbf', '.prj', '.index']
-              .indexOf(path.extname(entry.entryName).toLowerCase()) > -1
-          })
-          .forEach(function(entry) {
-            zip.extractEntryTo(entry, unzipDir, false, true)
-            if (path.extname(entry.entryName).toLowerCase() === '.shp') {
-              shpPath = path.join(unzipDir, path.basename(entry.entryName))
-            }
-          })
-
-        return callback(null, protocol + '//' + shpPath)
+      shpFairy(newPath, function(err, shpPath) {
+        return callback(err, protocol + '//' + shpPath)
+      })
+    },
+    info: function(source, callback) {
+      tilelive.info(source, function(err, info) {
+        return callback(err, info)
       })
     },
     copy: function(source, callback) {
@@ -113,7 +100,7 @@ module.exports.upload = function(req, res) {
 
       tilelive.copy(source, dst, opts, callback)
     },
-    writeDB: function(copy, callback) {
+    writeDB: function(info, copy, callback) {
       var newTileset = {
         tileset_id: tileset_id,
         owner: username,
@@ -122,7 +109,7 @@ module.exports.upload = function(req, res) {
         filename: originalname,
         filesize: size,
         name: path.basename(originalname, path.extname(originalname)),
-        tiles: [config.API_URL + '/tilesets/' + username + '/' + tileset_id + '/{z}/{x}/{y}.vector.pbf']
+        tiles: [apiUrl + '/tilesets/' + username + '/' + tileset_id + '/{z}/{x}/{y}.' + info.format]
       }
 
       var keys = ['scope', 'tags', 'name', 'description', 'vector_layers']

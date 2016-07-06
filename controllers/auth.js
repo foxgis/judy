@@ -76,6 +76,7 @@ var authResource = function(req, res, next) {
 var authUser = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /users/:username':
+    case 'GET /users/:username/avatar':
       if (req.user.username === req.params.username || req.user.role === 'admin') {
         return next()
       } else {
@@ -98,6 +99,7 @@ var authUser = function(req, res, next) {
       }
 
     case 'PATCH /users/:username':
+    case 'PUT /users/:username/avatar':
       if (req.user.username === req.params.username) {
         return next()
       } else {
