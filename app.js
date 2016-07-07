@@ -16,6 +16,8 @@ require('./db')
 
 var app = express()
 
+app.set('json spaces', 2)
+
 app.use(compression())
 app.use(helmet())
 app.use(cors())
