@@ -31,7 +31,7 @@ router.get('/styles/:username/:style_id', auth, styles.retrieve)
 router.post('/styles/:username', auth, styles.create)
 router.patch('/styles/:username/:style_id', auth, styles.update)
 router.delete('/styles/:username/:style_id', auth, styles.delete)
-router.get('/styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', auth, styles.downloadTile)
+router.get('/styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)', styles.downloadTile)
 router.get('/styles/:username/:style_id/thumbnail', auth, styles.preview)
 
 // 瓦片集
@@ -40,7 +40,7 @@ router.get('/tilesets/:username/:tileset_id', tilesets.retrieve)
 router.post('/tilesets/:username', auth, upload.any(), tilesets.upload)
 router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
-router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[2]x)?\.:format([\\w\\.]+)', tilesets.downloadTile)
+router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)', tilesets.downloadTile)
 router.get('/tilesets/:username/:tileset_id/raw', auth, tilesets.downloadRaw)
 router.get('/tilesets/:username/:tileset_id/thumbnail', auth, tilesets.preview)
 

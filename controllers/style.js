@@ -1,7 +1,17 @@
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
 var escaper = require('mongo-key-escaper')
+var abaculus = require('abaculus')
+var gl2xml = require('mapbox-gl-json-to-mapnik-xml')
+var async = require('async')
+var tilelive = require('tilelive')
+// var mbgl = require('mapbox-gl-native')
+// var sharp = require('sharp')
+// var request = require('request')
+// var SphericalMercator = require('sphericalmercator')
+// var mime = require('mime')
 var Style = require('../models/style')
+
 
 
 module.exports.list = function(req, res) {
@@ -97,10 +107,177 @@ module.exports.delete = function(req, res) {
 
 
 module.exports.downloadTile = function(req, res) {
-  return res.sendStatus(200)
+  var style_id = req.params.style_id
+  var username = req.params.username
+  var z = +req.params.z || 0
+  var x = +req.params.x || 0
+  var y = +req.params.y || 0
+  var scale = +(req.params.scale || '@1x').slice(1, 2)
+  var format = req.params.format || 'png'
+
+  async.autoInject({
+    style: function(callback) {
+      Style.findOne({ style_id: style_id, owner: username }, callback)
+    },
+    getTile: function(style, callback) {
+      var opts = {
+        style: style,
+        scale: scale,
+        format: format
+      }
+
+      getTileMapnik(z, x, y, opts, callback)
+    }
+  }, function(err, results) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.set(results.getTile[1])
+    res.send(results.getTile[0])
+  })
 }
 
 
 module.exports.preview = function(req, res) {
-  return res.sendStatus(200)
+  var style_id = req.params.style_id
+  var username = req.params.username
+
+  var params = {
+    zoom: +req.query.zoom || 1,
+    scale: +req.query.scale || 1,
+    bbox: JSON.parse(req.query.bbox || null),
+    center: JSON.parse(req.query.center || null),
+    format: req.query.format || 'png',
+    quality: +req.query.quality || null,
+    limit: 19008,
+    tileSize: 256
+  }
+
+  async.autoInject({
+    style: function(callback) {
+      Style.findOne({ style_id: style_id, owner: username }, callback)
+    },
+    getImage: function(style, callback) {
+      var opts = {
+        style: style,
+        scale: params.scale,
+        format: params.format
+      }
+
+      params.getTile = function(z, x, y, callback2) {
+        return getTileMapnik(z, x, y, opts, callback2)
+      }
+
+      abaculus(params, callback)
+    }
+  }, function(err, results) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.set(results.getImage[1])
+    res.send(results.getImage[0])
+  })
 }
+
+
+function getTileMapnik(z, x, y, opts, callback) {
+  if (!opts.style) {
+    return callback('Mising style')
+  }
+
+  opts.scale = +opts.scale || 1
+  opts.format = opts.format || 'png'
+
+  async.autoInject({
+    xml: function(callback) {
+      gl2xml(opts.style, callback)
+    },
+    source: function(xml, callback) {
+      var uri = {
+        protocal: 'vector:',
+        xml: xml,
+        scale: opts.scale,
+        format: opts.format
+      }
+
+      tilelive.load(uri, callback)
+    },
+    getTile: function(source, callback) {
+      source.getTile(z, x, y, callback)
+    }
+  }, function(err, results) {
+    return callback(err, results.getTile[0], results.getTile[1])
+  })
+}
+
+
+// mbgl.on('message', function(msg) {
+//   console.log(msg)
+// })
+
+// function getTileMapboxGL(z, x, y, opts, callback) {
+//   if (!opts.style) {
+//     return callback(new Error('Mising style'))
+//   }
+
+//   opts.scale = +opts.scale || 1
+//   opts.format = opts.format || 'png'
+
+//   var mapOptions = {
+//     request: function(req, callback) {
+//       request({
+//         url: req.url,
+//         encoding: null,
+//         gzip: true
+//       }, function(err, res, body) {
+//         if (err) return callback(err)
+
+//         var response = {}
+
+//         if (res.headers.modified) { response.modified = new Date(res.headers.modified) }
+//         if (res.headers.expires) { response.expires = new Date(res.headers.expires) }
+//         if (res.headers.etag) { response.etag = res.headers.etag }
+
+//         response.data = body
+
+//         return callback(null, response)
+//       })
+//     },
+//     ratio: opts.scale
+//   }
+
+//   var sm = new SphericalMercator({ size: 512 })
+//   var center = sm.ll([x * 512 + 256, y * 512 + 256], z)
+
+//   var renderOptions = {
+//     zoom: z,
+//     width: 512,
+//     height: 512,
+//     center: center,
+//     bearing: opts.bearing || 0,
+//     pitch: opts.pitch || 0
+//   }
+
+//   var map = new mbgl.Map(mapOptions)
+//   map.on
+//   map.load(opts.style)
+//   map.render(renderOptions, function(err, buffer) {
+//     if (err) return callback(err)
+
+//     map.release()
+
+//     var image = sharp(buffer, {
+//       raw: {
+//         width: 512 * opts.scale,
+//         height: 512 * opts.scale,
+//         channels: 4
+//       }
+//     })
+
+//     image.toFormat(opts.format).toBuffer(function(err, buffer, info) {
+//       return callback(err, buffer, { 'Content-Type': mime.lookup(info.format) })
+//     })
+//   })
+// }

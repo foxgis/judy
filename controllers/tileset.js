@@ -9,6 +9,8 @@ var tilelive = require('tilelive')
 var tiletype = require('tiletype')
 var shpFairy = require('shapefile-fairy')
 var mkdirp = require('mkdirp')
+var abaculus = require('abaculus')
+var gm = require('gm')
 var config = require('../config')
 var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
@@ -175,29 +177,48 @@ module.exports.delete = function(req, res) {
 
 
 module.exports.downloadTile = function(req, res) {
+  var tileset_id = req.params.tileset_id
   var z = +req.params.z || 0
   var x = +req.params.x || 0
   var y = +req.params.y || 0
-  var tileset_id = req.params.tileset_id
+  var scale = +(req.params.scale || '@1x').slice(1, 2)
+  var format = req.params.format || 'png'
 
-  var tiles = 'tiles_' + tileset_id
-  var Tile = mongoose.model(tiles, TileSchema, tiles)
+  async.autoInject({
+    tile: function(callback) {
+      var tiles = 'tiles_' + tileset_id
+      var Tile = mongoose.model(tiles, TileSchema, tiles)
 
-  Tile.findOne({
-    zoom_level: z,
-    tile_column: x,
-    tile_row: y
-  }, function(err, tile) {
+      Tile.findOne({ zoom_level: z, tile_column: x, tile_row: y }, callback)
+    },
+    image: function(tile, callback) {
+      var type = tiletype(tile)
+      switch (type) {
+        case 'png':
+        case 'jpg':
+        case 'gif':
+        case 'webp':
+          return gm(tile).resize(256 * scale, 256 * scale).toBuffer(format, callback)
+
+        case 'pbf':
+          return callback(null, tile)
+
+        default:
+          return callback(null, tile)
+      }
+    }
+  }, function(err, results) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    if (!tile) {
+    if (!results.image) {
       return res.sendStatus(404)
     }
 
-    res.set(tiletype.headers(tile.tile_data))
-    return res.send(tile.tile_data)
+    res.set({'Expires': new Date(Date.now() + 604800000).toUTCString()})
+    res.set(tiletype.headers(results.image))
+    res.send(results.image)
   })
 }
 
@@ -228,5 +249,28 @@ module.exports.downloadRaw = function(req, res) {
 
 
 module.exports.preview = function(req, res) {
-  return res.sendStatus(200)
+  var params = {
+    zoom: +req.query.zoom || 1,
+    scale: +req.query.scale || 1,
+    bbox: JSON.parse(req.query.bbox || null),
+    center: JSON.parse(req.query.center || null),
+    format: req.query.format || 'png',
+    quality: +req.query.quality || null,
+    limit: 19008,
+    tileSize: 256
+  }
+
+  params.getTile = function(z, x, y, callback) {
+    return callback
+  }
+
+
+  abaculus(params, function(err, image, headers) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.set(headers)
+    res.send(image)
+  })
 }

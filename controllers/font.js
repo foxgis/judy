@@ -168,6 +168,7 @@ module.exports.download = function(req, res) {
       return res.send(pbf)
     }
 
+    res.set({'Expires': new Date(Date.now() + 604800000).toUTCString()})
     return res.sendStatus(404)
   })
 }
