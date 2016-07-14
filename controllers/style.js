@@ -213,16 +213,12 @@ function getTileMapnik(z, x, y, opts, callback) {
 }
 
 
-// mbgl.on('message', function(msg) {
-//   console.log(msg)
-// })
-
 // function getTileMapboxGL(z, x, y, opts, callback) {
 //   if (!opts.style) {
 //     return callback(new Error('Mising style'))
 //   }
 
-//   opts.scale = +opts.scale || 1
+//   opts.scale = (+opts.scale || 1) / 2
 //   opts.format = opts.format || 'png'
 
 //   var mapOptions = {
@@ -234,15 +230,7 @@ function getTileMapnik(z, x, y, opts, callback) {
 //       }, function(err, res, body) {
 //         if (err) return callback(err)
 
-//         var response = {}
-
-//         if (res.headers.modified) { response.modified = new Date(res.headers.modified) }
-//         if (res.headers.expires) { response.expires = new Date(res.headers.expires) }
-//         if (res.headers.etag) { response.etag = res.headers.etag }
-
-//         response.data = body
-
-//         return callback(null, response)
+//         return callback(null, {data: body})
 //       })
 //     },
 //     ratio: opts.scale
@@ -261,7 +249,6 @@ function getTileMapnik(z, x, y, opts, callback) {
 //   }
 
 //   var map = new mbgl.Map(mapOptions)
-//   map.on
 //   map.load(opts.style)
 //   map.render(renderOptions, function(err, buffer) {
 //     if (err) return callback(err)
@@ -270,8 +257,8 @@ function getTileMapnik(z, x, y, opts, callback) {
 
 //     var image = sharp(buffer, {
 //       raw: {
-//         width: 512 * opts.scale,
-//         height: 512 * opts.scale,
+//         width: renderOptions.width * mapOptions.ratio,
+//         height: renderOptions.width * mapOptions.ratio,
 //         channels: 4
 //       }
 //     })

@@ -162,14 +162,14 @@ module.exports.download = function(req, res) {
     req.params.fontname, req.params.range + '.pbf')
 
   fs.readFile(filePath, function(err, pbf) {
-    if (!err) {
-      res.set('Content-Encoding', 'gzip')
-      res.set('Content-Type', 'application/x-protobuf')
-      return res.send(pbf)
+    if (err) {
+      return res.sendStatus(404)
     }
 
-    res.set({'Expires': new Date(Date.now() + 604800000).toUTCString()})
-    return res.sendStatus(404)
+    res.set('Content-Encoding', 'gzip')
+    res.set('Content-Type', 'application/x-protobuf')
+    res.set('Expires', new Date(Date.now() + 604800000).toUTCString())
+    return res.send(pbf)
   })
 }
 

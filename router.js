@@ -42,7 +42,6 @@ router.patch('/tilesets/:username/:tileset_id', auth, tilesets.update)
 router.delete('/tilesets/:username/:tileset_id', auth, tilesets.delete)
 router.get('/tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)', tilesets.downloadTile)
 router.get('/tilesets/:username/:tileset_id/raw', auth, tilesets.downloadRaw)
-router.get('/tilesets/:username/:tileset_id/thumbnail', auth, tilesets.preview)
 
 // 字体
 router.get('/fonts/:username', auth, fonts.list)
