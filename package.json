@@ -52,7 +52,7 @@
     "tilelive": "^5.12.2",
     "tilelive-bridge": "^2.3.1",
     "tilelive-foxgis": "^0.3.0",
-    "tilelive-http": "^0.11.0",
+    "tilelive-http": "0.11.1",
     "tilelive-modules": "^0.3.0",
     "tilelive-omnivore": "^3.0.0",
     "tilelive-vector": "^3.9.3",

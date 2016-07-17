@@ -20,20 +20,15 @@ describe('权限模块', function() {
       .send({ username: 'nick', password: '123456' })
       .expect(200)
       .end(function(err, res) {
-        if (err) {
-          return done(err)
-        }
+        if (err) return done(err)
 
-        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }
-          , { new: true }, function(err) {
-            if (err) {
-              done()
-            }
-          })
+        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }, function(err) {
+          if (err) return done(err)
 
-        nick_access_token = res.body.access_token
+          nick_access_token = res.body.access_token
 
-        done()
+          done()
+        })
       })
   })
 
@@ -43,20 +38,14 @@ describe('权限模块', function() {
       .send({ username: 'judy', password: '123456' })
       .expect(200)
       .end(function(err, res) {
-        if (err) {
-          return done(err)
-        }
+        if (err) return done(err)
 
-        User.findOneAndUpdate({ username: 'judy' }, { is_verified: true }
-          , { new: true }, function(err) {
-            if (err) {
-              done()
-            }
-          })
+        User.findOneAndUpdate({ username: 'judy' }, { is_verified: true }, function(err) {
+          if (err) return done(err)
+          judy_access_token = res.body.access_token
 
-        judy_access_token = res.body.access_token
-
-        done()
+          done()
+        })
       })
   })
 
