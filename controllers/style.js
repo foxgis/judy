@@ -5,11 +5,11 @@ var abaculus = require('abaculus')
 var gl2xml = require('mapbox-gl-json-to-mapnik-xml')
 var async = require('async')
 var tilelive = require('tilelive')
-// var mbgl = require('mapbox-gl-native')
-// var sharp = require('sharp')
-// var request = require('request')
-// var SphericalMercator = require('sphericalmercator')
-// var mime = require('mime')
+  // var mbgl = require('mapbox-gl-native')
+  // var sharp = require('sharp')
+  // var request = require('request')
+  // var SphericalMercator = require('sphericalmercator')
+  // var mime = require('mime')
 var Style = require('../models/style')
 
 
@@ -144,9 +144,9 @@ module.exports.preview = function(req, res) {
   var username = req.params.username
 
   var params = {
-    zoom: +req.query.zoom || 1,
+    zoom: +req.query.zoom || 0,
     scale: +req.query.scale || 1,
-    bbox: JSON.parse(req.query.bbox || null),
+    bbox: JSON.parse(req.query.bbox || null) || [-180, -85.0511, 180, 85.0511],
     center: JSON.parse(req.query.center || null),
     format: req.query.format || 'png',
     quality: +req.query.quality || null,
@@ -173,7 +173,7 @@ module.exports.preview = function(req, res) {
     }
   }, function(err, results) {
     if (err) {
-      return res.status(500).json({ error: err })
+      return res.status(500).json({ error: err.message || err })
     }
 
     res.set(results.getImage[1])
@@ -196,7 +196,7 @@ function getTileMapnik(z, x, y, opts, callback) {
     },
     source: function(xml, callback) {
       var uri = {
-        protocal: 'vector:',
+        protocol: 'vector:',
         xml: xml,
         scale: opts.scale,
         format: opts.format
@@ -208,6 +208,10 @@ function getTileMapnik(z, x, y, opts, callback) {
       source.getTile(z, x, y, callback)
     }
   }, function(err, results) {
+    if (err) return callback(err)
+
+    if (!results.getTile) return callback()
+
     return callback(err, results.getTile[0], results.getTile[1])
   })
 }
