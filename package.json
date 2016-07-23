@@ -12,7 +12,7 @@
     "tilelive-copy": "./node_modules/.bin/tilelive-copy"
   },
   "dependencies": {
-    "abaculus": "^2.0.0",
+    "abaculus": "github:jingsam/abaculus",
     "adm-zip": "0.4.4",
     "async": "^2.0.0-rc.5",
     "body-parser": "^1.15.1",
@@ -30,7 +30,7 @@
     "jsonwebtoken": "^7.0.0",
     "lodash": "^4.12.0",
     "mapbox-file-sniff": "^0.5.0",
-    "mapbox-gl-json-to-mapnik-xml": "^0.1.0",
+    "mapbox-gl-json-to-mapnik-xml": "^0.2.0",
     "mapbox-gl-native": "^3.1.2",
     "mapbox-gl-style-spec": "^8.7.0",
     "mbtiles": "^0.9.0",
