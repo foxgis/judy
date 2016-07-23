@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "lint": "eslint *.js models/** controllers/** test/*.js",
-    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha"
+    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha",
+    "testbytape": "tape test/*.tape_test.js"
   },
   "bin": {
     "tilelive-copy": "./node_modules/.bin/tilelive-copy"
