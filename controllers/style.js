@@ -1,3 +1,5 @@
+var fs = require('fs')
+var path = require('path')
 var _ = require('lodash')
 var validate = require('mapbox-gl-style-spec').validate
 var escaper = require('mongo-key-escaper')
@@ -8,8 +10,10 @@ var tilelive = require('tilelive')
   // var mbgl = require('mapbox-gl-native')
   // var sharp = require('sharp')
   // var request = require('request')
-  // var SphericalMercator = require('sphericalmercator')
-  // var mime = require('mime')
+var SphericalMercator = require('sphericalmercator')
+var mime = require('mime')
+var mapnik = require('mapnik')
+var url = require('url')
 var Style = require('../models/style')
 
 
@@ -144,7 +148,7 @@ module.exports.preview = function(req, res) {
   var username = req.params.username
 
   var params = {
-    zoom: +req.query.zoom || 0,
+    zoom: Math.round(+req.query.zoom + 1 || 0),
     scale: +req.query.scale || 1,
     bbox: JSON.parse(req.query.bbox || null) || [-180, -85.0511, 180, 85.0511],
     center: JSON.parse(req.query.center || null),
@@ -159,17 +163,7 @@ module.exports.preview = function(req, res) {
       Style.findOne({ style_id: style_id, owner: username }, callback)
     },
     getImage: function(style, callback) {
-      var opts = {
-        style: style,
-        scale: params.scale,
-        format: params.format
-      }
-
-      params.getTile = function(z, x, y, callback2) {
-        return getTileMapnik(z, x, y, opts, callback2)
-      }
-
-      abaculus(params, callback)
+      getImageAbaculus(style, params, callback)
     }
   }, function(err, results) {
     if (err) {
@@ -272,3 +266,75 @@ function getTileMapnik(z, x, y, opts, callback) {
 //     })
 //   })
 // }
+
+/* eslint-disable no-unused-vars */
+function getImageAbaculus(style, params, callback) {
+  var opts = {
+    style: style,
+    scale: params.scale,
+    format: params.format
+  }
+
+  params.getTile = function(z, x, y, callback2) {
+    return getTileMapnik(z, x, y, opts, callback2)
+  }
+
+  abaculus(params, callback)
+}
+
+
+function getImageMapnik(style, params, callback) {
+  async.autoInject({
+    xml: function(callback) {
+      gl2xml(style, callback)
+    },
+    getImage: function(xml, callback) {
+      var sm = new SphericalMercator()
+
+      params.center = abaculus.coordsFromBbox(params.zoom, params.scale, params.bbox)
+
+      var map = new mapnik.Map(params.center.w, params.center.h)
+      map.extent = sm.convert(params.bbox, '900913')
+      map.fromStringSync(xml)
+
+      var sourceUrl = map.parameters.source
+      var urlPath = url.parse(sourceUrl).pathname.split('/')
+
+      var config = 'z0_z4_config.json'
+      var zoom = params.zoom
+      if (zoom <= 4) config = 'z0_z4_config.json'
+      else if (zoom == 5) config = 'z5_config.json'
+      else if (zoom <= 7) config = 'z6_z7_config.json'
+      else if (zoom == 8) config = 'z8_config.json'
+      else if (zoom == 9) config = 'z9_config.json'
+      else if (zoom == 10) config = 'z10_config.json'
+      else config = 'z11_z12_config.json'
+
+      fs.readFile(path.join('metadata', urlPath[urlPath.indexOf('tilesets') + 2], config), function(err, buffer) {
+        if (err) return callback(err)
+
+        var layerConfig = JSON.parse(buffer).layer_config
+        map.layers().forEach(function(layer) {
+          if (layerConfig.hasOwnProperty(layer.name)) {
+            layer.datasource = new mapnik.Datasource(layerConfig[layer.name])
+            map.add_layer(layer)
+          }
+        })
+
+        map.render(new mapnik.Image(map.width, map.height), { scale: params.scale }, function(err, data) {
+          if (err) return callback(err)
+
+          var image = data.encodeSync(params.format)
+          return callback(null, image, { 'Content-Type': mime.lookup(params.format) })
+        })
+      })
+
+    }
+  }, function(err, results) {
+    if (err) return callback(err)
+
+    if (!results.getImage) return callback()
+
+    return callback(err, results.getImage[0], results.getImage[1])
+  })
+}
