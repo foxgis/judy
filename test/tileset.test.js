@@ -48,7 +48,7 @@ describe('瓦片集模块', function(){
     })
 
     it('上传成功', function(done){
-      this.timeout(4000)
+      this.timeout(10000)
       request(app)
         .post('/api/v1/tilesets/nick')
         .set('x-access-token', access_token)
