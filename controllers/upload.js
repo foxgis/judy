@@ -195,7 +195,7 @@ module.exports.download = function(req, res) {
       Upload.findOneAndUpdate({
         upload_id: req.params.upload_id,
         owner: req.params.username
-      }, { $inc: { downloadNum: 1} }, { new: true }, function(err, upload1) {
+      }, { $inc: { downloadNum: 1} }, { new: true }, function(err) {
         if (err) {
           return 
         }
@@ -204,7 +204,7 @@ module.exports.download = function(req, res) {
 
       User.findOneAndUpdate({
         username: req.params.username,
-      }, { $inc: { downloadNum: 1} }, { new: true }, function(err, user1) {
+      }, { $inc: { downloadNum: 1} }, { new: true }, function(err) {
         if (err) {
           return
         }
