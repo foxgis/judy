@@ -112,7 +112,7 @@ module.exports.upload = function(req, res) {
         tiles: [apiUrl + '/tilesets/' + username + '/' + tileset_id + '/{z}/{x}/{y}.' + info.format]
       }
 
-      var keys = ['scope', 'tags', 'name', 'description', 'vector_layers']
+      var keys = ['scope', 'tags', 'description', 'vector_layers']
       keys.forEach(function(key) {
         if (req.body[key]) {
           newTileset[key] = req.body[key]

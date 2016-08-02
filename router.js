@@ -10,7 +10,6 @@ var files = require('./controllers/file')
 var uploads = require('./controllers/upload')
 var stats = require('./controllers/stat')
 
-
 var router = express.Router()
 var upload = multer({
   dest: 'uploads/',

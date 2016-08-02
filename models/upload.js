@@ -9,6 +9,7 @@ var UploadSchema = new mongoose.Schema({
   owner: String,
   scope: { type: String, default: 'private' },
   is_deleted: { type: Boolean, default: false },
+  downloadNum: { type: Number, default: 0 },
 
   name: String,
   location: String,

@@ -6,6 +6,7 @@ var async = require('async')
 var sharp = require('sharp')
 var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
+var User = require('../models/user')
 
 
 module.exports.list = function(req, res) {
@@ -189,6 +190,27 @@ module.exports.download = function(req, res) {
       encodeURIComponent(upload.name) + '.' + encodeURIComponent(upload.format))
     res.type(upload.format)
     readStream.pipe(res)
+
+    readStream.on('end', function() {
+      Upload.findOneAndUpdate({
+        upload_id: req.params.upload_id,
+        owner: req.params.username
+      }, { $inc: { downloadNum: 1} }, { new: true }, function(err, upload1) {
+        if (err) {
+          return 
+        }
+      })
+
+
+      User.findOneAndUpdate({
+        username: req.params.username,
+      }, { $inc: { downloadNum: 1} }, { new: true }, function(err, user1) {
+        if (err) {
+          return
+        }
+      })
+
+    })
   })
 }
 

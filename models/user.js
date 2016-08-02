@@ -11,6 +11,7 @@ var UserSchema = new mongoose.Schema({
   role: { type: String, default: 'user'},
   scope: { type: String, default: 'public'},
   is_verified: { type: Boolean, default: false },
+  downloadNum: { type: Number, default: 0 },
 
   // profile
   name: String,
