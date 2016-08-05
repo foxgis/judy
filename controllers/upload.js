@@ -265,7 +265,7 @@ module.exports.search = function(req, res) {
     [
         {name : {$regex : req.query.search}},
         {location : {$regex : req.query.search}},
-        {$text : {$search: req.query.search}}
+        {tags : {$regex: req.query.search}}
     ]
 
   }
