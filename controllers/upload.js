@@ -261,7 +261,12 @@ module.exports.search = function(req, res) {
   var query = {}
 
   if (req.query.search) {
-    query.$text = { $search: req.query.search }
+   // query.$text = { $search: req.query.search }
+   query.$or = 
+     [
+       {name : {$regex : req.query.search}},
+       {location : {$regex : req.query.search}}
+     ]
   }
 
   if (!req.user.role || req.user.role !== 'admin') {
