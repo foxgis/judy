@@ -143,7 +143,7 @@ module.exports.preview = function(req, res) {
   var username = req.params.username
 
   var params = {
-    zoom: Math.round(+req.query.zoom + 1 || 0),
+    zoom: parseInt(+req.query.zoom + 1 || 0),
     scale: +req.query.scale || 1,
     bbox: JSON.parse(req.query.bbox || null) || [-180, -85.0511, 180, 85.0511],
     center: JSON.parse(req.query.center || null),

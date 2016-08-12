@@ -9,7 +9,8 @@
     "testbytape": "tape test/*.tape_test.js"
   },
   "bin": {
-    "tilelive-copy": "./node_modules/.bin/tilelive-copy"
+    "tilelive-copy": "./node_modules/.bin/tilelive-copy",
+    "delete-uploads-true": "./bin/delete"
   },
   "dependencies": {
     "abaculus": "github:jingsam/abaculus",

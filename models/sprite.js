@@ -10,6 +10,7 @@ var SpriteSchema = new mongoose.Schema({
   is_deleted: { type: Boolean, default: false },
 
   name: { type: String, default: 'sprite'},
+  description: { type: String, default: ''},
 
   filename: String,
   filesize: Number

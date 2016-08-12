@@ -79,7 +79,7 @@ module.exports.upload = function(req, res) {
         filesize: size
       })
 
-      var keys = ['scope', 'name']
+      var keys = ['scope', 'description']
       keys.forEach(function(key) {
         if (req.body[key]) {
           newSprite[key] = req.body[key]
@@ -127,7 +127,7 @@ module.exports.uploadIcon = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'name']
+  var filter = ['scope', 'name' ,'description']
 
   Sprite.findOneAndUpdate({
     sprite_id: req.params.sprite_id,
