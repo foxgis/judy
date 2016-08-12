@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+
+var mongoose = require('mongoose')
+var config = require('../config')
+var shortid = require('shortid')
+
+var conn = mongoose.createConnection(config.DB)
+var UploadSchema = new mongoose.Schema({
+  upload_id: { type: String, default: shortid.generate, index: true },
+  file_id: mongoose.Schema.Types.ObjectId,
+  owner: String,
+  scope: { type: String, default: 'private' },
+  is_deleted: { type: Boolean, default: false },
+  downloadNum: { type: Number, default: 0 },
+
+  name: String,
+  location: String,
+  scale: Number,
+  dimensions: [Number],
+  year: String,
+  tags: [String],
+  description: String,
+  size: Number,
+  format: String,
+  thumbnail: Buffer,
+  mini_thumbnail: Buffer
+}, { timestamps: true })
+
+var Upload = conn.model('Upload', UploadSchema);
+
+conn.on('connected', function() {
+  Upload.remove({
+    is_deleted: true
+  }, function(err) {
+    conn.close()
+    if(err) {
+      return console.log(err)
+    }
+    console.log('delete operation done')
+  })
+})
