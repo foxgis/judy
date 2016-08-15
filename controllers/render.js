@@ -8,7 +8,9 @@ var async = require('async')
 var http = require('http')
 var zlib = require('zlib')
 var gl2xml = require('mapbox-gl-json-to-mapnik-xml')
-
+var turf = require('turf')
+turf.bboxClip = require('turf-bbox-clip')
+//require('turf-bbox-clip').registerProtocols(turf)
 
 module.exports = function(style, params, callback) {
   async.autoInject({
@@ -16,7 +18,7 @@ module.exports = function(style, params, callback) {
       gl2xml(style, callback)
     },
     getImage: function(xml, callback) {
-      params.center = abaculus.coordsFromBbox(params.zoom, params.scale, params.bbox)
+      params.center = abaculus.coordsFromBbox(params.zoom, params.scale, params.bbox,params.limit)
       params.coors = abaculus.tileList(params.zoom, params.scale, params.center)
 
       var sm = new SphericalMercator()
@@ -29,7 +31,7 @@ module.exports = function(style, params, callback) {
           getLayerInfo(map, params.zoom, callback)
         },
         pgSource: function(LayerInfo, callback) {
-          genPgSource(LayerInfo[0], callback)
+          genPgSource(LayerInfo[0], map.extent,callback)
         },
         tileSource: function(LayerInfo, callback) {
           var source = {}
@@ -81,6 +83,7 @@ function renderStaticImage(map, params, LayerInfo, pgSource, tileSource, callbac
 }
 
 function genTileSource(tileLayerInfo, coors, callback) {
+  var sm = new SphericalMercator();
   async.map(tileLayerInfo.source, function(sourceURL, callback) {
     async.map(coors.tiles, function(item, callback) {
       var x = item.x
@@ -95,6 +98,7 @@ function genTileSource(tileLayerInfo, coors, callback) {
         urlPath = urlPath.replace('{z}', z)
 
         http.get(urlPath, function(response) {
+          console.log(urlPath)
           var buffer = []
           response.on('data', function(chunk) {
             buffer.push(chunk)
@@ -103,17 +107,25 @@ function genTileSource(tileLayerInfo, coors, callback) {
             zlib.gunzip(buffer, function(err, buf) {
               var dataSourceGeoJSON = {}
               var vtile = new mapnik.VectorTile(z, x, y)
-              if (!buf) return callback(null, {})
+              
+              if (!buf) return callback(null,{})
               vtile.setData(buf)
               vtile.names().forEach(function(layer_name) {
-                var geojson = JSON.parse(vtile.toGeoJSONSync(layer_name))
-                for (var f_num in geojson.features) {
-                  var feat = geojson.features[f_num]
+                if(tileLayerInfo.layers.hasOwnProperty(layer_name)&&tileLayerInfo.layers[layer_name] == sourceURL) {
+                  var geojson = JSON.parse(vtile.toGeoJSONSync(layer_name))
+                  for (var f_num in geojson.features) {
+                    var feat = geojson.features[f_num]
                     //Convert lon/lat values to 900913 x/y.
-                  feat = convert2xy(feat)
-                  geojson.features[f_num] = feat
+                    if (layer_name == 'hillshade') {
+                      var intersect = turf.bboxClip(feat, sm.bbox(x, y, z, false, 'WGS84'))
+                      if (intersect) feat.geometry = intersect.geometry;
+                      else continue;
+                    }
+                    feat = convert2xy(feat)
+                    geojson.features[f_num] = feat
+                  }
+                  dataSourceGeoJSON[layer_name] = geojson
                 }
-                dataSourceGeoJSON[layer_name] = geojson
               })
               callback(null, dataSourceGeoJSON)
             })
@@ -151,10 +163,11 @@ function genTileSource(tileLayerInfo, coors, callback) {
 
 }
 
-function genPgSource(pgLayerInfo, callback) {
+function genPgSource(pgLayerInfo,extent, callback) {
   var source = {}
   for (var id in pgLayerInfo.source) {
     source[id] = JSON.parse(fs.readFileSync('./metadata/' + id + '/' + pgLayerInfo.source[id])).layer_config
+    source[id]["extent"] = extent
   }
   return callback(null, source)
 }
@@ -197,22 +210,36 @@ function convert2xy(feat) {
     }
   }
   else if (type == 'Polygon') {
-
-    var coor_ploygen = coordinates[0]
-    for (var i_ploygon in coor_ploygen) {
-      coor_ploygen[i_ploygon] = sm.forward(coor_ploygen[i_ploygon])
+    var poly = [];
+    var num_subPoly = 0;
+    for (var i_subPoly in coordinates) {
+      var coor_ploygen = coordinates[i_subPoly]
+      for (var i_ploygon in coor_ploygen) {
+        coor_ploygen[i_ploygon] = sm.forward(coor_ploygen[i_ploygon])
+      }
+      poly[num_subPoly++] = coor_ploygen
     }
-    feat.geometry.coordinates[0] = coor_ploygen
+    feat.geometry.coordinates = poly
 
   }
   else if (type == 'MultiPolygon') {
+    var MultiPoly = [];
+    var num_poly = 0;
     for (var i_mpolygon in coordinates) {
-      var coor_mpolygon = coordinates[i_mpolygon][0]
-      for (var j_mpolygon in coor_mpolygon) {
-        coor_mpolygon[j_mpolygon] = sm.forward(coor_mpolygon[j_mpolygon])
+      var m_poly = [];
+      var m_num_subPoly = 0;
+      var coor_mpolygon = coordinates[i_mpolygon]
+      if (coor_mpolygon.length == 0) continue
+      for (var ii_subPoly in coor_mpolygon) {
+        var coor_sub_ploygen = coor_mpolygon[ii_subPoly]
+        for (var j_mpolygon in coor_sub_ploygen) {
+          coor_sub_ploygen[j_mpolygon] = sm.forward(coor_sub_ploygen[j_mpolygon])
+        }
+        m_poly[m_num_subPoly++] = coor_sub_ploygen
       }
-      feat.geometry.coordinates[i_mpolygon][0] = coor_mpolygon
+      MultiPoly[num_poly++] = m_poly
     }
+    feat.geometry.coordinates = MultiPoly
   }
   else if (type == 'MultiLineString') {
     for (var i_ml in coordinates) {

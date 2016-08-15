@@ -296,7 +296,6 @@ var authSprite = function(req, res, next) {
       }
 
     case 'POST /sprites/:username':
-    case 'PUT /sprites/:username/:sprite_id/:icon':
     case 'PATCH /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id/:icon':
@@ -305,6 +304,33 @@ var authSprite = function(req, res, next) {
       } else {
         return res.sendStatus(401)
       }
+
+    case 'PUT /sprites/:username/:sprite_id/:icon':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        Sprite.findOne({
+          sprite_id: req.params.sprite_id,
+          owner: req.params.username
+        }, function(err ,sprite) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!sprite) {
+            return res.sendStatus(404)
+          }
+        
+          if (sprite.scope === 'public') {
+            return next()
+          } else {
+            return res.sendStatus(401)
+          }
+        })
+
+        return
+      }
+      
 
     default:
       return res.sendStatus(401)
