@@ -62,6 +62,7 @@
     "tilelive-xray": "^0.2.0",
     "tiletype": "^0.3.0",
     "turf": "^3.0.14",
+    "turf-bbox-clip": "^1.0.0",
     "zipfile": "^0.5.9"
   },
   "devDependencies": {
