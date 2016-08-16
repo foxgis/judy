@@ -447,6 +447,10 @@ var authUpload = function(req, res, next) {
 var authStat = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /stats/uploads':
+    case 'GET /stats/userdownloads':
+    case 'GET /stats/filedownloads':
+    case 'GET /stats/location':
+    case 'GET /stats/year':
       return next()
 
     default:

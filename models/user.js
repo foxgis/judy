@@ -45,5 +45,6 @@ UserSchema.methods.validPassword = function(password) {
   return this.hash === hash
 }
 
+UserSchema.index({ downloadNum: -1 })
 
 module.exports = mongoose.model('User', UserSchema)

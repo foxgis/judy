@@ -85,7 +85,13 @@ router.get('/uploads/:username/:upload_id/file', auth, uploads.download)
 router.get('/uploads/:username/:upload_id/thumbnail', auth, uploads.getThumbnail)
 router.get('/uploads/:username/:upload_id/mini_thumbnail', auth, uploads.getMiniThumbnail)
 router.get('/uploads', auth, uploads.search)
+
+//统计
 router.get('/stats/uploads', auth, stats.uploads)
+router.get('/stats/userdownloads', auth, stats.userdownloads)
+router.get('/stats/filedownloads', auth, stats.filedownloads)
+router.get('/stats/location', auth, stats.location)
+router.get('/stats/year', auth, stats.year)
 
 
 module.exports = router
