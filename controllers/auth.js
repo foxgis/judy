@@ -296,7 +296,6 @@ var authSprite = function(req, res, next) {
       }
 
     case 'POST /sprites/:username':
-    case 'PATCH /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id':
     case 'DELETE /sprites/:username/:sprite_id/:icon':
       if (req.user.username === req.params.username) {
@@ -306,6 +305,7 @@ var authSprite = function(req, res, next) {
       }
 
     case 'PUT /sprites/:username/:sprite_id/:icon':
+    case 'PATCH /sprites/:username/:sprite_id':
       if (req.user.username === req.params.username) {
         return next()
       } else {

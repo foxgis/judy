@@ -258,16 +258,67 @@ module.exports.search = function(req, res) {
   var skip = +req.query.skip || 0
   var sort = req.query.sort
 
+  // var query = {}
+
+  // if (req.query.search) {
+  //   query.$or = 
+  //   [
+  //       {name : {$regex : req.query.search}},
+  //       {location : {$regex : req.query.search}},
+  //       {tags : {$regex: req.query.search}}
+  //   ]
+
+  // }
+
+  // if (!req.user.role || req.user.role !== 'admin') {
+  //   query.scope = 'public'
+  //   query.is_deleted = false
+  // }
+
+  // Upload.find(query,
+  //   '-_id -__v -file_id -thumbnail -mini_thumbnail',
+  //   function(err, uploads) {
+  //     if (err) {
+  //       return res.status(500).json({ error: err })
+  //     }
+
+  //     res.status(200).json(uploads)
+  //   }).limit(limit).skip(skip).sort(sort)
+
+
+
   var query = {}
+  var querydata = null
 
   if (req.query.search) {
-    query.$or = 
-    [
-        {name : {$regex : req.query.search}},
-        {location : {$regex : req.query.search}},
-        {tags : {$regex: req.query.search}}
-    ]
+    querydata = req.query.search.trim().split(/\s+/g)
+    if (querydata.length === 1) {
+      query.$or = 
+      [
+          {name : {$regex : querydata[0] }},
+          {location : {$regex : querydata[0] }},
+          {tags : {$regex: querydata[0] }}
+      ]
 
+    } else {
+      query.$and = 
+      [
+        { 
+          $or: 
+          [
+            {name : {$regex : querydata[0] }},
+            {location : {$regex : querydata[0] }},
+            {tags : {$regex: querydata[0] }}
+          ]},{
+            $or: 
+            [
+            {name : {$regex : querydata[1] }},
+            {location : {$regex : querydata[1] }},
+            {tags : {$regex: querydata[1] }}
+            ]
+          }
+      ]
+    }
   }
 
   if (!req.user.role || req.user.role !== 'admin') {
@@ -281,7 +332,24 @@ module.exports.search = function(req, res) {
       if (err) {
         return res.status(500).json({ error: err })
       }
+      if (_.keys(uploads).length === 0 && querydata.length > 1) {
+        Upload.find({
+          $or : 
+          [
+          {name : {$regex : querydata[0] }},
+          {location : {$regex : querydata[0] }},
+          {tags : {$regex: querydata[0] }}
+          ]},
+          '-_id -__v -file_id -thumbnail -mini_thumbnail',
+          function(err, uploads1) {
+            if (err) {
+              return res.status(500).json({ error: err })
+            }
 
-      res.status(200).json(uploads)
+            res.status(200).json(uploads1)
+          }).limit(limit).skip(skip).sort(sort)
+      } else {
+        res.status(200).json(uploads)
+      }
     }).limit(limit).skip(skip).sort(sort)
 }
