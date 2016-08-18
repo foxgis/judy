@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "lint": "eslint *.js models/** controllers/** test/*.js",
-    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha",
-    "testbytape": "tape test/*.tape_test.js"
+    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "bin": {
     "tilelive-copy": "./node_modules/.bin/tilelive-copy",
@@ -61,6 +60,8 @@
     "tilelive-vector": "^3.9.3",
     "tilelive-xray": "^0.2.0",
     "tiletype": "^0.3.0",
+    "turf": "^3.0.0",
+    "turf-bbox-clip": "github:turfjs/turf-bbox-clip",
     "zipfile": "^0.5.9"
   },
   "devDependencies": {

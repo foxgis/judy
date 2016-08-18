@@ -6,6 +6,7 @@ var Tileset = require('../models/tileset')
 var Font = require('../models/font')
 var File = require('../models/file')
 var Upload = require('../models/upload')
+var Template = require('../models/template')
 
 
 module.exports = function(req, res, next) {
@@ -69,6 +70,8 @@ var authResource = function(req, res, next) {
       return authUpload(req, res, next)
     case 'stats':
       return authStat(req, res, next)
+    case 'templates':
+      return authTemplate(req, res,next)
   }
 }
 
@@ -452,6 +455,58 @@ var authStat = function(req, res, next) {
     case 'GET /stats/location':
     case 'GET /stats/year':
       return next()
+
+    default:
+      return res.sendStatus(401)
+  }
+}
+
+
+var authTemplate = function(req, res, next) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /templates/:username':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
+    case 'GET /templates/:username/:template_id':
+    case 'GET /templates/:username/:template_id/json':
+    case 'GET /templates/:username/:template_id/image':
+      if (req.user.username === req.params.username || req.user.role === 'admin') {
+        return next()
+      } else {
+        Template.findOne({
+          template_id: req.params.template_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, upload) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!upload) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /templates/:username':
+    case 'PATCH /templates/:username/:template_id':
+    case 'PUT /templates/:username/:template_id':
+    case 'DELETE /templates/:username/:template_id':
+    case 'POST /templates/:username/:template_id/image':
+    case 'PUT /templates/:username/:template_id/image':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
 
     default:
       return res.sendStatus(401)
