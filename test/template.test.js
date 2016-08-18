@@ -60,8 +60,6 @@ describe('模板模块', function() {
           }
 
           res.body.owner.should.equal('nick')
-          res.body.name.should.equal('地级市行政区划图')
-          res.body.replace.should.equal('成都市')
           res.body.style.should.equal('admin.json')
 
           template_id = res.body.template_id
