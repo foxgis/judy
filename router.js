@@ -9,7 +9,6 @@ var sprites = require('./controllers/sprite')
 var files = require('./controllers/file')
 var uploads = require('./controllers/upload')
 var stats = require('./controllers/stat')
-var templates = require('./controllers/template')
 
 var router = express.Router()
 var upload = multer({
@@ -93,19 +92,6 @@ router.get('/stats/userdownloads', auth, stats.userdownloads)
 router.get('/stats/filedownloads', auth, stats.filedownloads)
 router.get('/stats/location', auth, stats.location)
 router.get('/stats/year', auth, stats.year)
-
-//模板
-router.get('/templates/:username', auth, templates.list)
-router.post('/templates/:username', auth, upload.any(), templates.upload)
-router.get('/templates/:username/:template_id', auth, templates.retrieve)
-router.get('/templates/:username/:template_id/json', auth, templates.getJSON)
-router.delete('/templates/:username/:template_id', auth, templates.delete)
-router.patch('/templates/:username/:template_id', auth, templates.update)
-router.put('/templates/:username/:template_id', auth, upload.any(), templates.updatejson)
-router.post('/templates/:username/:template_id/image', auth, upload.any(), templates.postImage)
-router.get('/templates/:username/:template_id/image', auth, templates.getImage)
-//router.put('/templates/:username/:template_id/image', auth, upload.any(), templates.updateImage)
-
 
 
 module.exports = router
