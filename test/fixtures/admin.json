@@ -1,0 +1,460 @@
+{
+  "updatedAt": "2016-07-02T03:13:04.307Z",
+  "name": "admin_map",
+  "owner": "foxgis",
+  "createdAt": "2016-07-02T03:13:04.307Z",
+  "vector_layers": [
+    {
+      "id": "asia_a",
+      "description": "亚洲面",
+      "fields": [
+        {
+          "gid": "gid"
+        }
+      ]
+    },
+    {
+      "id": "boua_prov",
+      "description": "省级行政界面",
+      "fields": [
+        {
+          "gid": "gid",
+          "pac": "行政编码",
+          "name": "名称",
+          "shape_leng": "周长",
+          "shape_area": "面积",
+          "connection": "邻接表",
+          "color": "颜色"
+        }
+      ]
+    },
+    {
+      "id": "boua_dist",
+      "description": "市级行政界面",
+      "fields": [
+        {
+          "gid": "gid",
+          "pac": "行政编码",
+          "name": "名称",
+          "shape_leng": "周长",
+          "shape_area": "面积",
+          "belong_pro": "所属省",
+          "connection": "邻接表",
+          "color": "颜色"
+        }
+      ]
+    },
+    {
+      "id": "yunnan_dis",
+      "description": "云南省市行政界面",
+      "fields": [
+        {
+          "gid": "gid",
+          "shape_leng": "周长",
+          "shape_area": "面积",
+          "belong_dis": "所属地级市",
+          "color": "颜色",
+          "belong_pro": "所属省",
+          "name": "名称"
+        }
+      ]
+    },
+    {
+      "id": "boua",
+      "description": "县级行政界面",
+      "fields": [
+        {
+          "gid": "gid",
+          "pac": "行政编码",
+          "name": "名称",
+          "shape_leng": "周长",
+          "shape_area": "面积",
+          "belong_pro": "所属省",
+          "belong_dis": "所属地级市",
+          "connection": "邻接表",
+          "color": "颜色"
+        }
+      ]
+    },
+    {
+      "id": "yunnan_xian",
+      "description": "云南省县级行政界面",
+      "fields": [
+        {
+          "gid": "gid",
+          "xianid": "行政编码",
+          "shape_leng": "周长",
+          "name": "名称",
+          "belong_dis": "所属地级市",
+          "belong_pro": "所属省",
+          "shape_area": "面积",
+          "color": "颜色"
+        }
+      ]
+    },
+    {
+      "id": "yunnan_village",
+      "description": "云南乡镇级行政界面",
+      "fields": [
+        {
+          "gid": "gid",
+          "xzq_xz": "xzq_xz",
+          "name": "名称",
+          "pinyin": "拼音",
+          "class": "class",
+          "gnid": "行政编码",
+          "xzname": "xzname",
+          "tfh": "tfh",
+          "color": "颜色",
+          "xianid": "所属县行政编码"
+        }
+      ]
+    },
+    {
+      "id": "china_l",
+      "description": "国界线",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码"
+        }
+      ]
+    },
+    {
+      "id": "hydl",
+      "description": "线状水系",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "hydc": "水系代码",
+          "name": "名称",
+          "period": "时令月份",
+          "shape_leng": "周长"
+        }
+      ]
+    },
+    {
+      "id": "chydl",
+      "description": "线状水系",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称",
+          "gb": "国标码",
+          "hydc": "水系代码",
+          "period": "时令月份",
+          "shape_leng": "周长"
+        }
+      ]
+    },
+    {
+      "id": "hyda",
+      "description": "面状水系",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "hydc": "水系代码",
+          "name": "名称",
+          "period": "时令月份",
+          "vol": "水库规模",
+          "shape_leng": "长度",
+          "shape_area": "面积"
+        }
+      ]
+    },
+    {
+      "id": "chyda",
+      "description": "面状水系",
+      "fields": [
+        {
+          "gid": "gid",
+          "cname": "名称",
+          "clasid": "分类码",
+          "gb": "国标码"
+        }
+      ]
+    },
+    {
+      "id": "resa",
+      "description": "居民地",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "shape_leng": "周长",
+          "shape_area": "面积"
+        }
+      ]
+    },
+    {
+      "id": "cresa",
+      "description": "居民地",
+      "fields": [
+        {
+          "gid": "gid",
+          "shape_leng": "周长",
+          "shape_area": "面积",
+          "gb": "国标码"
+        }
+      ]
+    },
+    {
+      "id": "lrrl",
+      "description": "铁路",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "rn": "道路编号",
+          "name": "名称",
+          "type": "类型",
+          "shape_leng": "长度"
+        }
+      ]
+    },
+    {
+      "id": "clrrl",
+      "description": "铁路",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称",
+          "gb": "国标码",
+          "rn": "道路编号",
+          "type": "类型",
+          "shape_leng": "长度"
+        }
+      ]
+    },
+    {
+      "id": "lrdl",
+      "description": "道路",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "gb",
+          "rn": "道路编号",
+          "name": "名称",
+          "rteg": "技术等级",
+          "type": "类型",
+          "shape_leng": "长度"
+        }
+      ]
+    },
+    {
+      "id": "clrdl",
+      "description": "道路",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称",
+          "rn": "道路编号",
+          "gb": "国标码",
+          "shape_leng": "长度",
+          "type": "类型",
+          "rteg": "技术等级"
+        }
+      ]
+    },
+    {
+      "id": "zhou_label",
+      "description": "洲名注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称"
+        }
+      ]
+    },
+    {
+      "id": "shan_label",
+      "description": "山脉注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称",
+          "smdj": "山脉等级"
+        }
+      ]
+    },
+    {
+      "id": "prov_label",
+      "description": "省名注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "pac": "行政编码",
+          "name": "名称",
+          "shape_leng": "周长",
+          "shape_area": "面积"
+        }
+      ]
+    },
+    {
+      "id": "agnp",
+      "description": "行政地名注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "class": "地名分类码",
+          "name": "名称",
+          "pinyin": "拼音",
+          "gnid": "行政编码",
+          "xzname": "所属乡镇",
+          "capname": "省会"
+        }
+      ]
+    },
+    {
+      "id": "cagnp",
+      "description": "行政地名注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "class": "地名分类码",
+          "name": "名称",
+          "pinyin": "拼音",
+          "gnid": "行政编码",
+          "xzname": "所属乡镇"
+        }
+      ]
+    },
+    {
+      "id": "aanp",
+      "description": "自然地名注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "class": "地名分类码",
+          "name": "名称",
+          "pinyin": "拼音"
+        }
+      ]
+    },
+    {
+      "id": "caanp",
+      "description": "自然地名注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "class": "地名分类码",
+          "name": "名称",
+          "pinyin": "拼音"
+        }
+      ]
+    },
+    {
+      "id": "hyda_labelp",
+      "description": "水系点注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "hydc": "水系代码",
+          "name": "名称",
+          "period": "时令月份",
+          "vol": "水库规模",
+          "shape_leng": "长度",
+          "shape_area": "面积"
+        }
+      ]
+    },
+    {
+      "id": "chyda_labelp",
+      "description": "水系点注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "name": "名称"
+        }
+      ]
+    },
+    {
+      "id": "lrdl_label",
+      "description": "道路注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "rn": "道路编号",
+          "name": "名称",
+          "rteg": "技术等级",
+          "type": "类型",
+          "shape_leng": "长度"
+        }
+      ]
+    },
+    {
+      "id": "clrdl_label",
+      "description": "道路注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称",
+          "rn": "道路编号",
+          "gb": "国标码",
+          "shape_leng": "长度",
+          "type": "类型",
+          "rteg": "技术等级"
+        }
+      ]
+    },
+    {
+      "id": "hyda_label",
+      "description": "水系线注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "gb": "国标码",
+          "hydc": "水系编码",
+          "name": "名称",
+          "period": "时令月份",
+          "vol": "水库规模",
+          "shape_leng": "长度",
+          "shape_area": "面积"
+        }
+      ]
+    },
+    {
+      "id": "chyda_label",
+      "description": "水系线注记",
+      "fields": [
+        {
+          "gid": "gid",
+          "name": "名称",
+          "gb": "国标码",
+          "hydc": "水系编码",
+          "period": "时令月份",
+          "shape_leng": "长度"
+        }
+      ]
+    }
+  ],
+  "center": [
+    0,
+    0,
+    0
+  ],
+  "bounds": [
+    25.6,
+    -11.1,
+    154,
+    55.5
+  ],
+  "maxzoom": 12,
+  "minzoom": 0,
+  "data": [],
+  "grids": [],
+  "tiles": [
+    "http://218.244.250.70:8090/api/v1/tilesets/foxgis/admin/{z}/{x}/{y}.vector.pbf"
+  ],
+  "scheme": "xyz",
+  "version": "1.0.0",
+  "tilejson": "2.1.0",
+  "tags": [],
+  "scope": "private",
+  "tileset_id": "admin"
+}
