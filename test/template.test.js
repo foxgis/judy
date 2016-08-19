@@ -69,10 +69,10 @@ describe('模板模块', function() {
     })
   })
 
-  describe('获取用户模板列表', function(){
+  describe('获取模板列表', function(){
     it('获取成功', function(done){
       request(app)
-        .get('/api/v1/templates/nick')
+        .get('/api/v1/templates')
         .set('x-access-token', access_token)
         .expect(200)
         .end(function(err, res){
