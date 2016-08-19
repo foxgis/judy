@@ -12,7 +12,6 @@ var Buffer = require('buffer').Buffer
 
 module.exports.list = function(req, res) {
   Template.find({
-    owner: req.params.username,
     is_deleted: false
   }, '-_id -__v -is_deleted -styleJSON', function(err, templates) {
     if (err) {
@@ -211,7 +210,7 @@ module.exports.upload = function(req, res) {
 
   writeStream.on('close', function(template) {
     var thumb = {}
-    thumb['background-image'] = 'url(\'' +apiUrl + '/templates/'+'wanyanyan/rkXfofQc'+ '/image\')'
+    thumb['background-image'] = 'url(\'' +apiUrl + '/templates/wanyanyan/rkXfofQc/image\')'
     var newTemplate = new Template({
       template_id: template_id,
       owner: req.params.username,

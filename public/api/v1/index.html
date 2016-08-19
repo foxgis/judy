@@ -10,7 +10,7 @@
     <link href='css/railscasts.css' rel='stylesheet' />
   </head>
   <body>
-    <!--START--><div id='app'><div class="container unlimiter" data-reactroot="" data-reactid="1" data-react-checksum="997276314"><div class="fixed-top fixed-right space-left16" data-reactid="2"><div class="fill-light col6 pin-right" data-reactid="3"></div></div><div class="space-top5 scroll-styled overflow-auto pad1 width16 sidebar fixed-left fill-dark dark" data-reactid="4"><div class="pad0x small" data-reactid="5"><div class="small pad0x quiet space-top1" data-reactid="6">API</div><a href="#路径" class="line-height15 pad0x pad00y quiet block " data-reactid="7">路径</a><a href="#access_token" class="line-height15 pad0x pad00y quiet block " data-reactid="8">access_token</a><a href="#用户模块" class="line-height15 pad0x pad00y quiet block " data-reactid="9">用户模块</a><a href="#地图样式模块" class="line-height15 pad0x pad00y quiet block " data-reactid="10">地图样式模块</a><a href="#瓦片集模块" class="line-height15 pad0x pad00y quiet block " data-reactid="11">瓦片集模块</a><a href="#字体模块" class="line-height15 pad0x pad00y quiet block " data-reactid="12">字体模块</a><a href="#符号库模块" class="line-height15 pad0x pad00y quiet block " data-reactid="13">符号库模块</a><a href="#文件模块" class="line-height15 pad0x pad00y quiet block " data-reactid="14">文件模块</a><a href="#统计模块" class="line-height15 pad0x pad00y quiet block " data-reactid="15">统计模块</a><a href="#模板模块" class="line-height15 pad0x pad00y quiet block " data-reactid="16">模板模块</a></div></div><div class="space-left16" data-reactid="17"><div class="" data-reactid="18"><div class="clearfix" data-reactid="19"><div data-title="路径" class="keyline-top section contain clearfix " data-reactid="20"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="21"><h2 id="&#x8DEF;&#x5F84;">&#x8DEF;&#x5F84;</h2>
+    <!--START--><div id='app'><div class="container unlimiter" data-reactroot="" data-reactid="1" data-react-checksum="381967537"><div class="fixed-top fixed-right space-left16" data-reactid="2"><div class="fill-light col6 pin-right" data-reactid="3"></div></div><div class="space-top5 scroll-styled overflow-auto pad1 width16 sidebar fixed-left fill-dark dark" data-reactid="4"><div class="pad0x small" data-reactid="5"><div class="small pad0x quiet space-top1" data-reactid="6">API</div><a href="#路径" class="line-height15 pad0x pad00y quiet block " data-reactid="7">路径</a><a href="#access_token" class="line-height15 pad0x pad00y quiet block " data-reactid="8">access_token</a><a href="#用户模块" class="line-height15 pad0x pad00y quiet block " data-reactid="9">用户模块</a><a href="#地图样式模块" class="line-height15 pad0x pad00y quiet block " data-reactid="10">地图样式模块</a><a href="#瓦片集模块" class="line-height15 pad0x pad00y quiet block " data-reactid="11">瓦片集模块</a><a href="#字体模块" class="line-height15 pad0x pad00y quiet block " data-reactid="12">字体模块</a><a href="#符号库模块" class="line-height15 pad0x pad00y quiet block " data-reactid="13">符号库模块</a><a href="#文件模块" class="line-height15 pad0x pad00y quiet block " data-reactid="14">文件模块</a><a href="#统计模块" class="line-height15 pad0x pad00y quiet block " data-reactid="15">统计模块</a><a href="#模板模块" class="line-height15 pad0x pad00y quiet block " data-reactid="16">模板模块</a></div></div><div class="space-left16" data-reactid="17"><div class="" data-reactid="18"><div class="clearfix" data-reactid="19"><div data-title="路径" class="keyline-top section contain clearfix " data-reactid="20"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="21"><h2 id="&#x8DEF;&#x5F84;">&#x8DEF;&#x5F84;</h2>
 <p>&#x6240;&#x6709;API&#x90E8;&#x7F72;&#x5230;&#x4EE5;&#x4E0B;&#x57FA;&#x7840;&#x8DEF;&#x5F84;&#xFF1A;</p>
 <pre><code>http://foxgis.com/api/v1
 </code></pre>
@@ -1639,10 +1639,10 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div></div><div data-title="获取用户模板列表" class="keyline-top section contain clearfix " data-reactid="193"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="194"><h3 id="&#x83B7;&#x53D6;&#x7528;&#x6237;&#x6A21;&#x677F;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x7528;&#x6237;&#x6A21;&#x677F;&#x5217;&#x8868;</h3>
+</div></div><div data-title="获取模板列表" class="keyline-top section contain clearfix " data-reactid="193"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="194"><h3 id="&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x5217;&#x8868;</h3>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="195"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
-      <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span></div>
+      <div class='pad0 code small endpoint-url'>/templates</div>
     </div>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-39">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
@@ -1652,7 +1652,9 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"省级行政区划图"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
   <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
-  <span class="hljs-attr">"thumb"</span>: {},
+  <span class="hljs-attr">"thumb"</span>: {
+    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
+  },
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }]</code></pre>
@@ -1671,7 +1673,9 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"省级行政区划图"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
   <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
-  <span class="hljs-attr">"thumb"</span>: {},
+  <span class="hljs-attr">"thumb"</span>: {
+    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
+  },
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }</code></pre>
@@ -1691,7 +1695,9 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"省级行政区划图"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
   <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
-  <span class="hljs-attr">"thumb"</span>: {},
+  <span class="hljs-attr">"thumb"</span>: {
+    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
+  },
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }</code></pre>
@@ -1717,7 +1723,9 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
   <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
-  <span class="hljs-attr">"thumb"</span>: {},
+  <span class="hljs-attr">"thumb"</span>: {
+    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
+  },
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }</code></pre>
@@ -1737,7 +1745,9 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
   <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
-  <span class="hljs-attr">"thumb"</span>: {},
+  <span class="hljs-attr">"thumb"</span>: {
+    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
+  },
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }</code></pre>

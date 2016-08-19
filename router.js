@@ -95,7 +95,7 @@ router.get('/stats/location', auth, stats.location)
 router.get('/stats/year', auth, stats.year)
 
 //模板
-router.get('/templates/:username', auth, templates.list)
+router.get('/templates', auth, templates.list)
 router.post('/templates/:username', auth, upload.any(), templates.upload)
 router.get('/templates/:username/:template_id', auth, templates.retrieve)
 router.get('/templates/:username/:template_id/json', auth, templates.getJSON)

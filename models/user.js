@@ -26,7 +26,7 @@ var UserSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-UserSchema.plugin(select, '-_id -__v -salt -hash -role -avatar')
+UserSchema.plugin(select, '-_id -__v -salt -hash -avatar')
 
 
 UserSchema.virtual('password').set(function(password) {

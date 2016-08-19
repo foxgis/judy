@@ -464,12 +464,8 @@ var authStat = function(req, res, next) {
 
 var authTemplate = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
-    case 'GET /templates/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
-        return next()
-      } else {
-        return res.sendStatus(401)
-      }
+    case 'GET /templates':
+      return next()
 
     case 'GET /templates/:username/:template_id':
     case 'GET /templates/:username/:template_id/json':
@@ -497,6 +493,12 @@ var authTemplate = function(req, res, next) {
       }
 
     case 'POST /templates/:username':
+      if (req.user.username === req.params.username && req.user.role === 'admin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
     case 'PATCH /templates/:username/:template_id':
     case 'PUT /templates/:username/:template_id':
     case 'DELETE /templates/:username/:template_id':
