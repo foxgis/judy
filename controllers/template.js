@@ -187,12 +187,6 @@ module.exports.getImage = function(req, res) {
       return res.sendStatus(404)
     }
 
-    // var filename = template.imageName
-    // res.download(path.resolve(filePath), filename, function(err) {
-    //   if (err) {
-    //     return res.status(err.status).end()
-    //   }
-    // })
     fs.readFile(filePath, function(err, buffer) {
       res.set({ 'Content-Type': 'image/jpeg' })
       res.status(200).send(buffer)
@@ -202,6 +196,7 @@ module.exports.getImage = function(req, res) {
 
 
 module.exports.upload = function(req, res) {
+  var apiUrl = req.protocol + '://' + req.headers.host + req.baseUrl
   var template_id = shortid.generate()
   var gfs = Grid(mongoose.connection.db, mongoose.mongo)
   var writeStream = gfs.createWriteStream({
@@ -215,10 +210,13 @@ module.exports.upload = function(req, res) {
   })
 
   writeStream.on('close', function(template) {
+    var thumb = {}
+    thumb['background-image'] = 'url(\'' +apiUrl + '/templates/'+'wanyanyan/rkXfofQc'+ '/image\')'
     var newTemplate = new Template({
       template_id: template_id,
       owner: req.params.username,
-      style: template.filename
+      style: template.filename,
+      thumb: thumb
     })
 
     var keys = ['scope', 'name', 'replace']

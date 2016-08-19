@@ -481,12 +481,12 @@ var authTemplate = function(req, res, next) {
           template_id: req.params.template_id,
           owner: req.params.username,
           scope: 'public'
-        }, function(err, upload) {
+        }, function(err, template) {
           if (err) {
             return res.status(500).json({ error: err })
           }
 
-          if (!upload) {
+          if (!template) {
             return res.sendStatus(401)
           }
 

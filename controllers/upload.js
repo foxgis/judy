@@ -326,6 +326,14 @@ module.exports.search = function(req, res) {
     query.is_deleted = false
   }
 
+  if (req.query.location) {
+    query.location = req.query.location
+  }
+
+  if (req.query.year) {
+    query.year = req.query.year
+  }
+
   Upload.find(query,
     '-_id -__v -file_id -thumbnail -mini_thumbnail',
     function(err, uploads) {

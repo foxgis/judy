@@ -65,8 +65,13 @@ module.exports.filedownloads = function(req, res) {
 }
 
 module.exports.location = function(req, res) {
+  var match = {}
+  if (!req.user.role || req.user.role !== 'admin') {
+    match['is_deleted'] = false
+    match['scope'] = 'public'
+  }
   var pipeline = [{
-    $match: { is_deleted: false }
+    $match: match
   },{
     $group: { _id: '$location', total: { $sum: 1 } }
   },{
@@ -89,8 +94,13 @@ module.exports.location = function(req, res) {
 }
 
 module.exports.year = function(req, res) {
+  var match = {}
+  if (!req.user.role || req.user.role !== 'admin') {
+    match['is_deleted'] = false
+    match['scope'] = 'public'
+  }
   var pipeline = [{
-    $match: { is_deleted: false }
+    $match: match
   },{
     $group: { _id: '$year', total: { $sum: 1 } }
   },{
