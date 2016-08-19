@@ -19,7 +19,7 @@ describe('模板模块', function() {
           return done(err)
         }
 
-        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true }, { new: true }, function(err) {
+        User.findOneAndUpdate({ username: 'nick' }, { is_verified: true, role: 'admin'}, { new: true }, function(err) {
           if (err) {
             done()
           }
