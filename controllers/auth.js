@@ -78,9 +78,17 @@ var authResource = function(req, res, next) {
 
 var authUser = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
+    case 'GET /users':
+      if (req.user.role === 'superadmin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
     case 'GET /users/:username':
     case 'GET /users/:username/avatar':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         User.findOne({
@@ -102,6 +110,12 @@ var authUser = function(req, res, next) {
       }
 
     case 'PATCH /users/:username':
+      if (req.user.username === req.params.username || req.user.role === 'superadmin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
     case 'PUT /users/:username/avatar':
       if (req.user.username === req.params.username) {
         return next()
@@ -118,7 +132,8 @@ var authUser = function(req, res, next) {
 var authStyle = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /styles/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
@@ -127,7 +142,8 @@ var authStyle = function(req, res, next) {
     case 'GET /styles/:username/:style_id':
     case 'GET /styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)':
     case 'GET /styles/:username/:style_id/thumbnail':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         Style.findOne({
@@ -167,7 +183,8 @@ var authStyle = function(req, res, next) {
 var authTileset = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /tilesets/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
@@ -176,7 +193,8 @@ var authTileset = function(req, res, next) {
     case 'GET /tilesets/:username/:tileset_id':
     case 'GET /tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)':
     case 'GET /tilesets/:username/:tileset_id/raw':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         Tileset.findOne({
@@ -216,7 +234,8 @@ var authTileset = function(req, res, next) {
 var authFont = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /fonts/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
@@ -226,7 +245,8 @@ var authFont = function(req, res, next) {
     case 'GET /fonts/:username/:fontname/:range.pbf':
     case 'GET /fonts/:username/:fontname/raw':
     case 'GET /fonts/:username/:fontname/thumbnail':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         Font.findOne({
@@ -266,7 +286,8 @@ var authFont = function(req, res, next) {
 var authSprite = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /sprites/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
@@ -276,7 +297,8 @@ var authSprite = function(req, res, next) {
     case 'GET /sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?':
     case 'GET /sprites/:username/:sprite_id/raw':
     case 'GET /sprites/:username/:sprite_id/:icon':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         Sprite.findOne({
@@ -348,7 +370,8 @@ var authFile = function(req, res, next) {
       return next()
 
     case 'GET /files/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
@@ -357,7 +380,8 @@ var authFile = function(req, res, next) {
     case 'GET /files/:username/:file_id':
     case 'GET /files/:username/:file_id/raw':
     case 'GET /files/:username/:file_id/thumbnail':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         File.findOne({
@@ -397,7 +421,8 @@ var authFile = function(req, res, next) {
 var authUpload = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /uploads/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
@@ -407,7 +432,8 @@ var authUpload = function(req, res, next) {
     case 'GET /uploads/:username/:upload_id/file':
     case 'GET /uploads/:username/:upload_id/thumbnail':
     case 'GET /uploads/:username/:upload_id/mini_thumbnail':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         Upload.findOne({
@@ -470,7 +496,8 @@ var authTemplate = function(req, res, next) {
     case 'GET /templates/:username/:template_id':
     case 'GET /templates/:username/:template_id/json':
     case 'GET /templates/:username/:template_id/image':
-      if (req.user.username === req.params.username || req.user.role === 'admin') {
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
         return next()
       } else {
         Template.findOne({
@@ -493,7 +520,8 @@ var authTemplate = function(req, res, next) {
       }
 
     case 'POST /templates/:username':
-      if (req.user.username === req.params.username && req.user.role === 'admin') {
+      if (req.user.username === req.params.username &&
+        (req.user.role === 'admin' || req.user.role === 'superadmin')) {
         return next()
       } else {
         return res.sendStatus(401)

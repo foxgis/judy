@@ -86,6 +86,10 @@ module.exports.update = function(req, res) {
   var filter = ['scope', 'name', 'location', 'organization', 'position',
     'telephone', 'mobile', 'email', 'signature'
   ]
+  
+  if (req.user.role === 'superadmin') {
+    filter.push('is_verified','role')
+  }
 
   User.findOneAndUpdate({
     username: req.params.username
@@ -144,4 +148,16 @@ module.exports.downloadAvatar = function(req, res) {
     res.type('png')
     res.send(user.avatar)
   })
+}
+
+
+module.exports.list = function(req, res) {
+  User.find({
+    role: {$ne: 'superadmin'}
+  }, function(err, users) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+    res.json(users)
+  }).sort({ createdAt: -1 })
 }

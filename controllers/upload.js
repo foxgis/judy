@@ -258,35 +258,6 @@ module.exports.search = function(req, res) {
   var skip = +req.query.skip || 0
   var sort = req.query.sort
 
-  // var query = {}
-
-  // if (req.query.search) {
-  //   query.$or = 
-  //   [
-  //       {name : {$regex : req.query.search}},
-  //       {location : {$regex : req.query.search}},
-  //       {tags : {$regex: req.query.search}}
-  //   ]
-
-  // }
-
-  // if (!req.user.role || req.user.role !== 'admin') {
-  //   query.scope = 'public'
-  //   query.is_deleted = false
-  // }
-
-  // Upload.find(query,
-  //   '-_id -__v -file_id -thumbnail -mini_thumbnail',
-  //   function(err, uploads) {
-  //     if (err) {
-  //       return res.status(500).json({ error: err })
-  //     }
-
-  //     res.status(200).json(uploads)
-  //   }).limit(limit).skip(skip).sort(sort)
-
-
-
   var query = {}
   var querydata = null
 
@@ -321,17 +292,27 @@ module.exports.search = function(req, res) {
     }
   }
 
-  if (!req.user.role || req.user.role !== 'admin') {
+  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     query.scope = 'public'
     query.is_deleted = false
   }
 
+  // if (req.query.location && req.query.year) {
+  //   query.$and = 
+  //   [
+  //     { 
+  //       location: {$in: req.query.location.split(',')}
+  //     },{
+  //       year: {$in: req.query.year.split(',')}
+  //     }
+  //   ]
+  // } else {}
   if (req.query.location) {
-    query.location = req.query.location
+    query.location = { $in: req.query.location.split(',')}
   }
 
   if (req.query.year) {
-    query.year = req.query.year
+    query.year = { $in: req.query.year.split(',')}
   }
 
   Upload.find(query,
@@ -340,7 +321,7 @@ module.exports.search = function(req, res) {
       if (err) {
         return res.status(500).json({ error: err })
       }
-      if (_.keys(uploads).length === 0 && querydata.length > 1) {
+      if (_.keys(uploads).length === 0 && querydata && querydata.length > 1) {
         Upload.find({
           $or : 
           [

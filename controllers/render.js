@@ -10,7 +10,6 @@ var zlib = require('zlib')
 var gl2xml = require('mapbox-gl-json-to-mapnik-xml')
 var turf = require('turf')
 turf.bboxClip = require('turf-bbox-clip')
-//require('turf-bbox-clip').registerProtocols(turf)
 
 module.exports = function(style, params, callback) {
   async.autoInject({
@@ -18,7 +17,7 @@ module.exports = function(style, params, callback) {
       gl2xml(style, callback)
     },
     getImage: function(xml, callback) {
-      params.center = abaculus.coordsFromBbox(params.zoom, params.scale, params.bbox,params.limit)
+      params.center = abaculus.coordsFromBbox(params.zoom, params.scale, params.bbox)
       params.coors = abaculus.tileList(params.zoom, params.scale, params.center)
 
       var sm = new SphericalMercator()
@@ -31,7 +30,7 @@ module.exports = function(style, params, callback) {
           getLayerInfo(map, params.zoom, callback)
         },
         pgSource: function(LayerInfo, callback) {
-          genPgSource(LayerInfo[0], map.extent,callback)
+          genPgSource(LayerInfo[0], callback)
         },
         tileSource: function(LayerInfo, callback) {
           var source = {}
@@ -98,7 +97,6 @@ function genTileSource(tileLayerInfo, coors, callback) {
         urlPath = urlPath.replace('{z}', z)
 
         http.get(urlPath, function(response) {
-          console.log(urlPath)
           var buffer = []
           response.on('data', function(chunk) {
             buffer.push(chunk)
@@ -163,11 +161,10 @@ function genTileSource(tileLayerInfo, coors, callback) {
 
 }
 
-function genPgSource(pgLayerInfo,extent, callback) {
+function genPgSource(pgLayerInfo, callback) {
   var source = {}
   for (var id in pgLayerInfo.source) {
     source[id] = JSON.parse(fs.readFileSync('./metadata/' + id + '/' + pgLayerInfo.source[id])).layer_config
-    source[id]['extent'] = extent
   }
   return callback(null, source)
 }

@@ -66,7 +66,7 @@ module.exports.filedownloads = function(req, res) {
 
 module.exports.location = function(req, res) {
   var match = {}
-  if (!req.user.role || req.user.role !== 'admin') {
+  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     match['is_deleted'] = false
     match['scope'] = 'public'
   }
@@ -95,7 +95,7 @@ module.exports.location = function(req, res) {
 
 module.exports.year = function(req, res) {
   var match = {}
-  if (!req.user.role || req.user.role !== 'admin') {
+  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     match['is_deleted'] = false
     match['scope'] = 'public'
   }

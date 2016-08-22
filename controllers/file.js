@@ -56,7 +56,7 @@ module.exports.search = function(req, res) {
     query.$text = { $search: req.query.keywords }
   }
 
-  if (!req.user.role || req.user.role !== 'admin') {
+  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     query.scope = 'public'
     query.is_deleted = false
   }
