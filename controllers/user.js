@@ -67,6 +67,19 @@ module.exports.login = function(req, res) {
 }
 
 
+module.exports.delete = function(req, res) {
+
+  User.findOneAndRemove({ username: req.params.username }, function(err) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    } else {
+      res.sendStatus(204)
+    }
+    
+  })
+}
+
+
 module.exports.retrieve = function(req, res) {
   User.findOne({ username: req.params.username }, function(err, user) {
     if (err) {

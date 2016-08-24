@@ -116,6 +116,13 @@ var authUser = function(req, res, next) {
         return res.sendStatus(401)
       }
 
+    case 'DELETE /users/:username':
+      if (req.user.role === 'superadmin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
     case 'PUT /users/:username/avatar':
       if (req.user.username === req.params.username) {
         return next()
@@ -538,8 +545,8 @@ var authTemplate = function(req, res, next) {
     case 'PUT /templates/:username/:template_id':
     case 'DELETE /templates/:username/:template_id':
     case 'POST /templates/:username/:template_id/image':
-    case 'PUT /templates/:username/:template_id/image':
-      if (req.user.username === req.params.username) {
+      if (req.user.username === req.params.username ||
+        req.user.role === 'admin' || req.user.role === 'superadmin') {
         return next()
       } else {
         return res.sendStatus(401)
