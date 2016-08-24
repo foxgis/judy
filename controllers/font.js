@@ -87,6 +87,12 @@ module.exports.upload = function(req, res) {
           fontname: newFont.fontname,
           owner: newFont.owner
         }, newFont, { upsert: true, new: true, setDefaultsOnInsert: true }, callback)
+      },
+      updateDB: function(writeDB, font, callback) {
+        Font.findOneAndUpdate({
+          fontname: font.name,
+          owner: username
+        }, {createdAt: new Date(), updatedAt: new Date()}, { new: true }, callback)
       }
     }, function(err, results) {
       fs.unlink(filePath, function() {})
@@ -95,7 +101,7 @@ module.exports.upload = function(req, res) {
         return res.status(500).json({ error: err })
       }
 
-      res.json(results.writeDB)
+      res.json(results.updateDB)
     })
   }
 }
