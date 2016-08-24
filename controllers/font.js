@@ -59,8 +59,6 @@ module.exports.upload = function(req, res) {
       },
       writeDB: function(writePbf, writeFile, font, callback) {
         var newFont = {
-          createdAt: new Date(),
-          updatedAt: new Date(),
           fontname: font.name,
           owner: username,
           is_deleted: false,
