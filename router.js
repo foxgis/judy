@@ -79,6 +79,7 @@ router.get('/files/:username/:file_id/thumbnail', auth, files.preview)
 
 
 router.get('/uploads/:username', auth, uploads.list)
+router.get('/uploads/:username/download', auth, uploads.downloadAll)
 router.post('/uploads/:username', auth, upload.any(), uploads.upload)
 router.get('/uploads/:username/:upload_id', auth, uploads.retrieve)
 router.patch('/uploads/:username/:upload_id', auth, uploads.update)

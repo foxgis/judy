@@ -29,7 +29,7 @@ module.exports.create = function(req, res) {
     })
 
     var keys = ['scope', 'name', 'location', 'organization', 'position',
-      'telephone', 'mobile', 'email', 'signature'
+      'telephone', 'mobile', 'email', 'signature', 'role', 'is_verified'
     ]
     keys.forEach(function(key) {
       if (req.body[key]) {

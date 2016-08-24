@@ -455,6 +455,13 @@ var authUpload = function(req, res, next) {
         return
       }
 
+    case 'GET /uploads/:username/download':
+      if (req.user.role === 'admin' || req.user.role === 'superadmin') {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
     case 'POST /uploads/:username':
     case 'PATCH /uploads/:username/:upload_id':
     case 'DELETE /uploads/:username/:upload_id':

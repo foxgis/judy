@@ -7,6 +7,7 @@ var sharp = require('sharp')
 var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
 var User = require('../models/user')
+var JSZip = require('jszip')
 
 
 module.exports.list = function(req, res) {
@@ -315,6 +316,10 @@ module.exports.search = function(req, res) {
     query.year = { $in: req.query.year.split(',')}
   }
 
+  if (req.query.tags) {
+    query.tags = { $all: req.query.tags.split(',')}
+  }
+
   Upload.find(query,
     '-_id -__v -file_id -thumbnail -mini_thumbnail',
     function(err, uploads) {
@@ -341,4 +346,64 @@ module.exports.search = function(req, res) {
         res.status(200).json(uploads)
       }
     }).limit(limit).skip(skip).sort(sort)
+}
+
+
+module.exports.downloadAll = function(req, res) {
+  Upload.find({
+    location: req.query.location
+  }).lean().exec( function(err, uploads) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    var zip = new JSZip()
+    var gfs = Grid(mongoose.connection.db, mongoose.mongo)
+    async.autoInject({
+      zipfile: function(callback) {
+        async.each(uploads, function(upload, next) {
+          var bufs = []
+          var readStream = gfs.createReadStream({ _id: upload.file_id })
+          readStream.on('error', function(err) {
+            return callback(err, zip)
+          }).on('data', function(chunk) {
+            bufs.push(chunk)
+          }).on('end', function(){
+            var buf = Buffer.concat(bufs)
+            zip.file(upload.name+'.'+upload.format, buf)
+            next()
+          })
+        }, callback)
+      }
+    }, function(err) {
+      if (err) 
+        return res.status(500).json({ error: err })
+      res.set('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
+        encodeURIComponent(req.query.location) + '.zip')
+      res.set({ 'Content-Type': 'application/zip' })
+      zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
+      .pipe(res)
+      .on('finish', function(){
+
+        Upload.update({
+          location: req.query.location
+        }, { $inc: { downloadNum: 1} }, { multi: true }, function(err) {
+          if (err) {
+            return 
+          }
+        })
+
+        uploads.forEach(function(upload) {
+          User.findOneAndUpdate({
+            username: upload.owner
+          }, { $inc: { downloadNum: 1} }, { new: true }, function(err) {
+            if (err) {
+              return
+            }
+          })
+        })
+
+      })
+    })
+  })
 }
