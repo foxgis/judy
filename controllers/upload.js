@@ -168,6 +168,48 @@ module.exports.delete = function(req, res) {
 }
 
 
+module.exports.remove = function(req, res) {
+  if (req.query.username || req.query.upload_id) {
+    var gfs = Grid(mongoose.connection.db, mongoose.mongo)
+    var query = { is_deleted: true }
+    if (req.query.username) {
+      query.owner = req.query.username
+    }
+
+    if (req.query.upload_id) {
+      query.upload_id = req.query.upload_id
+    }
+
+    Upload.find(query).lean().exec(function(err, uploads) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
+
+      async.autoInject({
+        removeGFS: function(callback){
+          async.each(uploads, function(upload, next) {
+            gfs.remove({ _id: upload.file_id }, next)
+          }, callback)
+        },
+        removeDB: function(callback){
+          Upload.remove(query, callback)
+        }
+      },function(err) {
+        if (err) {
+          return res.status(500).json({ error: err })
+        } else {
+          res.sendStatus(204)
+        }
+      })
+
+    })
+  } else {
+    res.status(500).json({ error:'缺少图集信息'})
+  }
+
+}
+
+
 module.exports.download = function(req, res) {
   Upload.findOne({
     upload_id: req.params.upload_id,
@@ -298,26 +340,22 @@ module.exports.search = function(req, res) {
     query.is_deleted = false
   }
 
-  // if (req.query.location && req.query.year) {
-  //   query.$and = 
-  //   [
-  //     { 
-  //       location: {$in: req.query.location.split(',')}
-  //     },{
-  //       year: {$in: req.query.year.split(',')}
-  //     }
-  //   ]
-  // } else {}
   if (req.query.location) {
-    query.location = { $in: req.query.location.split(',')}
+    var locationStr = req.query.location.replace('null','')
+    query.location = { $in: locationStr.split(',')}
   }
 
   if (req.query.year) {
-    query.year = { $in: req.query.year.split(',')}
+    var yearStr = req.query.year.replace('null','')
+    query.year = { $in: yearStr.split(',')}
   }
 
   if (req.query.tags) {
     query.tags = { $all: req.query.tags.split(',')}
+  }
+
+  if (req.query.is_deleted) {
+    query.is_deleted = req.query.is_deleted === 'true'
   }
 
   Upload.find(query,
@@ -350,9 +388,32 @@ module.exports.search = function(req, res) {
 
 
 module.exports.downloadAll = function(req, res) {
-  Upload.find({
-    location: req.query.location
-  }).lean().exec( function(err, uploads) {
+  var query = {}
+  var downloadName = ''
+  if (req.query.user) {
+    query.owner = req.query.user.split(',')[0]
+    downloadName += req.query.user.replace(/,/g,'_')
+  }
+
+  if (req.query.location) {
+    query.location = req.query.location
+    downloadName = downloadName + '_' + req.query.location
+  }
+
+  if (req.query.year) {
+    query.year = req.query.year
+    downloadName = downloadName + '_' + req.query.year
+  }
+
+  if (req.query.createdAt) {
+    query.createdAt = { 
+      $gte: new Date(parseInt(req.query.createdAt), 0, 1),
+      $lt: new Date(parseInt(req.query.createdAt)+1, 0, 1)
+    }
+    downloadName = downloadName + '_' + req.query.createdAt
+  }
+
+  Upload.find(query).lean().exec(function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -370,7 +431,9 @@ module.exports.downloadAll = function(req, res) {
             bufs.push(chunk)
           }).on('end', function(){
             var buf = Buffer.concat(bufs)
-            zip.file(upload.name+'.'+upload.format, buf)
+            var zipFileName = ''+upload.createdAt.getFullYear()+upload.createdAt.getMonth()+upload.createdAt.getDate()+
+            upload.createdAt.getHours()+upload.createdAt.getMinutes()+upload.createdAt.getSeconds()+upload.createdAt.getMilliseconds()
+            zip.file(upload.name + zipFileName + '.' + upload.format, buf)
             next()
           })
         }, callback)
@@ -379,15 +442,13 @@ module.exports.downloadAll = function(req, res) {
       if (err) 
         return res.status(500).json({ error: err })
       res.set('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
-        encodeURIComponent(req.query.location) + '.zip')
+        encodeURIComponent(downloadName) + '.zip')
       res.set({ 'Content-Type': 'application/zip' })
       zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
       .pipe(res)
       .on('finish', function(){
 
-        Upload.update({
-          location: req.query.location
-        }, { $inc: { downloadNum: 1} }, { multi: true }, function(err) {
+        Upload.update(query, { $inc: { downloadNum: 1} }, { multi: true }, function(err) {
           if (err) {
             return 
           }
