@@ -120,6 +120,39 @@ module.exports.update = function(req, res) {
 }
 
 
+module.exports.updatePassword = function(req, res) {
+
+  if (!req.body.oldPassword) {
+    return res.status(400).json({ error: '缺少初始密码信息' })
+  }
+
+  if (!req.body.newPassword) {
+    return res.status(400).json({ error: '缺少修改密码信息' })
+  }
+
+  User.findOne({ username: req.params.username }, function(err, user) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    if (!user || !user.validPassword(req.body.oldPassword)) {
+      return res.status(401).json({ error: '用户密码错误' })
+    } else {
+      user.password = req.body.newPassword
+      user.save(function (err, newuser) {
+        if (err) {
+          return res.status(500).json({ error: err })
+        }
+
+        res.json(newuser.toJSON({ virtuals: true }))
+      })
+    }
+
+  })
+
+}
+
+
 module.exports.uploadAvatar = function(req, res) {
   var filePath = req.files[0].path
   var username = req.params.username

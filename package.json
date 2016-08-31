@@ -63,6 +63,7 @@
     "tiletype": "^0.3.0",
     "turf": "^3.0.0",
     "turf-bbox-clip": "github:turfjs/turf-bbox-clip",
+    "xlsx": "^0.8.0",
     "zipfile": "^0.5.9"
   },
   "devDependencies": {

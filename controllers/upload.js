@@ -8,6 +8,7 @@ var Grid = require('gridfs-stream')
 var Upload = require('../models/upload')
 var User = require('../models/user')
 var JSZip = require('jszip')
+var XLSX = require('xlsx')
 
 
 module.exports.list = function(req, res) {
@@ -467,4 +468,102 @@ module.exports.downloadAll = function(req, res) {
       })
     })
   })
+}
+
+
+module.exports.excel = function(req, res) {
+
+  var headers = ['文件所有者', '文件名', '制图区域', '制图时间', '比例尺', '文件大小', '上传时间', '文件格式']
+  
+  var datas = []
+  datas[0] = headers
+
+  Upload.find({}).lean().sort({owner: 1, createdAt: -1 }).exec(function(err, uploads) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    async.autoInject({
+      sheet: function(callback) {
+        async.eachSeries(uploads, function(upload, next) {
+          var temp = upload.createdAt.getFullYear()+'-'+upload.createdAt.getMonth()+'-'+upload.createdAt.getDate()+'-'+upload.createdAt.getHours()
+          var data = [upload.owner,upload.name,upload.location,upload.year,upload.scale,upload.size,temp,upload.format]
+          datas.push(data)
+          next()
+        }, callback)
+      }
+    }, function(err) {
+      if (err) 
+        return res.status(500).json({ error: err })
+
+      var ws_name = '用户上传图件信息'
+      var wscols = [
+        {wch:15},
+        {wch:15},
+        {wch:15},
+        {wch:15},
+        {wch:15},
+        {wch:15},
+        {wch:15},
+        {wch:15}
+      ]
+      var wb = {
+        SheetNames: [],
+        Sheets: {}
+      }
+
+
+      var ws = sheet_from_array_of_arrays(datas)
+      wb.SheetNames.push(ws_name)
+      wb.Sheets[ws_name] = ws
+      ws['!cols'] = wscols
+
+      var wbbuf = XLSX.write(wb, { type: 'buffer' })
+
+      res.set('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
+        'myexample' + '.xlsx')
+      res.set({ 'Content-Type': 'application/octet-stream' })
+      res.status(200).send(wbbuf)
+
+    })
+
+  })
+}
+
+
+function sheet_from_array_of_arrays(data) {
+  var ws = {}
+  var range = {s: {c:10000000, r:10000000}, e: {c:0, r:0 }}
+  for(var R = 0; R != data.length; ++R) {
+    for(var C = 0; C != data[R].length; ++C) {
+      if(range.s.r > R) 
+        range.s.r = R
+      if(range.s.c > C) 
+        range.s.c = C
+      if(range.e.r < R) 
+        range.e.r = R
+      if(range.e.c < C) 
+        range.e.c = C
+      var cell = {v: data[R][C] }
+      if(cell.v == null) 
+        continue
+      var cell_ref = XLSX.utils.encode_cell({c:C,r:R})
+
+
+      if(typeof cell.v === 'number') {
+        cell.t = 'n'
+      } else if(typeof cell.v === 'boolean') {
+        cell.t = 'b'
+      } else {
+        cell.t = 's'
+      }
+      var style = {horizontal: 'center', vertical: 'center'}
+      cell.s = {alignment: style}
+      ws[cell_ref] = cell
+    }
+  }
+
+  if(range.s.c < 10000000) 
+    ws['!ref'] = XLSX.utils.encode_range(range)
+  return ws
 }

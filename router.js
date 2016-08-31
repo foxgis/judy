@@ -24,6 +24,7 @@ router.post('/users/:username', users.login)
 router.get('/users/:username', auth, users.retrieve)
 router.delete('/users/:username', auth, users.delete)
 router.patch('/users/:username', auth, users.update)
+router.patch('/users/:username/password', auth, users.updatePassword)
 router.put('/users/:username/avatar', auth, upload.any(), users.uploadAvatar)
 router.get('/users/:username/avatar', auth, users.downloadAvatar)
 
@@ -79,6 +80,7 @@ router.get('/files/:username/:file_id/raw', auth, files.downloadRaw)
 router.get('/files/:username/:file_id/thumbnail', auth, files.preview)
 
 
+router.get('/uploads/excel', auth, uploads.excel)
 router.get('/uploads/:username', auth, uploads.list)
 router.get('/uploads/:username/download', auth, uploads.downloadAll)
 router.post('/uploads/:username', auth, upload.any(), uploads.upload)

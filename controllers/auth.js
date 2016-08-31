@@ -110,6 +110,7 @@ var authUser = function(req, res, next) {
       }
 
     case 'PATCH /users/:username':
+    case 'PATCH /users/:username/password':
       if (req.user.username === req.params.username || req.user.role === 'superadmin') {
         return next()
       } else {
@@ -462,6 +463,7 @@ var authUpload = function(req, res, next) {
         return
       }
 
+    case 'GET /uploads/excel':
     case 'GET /uploads/:username/download':
       if (req.user.role === 'admin' || req.user.role === 'superadmin') {
         return next()
