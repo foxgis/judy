@@ -34,21 +34,32 @@ module.exports = function(style, params, callback) {
         },
         tileSource: function(LayerInfo, callback) {
           var source = {}
-          if (LayerInfo[1].source.length == 0) return callback(null, source)
-          else genTileSource(LayerInfo[1], params.coors, callback)
+          if (LayerInfo[1].source.length == 0) {
+            return callback(null, source)
+          } else {
+            genTileSource(LayerInfo[1], params.coors, callback)
+          }
         },
         renderMap: function(LayerInfo, pgSource, tileSource, callback) {
           renderStaticImage(map, params, LayerInfo, pgSource, tileSource, callback)
         }
       }, function(err, results) {
-        if (err) return callback(err)
-        if (!results.renderMap) return callback()
+        if (err) {
+          return callback(err)
+        }
+        if (!results.renderMap) {
+          return callback()
+        }
         callback(err, results.renderMap[0], results.renderMap[1])
       })
     }
   }, function(err, results) {
-    if (err) return callback(err)
-    if (!results.getImage) return callback()
+    if (err) {
+      return callback(err)
+    }
+    if (!results.getImage) {
+      return callback()
+    }
     return callback(err, results.getImage[0], results.getImage[1])
   })
 }
@@ -56,15 +67,16 @@ module.exports = function(style, params, callback) {
 function renderStaticImage(map, params, LayerInfo, pgSource, tileSource, callback) {
   map.layers().forEach(function(layer) {
     if (LayerInfo[0].layers.hasOwnProperty(layer.name)) {
-      if (pgSource[LayerInfo[0].layers[layer.name][0]].hasOwnProperty(layer.name))
+      if (pgSource[LayerInfo[0].layers[layer.name][0]].hasOwnProperty(layer.name)) {
         layer.datasource = new mapnik.Datasource(pgSource[LayerInfo[0].layers[layer.name][0]][layer.name])
-    }
-    else {
-      if (tileSource[LayerInfo[1].layers[layer.name]].hasOwnProperty(layer.name))
+      }   
+    } else {
+      if (tileSource[LayerInfo[1].layers[layer.name]].hasOwnProperty(layer.name)) {
         layer.datasource = new mapnik.Datasource({
           type: 'geojson',
           inline: JSON.stringify(tileSource[LayerInfo[1].layers[layer.name]][layer.name])
         })
+      }
     }
     map.add_layer(layer)
   })
@@ -72,7 +84,9 @@ function renderStaticImage(map, params, LayerInfo, pgSource, tileSource, callbac
   map.render(new mapnik.Image(map.width, map.height), {
     scale: params.scale
   }, function(err, data) {
-    if (err) return callback(err)
+    if (err) {
+      return callback(err)
+    }
     var image = data.encodeSync(params.format)
       //fs.writeFileSync('test.png', image)
     return callback(null, image, {
@@ -106,7 +120,9 @@ function genTileSource(tileLayerInfo, coors, callback) {
               var dataSourceGeoJSON = {}
               var vtile = new mapnik.VectorTile(z, x, y)
               
-              if (!buf) return callback(null,{})
+              if (!buf) {
+                return callback(null,{})
+              }
               vtile.setData(buf)
               vtile.names().forEach(function(layer_name) {
                 if(tileLayerInfo.layers.hasOwnProperty(layer_name)&&tileLayerInfo.layers[layer_name] == sourceURL) {
@@ -116,8 +132,11 @@ function genTileSource(tileLayerInfo, coors, callback) {
                     //Convert lon/lat values to 900913 x/y.
                     if (layer_name == 'hillshade') {
                       var intersect = turf.bboxClip(feat, sm.bbox(x, y, z, false, 'WGS84'))
-                      if (intersect) feat.geometry = intersect.geometry
-                      else continue
+                      if (intersect) {
+                        feat.geometry = intersect.geometry
+                      } else {
+                        continue
+                      }
                     }
                     feat = convert2xy(feat)
                     geojson.features[f_num] = feat
@@ -131,7 +150,9 @@ function genTileSource(tileLayerInfo, coors, callback) {
         })
       })(x, y, z)
     }, function(err, results) {
-      if (err) return callback(err, {})
+      if (err) {
+        return callback(err, {})
+      }
         //拼瓦片
       var source = {}
       var geoJSONConfig = {}
@@ -142,8 +163,9 @@ function genTileSource(tileLayerInfo, coors, callback) {
           'features': []
         }
         results.forEach(function(dataSourceGeoJSON) {
-          if (dataSourceGeoJSON.hasOwnProperty(layername))
+          if (dataSourceGeoJSON.hasOwnProperty(layername)) {
             geojson.features = geojson.features.concat(dataSourceGeoJSON[layername].features)
+          }
         })
         geoJSONConfig[layername] = geojson
       }
@@ -153,8 +175,9 @@ function genTileSource(tileLayerInfo, coors, callback) {
   }, function(err, result) {
     var source = {}
     result.forEach(function(subSource) {
-      for (var key in subSource)
+      for (var key in subSource) {
         source[key] = subSource[key]
+      }
     })
     return callback(null, source)
   })
@@ -182,13 +205,15 @@ function getLayerInfo(map, zoom, callback) {
     var nativePg = isNative(layerSource, zoom)
     if (nativePg[0]) {
       pgConfigInfo.layers[layer.name] = [nativePg[1], nativePg[2]]
-      if (!pgConfigInfo.source.hasOwnProperty(nativePg[1]))
+      if (!pgConfigInfo.source.hasOwnProperty(nativePg[1])) {
         pgConfigInfo.source[nativePg[1]] = nativePg[2]
+      }
     }
     else {
       tileConfigInfo.layers[layer.name] = layerSource
-      if (tileConfigInfo.source.indexOf(layerSource) == -1)
+      if (tileConfigInfo.source.indexOf(layerSource) == -1) {
         tileConfigInfo.source.push(layerSource)
+      }
     }
 
   })
@@ -199,14 +224,13 @@ function convert2xy(feat) {
   var sm = new SphericalMercator()
   var coordinates = feat.geometry.coordinates
   var type = feat.geometry.type
-  if (type == 'Point')
+  if (type == 'Point') {
     feat.geometry.coordinates = sm.forward(coordinates)
-  else if (type == 'LineString') {
+  } else if (type == 'LineString') {
     for (var i_ls in coordinates) {
       feat.geometry.coordinates[i_ls] = sm.forward(coordinates[i_ls])
     }
-  }
-  else if (type == 'Polygon') {
+  } else if (type == 'Polygon') {
     var poly = []
     var num_subPoly = 0
     for (var i_subPoly in coordinates) {
@@ -218,15 +242,16 @@ function convert2xy(feat) {
     }
     feat.geometry.coordinates = poly
 
-  }
-  else if (type == 'MultiPolygon') {
+  } else if (type == 'MultiPolygon') {
     var MultiPoly = []
     var num_poly = 0
     for (var i_mpolygon in coordinates) {
       var m_poly = []
       var m_num_subPoly = 0
       var coor_mpolygon = coordinates[i_mpolygon]
-      if (coor_mpolygon.length == 0) continue
+      if (coor_mpolygon.length == 0) {
+        continue
+      }
       for (var ii_subPoly in coor_mpolygon) {
         var coor_sub_ploygen = coor_mpolygon[ii_subPoly]
         for (var j_mpolygon in coor_sub_ploygen) {
@@ -237,8 +262,7 @@ function convert2xy(feat) {
       MultiPoly[num_poly++] = m_poly
     }
     feat.geometry.coordinates = MultiPoly
-  }
-  else if (type == 'MultiLineString') {
+  } else if (type == 'MultiLineString') {
     for (var i_ml in coordinates) {
       var coor_ml = coordinates[i_ml]
       for (var j_ml in coor_ml) {
@@ -246,8 +270,7 @@ function convert2xy(feat) {
       }
       feat.geometry.coordinates[i_ml] = coor_ml
     }
-  }
-  else if (type == 'MultiPoints') {
+  } else if (type == 'MultiPoints') {
     for (var i_mp in coordinates) {
       feat.geometry.coordinates[i_mp] = sm.forward(coordinates[i_mp])
     }
@@ -264,8 +287,12 @@ function isNative(sourceUrl, zoom) {
         //zoom = ['z',zoom].join('')
       for (var id in zoomConfig) {
         var nameArr = zoomConfig[id].split('.')[0].split('_')
-        if (nameArr.length == 3 && zoom >= nameArr[0].slice(1, this.length) && zoom <= nameArr[1].slice(1, this.length)) return [true, urlPath[urlPath.indexOf('tilesets') + 2], zoomConfig[id]]
-        if (nameArr.length == 2 && zoom == nameArr[0].slice(1, this.length)) return [true, urlPath[urlPath.indexOf('tilesets') + 2], zoomConfig[id]]
+        if (nameArr.length == 3 && zoom >= nameArr[0].slice(1, this.length) && zoom <= nameArr[1].slice(1, this.length)) {
+          return [true, urlPath[urlPath.indexOf('tilesets') + 2], zoomConfig[id]]
+        }
+        if (nameArr.length == 2 && zoom == nameArr[0].slice(1, this.length)) {
+          return [true, urlPath[urlPath.indexOf('tilesets') + 2], zoomConfig[id]]
+        }
       }
     }
   }

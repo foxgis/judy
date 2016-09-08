@@ -473,12 +473,39 @@ module.exports.downloadAll = function(req, res) {
 
 module.exports.excel = function(req, res) {
 
-  var headers = ['文件所有者', '文件名', '制图区域', '制图时间', '比例尺', '文件大小', '上传时间', '文件格式']
+  var owners = ['Zhongtu01','Beijing11','Tianjin12','Hebei13','Shanxi14','Neimenggu15','Liaoning21','Jilin22','Heilongjiang23','Shanghai31',
+  'Jiangsu32','Zhejiang33','Anhui34','Fujian35','Shandong37','Henan41','Hubei42','Hunan43','Guangdong44','Guangxi45','Chongqing50','Sichuan51',
+  'Guizhou52','Yunnan53','Xizang54','Shanxi61','Gansu62','Qinghai63','Ningxia64','Xinjiang65','Jiangxi36','Hainan46']
+  var headers = ['文件所有者', '姓名', '单位', '文件名', '制图区域', '制图时间', '比例尺', '图幅宽', '图幅高', '文件大小', '上传时间', '文件格式', '标签']
   
   var datas = []
   datas[0] = headers
 
-  Upload.find({}).lean().sort({owner: 1, createdAt: -1 }).exec(function(err, uploads) {
+  var pipeline = [{
+    $match: { owner: {$in: owners} }
+  }, {
+    $lookup: { from: 'users', localField: 'owner', foreignField: 'username', as: 'users' }
+  }, {
+    $project: {
+      _id: 0,
+      owner: 1,
+      name: 1,
+      location: 1,
+      year: 1,
+      scale: 1,
+      size: 1,
+      createdAt: 1,
+      format: 1,
+      tags: 1,
+      dimensions: 1,
+      uname: { $arrayElemAt: ['$users.name', 0] },
+      organization: { $arrayElemAt: ['$users.organization', 0] }
+    }
+  }, {
+    $sort: { owner: -1, createdAt: -1 }
+  }]
+  Upload.aggregate(pipeline).exec(function(err, uploads) {
+  //Upload.find({owner: {$in: owners}}, 'owner name location year scale size createdAt format').lean().sort({owner: -1}).exec(function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
@@ -487,7 +514,7 @@ module.exports.excel = function(req, res) {
       sheet: function(callback) {
         async.eachSeries(uploads, function(upload, next) {
           var temp = upload.createdAt.getFullYear()+'-'+upload.createdAt.getMonth()+'-'+upload.createdAt.getDate()+'-'+upload.createdAt.getHours()
-          var data = [upload.owner,upload.name,upload.location,upload.year,upload.scale,upload.size,temp,upload.format]
+          var data = [upload.owner,upload.uname,upload.organization,upload.name,upload.location,upload.year,upload.scale,upload.dimensions[1],upload.dimensions[0],upload.size,temp,upload.format,upload.tags.join(',')]
           datas.push(data)
           next()
         }, callback)
@@ -500,12 +527,17 @@ module.exports.excel = function(req, res) {
       var wscols = [
         {wch:15},
         {wch:15},
+        {wch:20},
+        {wch:30},
         {wch:15},
         {wch:15},
         {wch:15},
         {wch:15},
         {wch:15},
-        {wch:15}
+        {wch:15},
+        {wch:15},
+        {wch:15},
+        {wch:40}
       ]
       var wb = {
         SheetNames: [],
@@ -521,7 +553,7 @@ module.exports.excel = function(req, res) {
       var wbbuf = XLSX.write(wb, { type: 'buffer' })
 
       res.set('Content-disposition', 'attachment; filename*=UTF-8\'\'' +
-        'myexample' + '.xlsx')
+        encodeURIComponent('用户上传图件信息') + '.xlsx')
       res.set({ 'Content-Type': 'application/octet-stream' })
       res.status(200).send(wbbuf)
 

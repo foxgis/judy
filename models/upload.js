@@ -32,6 +32,7 @@ UploadSchema.index({ name: 'text', year: 'text', location: 'text', tags: 'text' 
 UploadSchema.index({ createdAt: -1 })
 UploadSchema.index({ updatedAt: -1 })
 UploadSchema.index({ downloadNum: -1 })
+UploadSchema.index({ owner: -1 })
 
 
 module.exports = mongoose.model('Upload', UploadSchema)
