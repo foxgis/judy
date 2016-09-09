@@ -400,17 +400,17 @@ describe('权限模块', function() {
     })
 
     describe('获取字体', function() {
-      it('获取列表失败', function(done) {
+      it('获取列表成功', function(done) {
         request(app)
           .get('/api/v1/fonts/nick')
           .set('x-access-token', judy_access_token)
-          .expect(401)
+          .expect(200)
           .end(function(err, res) {
             if (err) {
               return done(err)
             }
 
-            res.body.should.be.empty
+            res.body[0]['owner'].should.equal('nick')
 
             done()
           })
