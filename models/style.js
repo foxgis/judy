@@ -3,6 +3,7 @@ var select = require('mongoose-json-select')
 var shortid = require('shortid')
 
 
+//该模块定义了一个schema，对应Mongodb数据库中的styles集合，并导出模型，使其执行数据库CURD操作
 var StyleSchema = new mongoose.Schema({
   style_id: { type: String, default: shortid.generate, index: true },
   owner: String,

@@ -9,6 +9,8 @@ var gm = require('gm')
 var File = require('../models/file')
 
 
+//该模块包含了对文件功能进行业务处理的各项函数
+
 module.exports.stats = function(req, res) {
   var pipeline = [{
     $match: { is_deleted: false }

@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
 var select = require('mongoose-json-select')
 
 
+//该模块定义了一个schema，对应Mongodb数据库中的fonts集合，并导出模型，使其执行数据库CURD操作
 var FontSchema = new mongoose.Schema({
   fontname: { type: String, index: true },
   owner: String,

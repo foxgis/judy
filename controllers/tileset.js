@@ -14,6 +14,8 @@ var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
 
 
+//该模块包含了对瓦片集功能进行业务处理的各项函数
+
 module.exports.list = function(req, res) {
   Tileset.find({
     owner: req.params.username,

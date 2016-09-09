@@ -10,6 +10,8 @@ var Template = require('../models/template')
 var Buffer = require('buffer').Buffer
 
 
+//该模块包含了对模板功能进行业务处理的各项函数
+
 module.exports.list = function(req, res) {
   Template.find({
     is_deleted: false
@@ -66,16 +68,16 @@ module.exports.update = function(req, res) {
   Template.findOneAndUpdate({
     template_id: req.params.template_id,
     owner: req.params.username
-  }, updateData, { new: true }, function(err, template1) {
+  }, updateData, { new: true }, function(err, template) {
     if (err) {
       return res.status(500).json({ error: err })
     }
 
-    if (!template1) {
+    if (!template) {
       return res.sendStatus(404)
     }
 
-    res.status(200).json(template1)
+    res.status(200).json(template)
   })
 }
 

@@ -11,6 +11,8 @@ var shortid = require('shortid')
 var Sprite = require('../models/sprite')
 
 
+//该模块包含了对符号库功能进行业务处理的各项函数
+
 module.exports.list = function(req, res) {
   Sprite.find({
     owner: req.params.username,

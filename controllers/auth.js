@@ -9,6 +9,7 @@ var Upload = require('../models/upload')
 var Template = require('../models/template')
 
 
+//该模块对用户权限进行验证
 module.exports = function(req, res, next) {
   authAccessToken(req, res, function() {
     authResource(req, res, next)
@@ -16,6 +17,7 @@ module.exports = function(req, res, next) {
 }
 
 
+//验证access_token的有效性，并获取用户属性添加到req对象当中（即req.user）
 var authAccessToken = function(req, res, next) {
   var access_token = req.query.access_token || req.cookies.access_token ||
     req.headers['x-access-token']
@@ -51,6 +53,7 @@ var authAccessToken = function(req, res, next) {
 }
 
 
+//用于验证用户的资源权限
 var authResource = function(req, res, next) {
   var resourceType = req.route.path.split('/')[1]
   switch (resourceType) {
@@ -76,6 +79,7 @@ var authResource = function(req, res, next) {
 }
 
 
+//验证用户模块权限
 var authUser = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /users':
@@ -137,6 +141,7 @@ var authUser = function(req, res, next) {
 }
 
 
+//验证样式模块权限
 var authStyle = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /styles/:username':
@@ -188,6 +193,7 @@ var authStyle = function(req, res, next) {
 }
 
 
+//验证瓦片集模块权限
 var authTileset = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /tilesets/:username':
@@ -239,15 +245,11 @@ var authTileset = function(req, res, next) {
 }
 
 
+//验证字体模块权限
 var authFont = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /fonts/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin' ||
-        req.user.role === 'superadmin') {
-        return next()
-      } else {
-        return res.sendStatus(401)
-      }
+      return next()
 
     case 'GET /fonts/:username/:fontname':
     case 'GET /fonts/:username/:fontname/:range.pbf':
@@ -291,6 +293,7 @@ var authFont = function(req, res, next) {
 }
 
 
+//验证符号库模块权限
 var authSprite = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /sprites/:username':
@@ -371,6 +374,7 @@ var authSprite = function(req, res, next) {
 }
 
 
+//验证文件模块权限
 var authFile = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /files/stats':
@@ -426,6 +430,7 @@ var authFile = function(req, res, next) {
 }
 
 
+//验证上传图集模块权限
 var authUpload = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /uploads/:username':
@@ -496,6 +501,7 @@ var authUpload = function(req, res, next) {
 }
 
 
+//验证统计模块权限
 var authStat = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /stats/uploads':
@@ -511,6 +517,7 @@ var authStat = function(req, res, next) {
 }
 
 
+//验证模板模块权限
 var authTemplate = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /templates':

@@ -12,6 +12,7 @@ var Style = require('../models/style')
 var render = require('./render')
 
 
+//该模块包含了对样式功能进行业务处理的各项函数
 
 module.exports.list = function(req, res) {
   Style.find({

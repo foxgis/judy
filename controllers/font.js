@@ -9,11 +9,19 @@ var gm = require('gm')
 var Font = require('../models/font')
 
 
+//该模块包含了对字体功能进行业务处理的各项函数
+
 module.exports.list = function(req, res) {
-  Font.find({
+  var query = {
     owner: req.params.username,
-    is_deleted: false
-  }, '-_id -__v -is_deleted', function(err, fonts) {
+    is_deleted: false 
+  }
+
+  if (req.user.username !== req.params.username && req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.scope = 'public'
+  }
+
+  Font.find(query, '-_id -__v -is_deleted', function(err, fonts) {
     if (err) {
       return res.status(500).json({ error: err })
     }

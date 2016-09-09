@@ -11,6 +11,8 @@ var JSZip = require('jszip')
 var XLSX = require('xlsx')
 
 
+//该模块包含了对上传图片功能进行业务处理的各项函数
+
 module.exports.list = function(req, res) {
   Upload.find({
     owner: req.params.username,
@@ -513,7 +515,7 @@ module.exports.excel = function(req, res) {
     async.autoInject({
       sheet: function(callback) {
         async.eachSeries(uploads, function(upload, next) {
-          var temp = upload.createdAt.getFullYear()+'-'+upload.createdAt.getMonth()+'-'+upload.createdAt.getDate()+'-'+upload.createdAt.getHours()
+          var temp = upload.createdAt.getFullYear()+'-'+(upload.createdAt.getMonth()+1)+'-'+upload.createdAt.getDate()+'-'+upload.createdAt.getHours()
           var data = [upload.owner,upload.uname,upload.organization,upload.name,upload.location,upload.year,upload.scale,upload.dimensions[1],upload.dimensions[0],upload.size,temp,upload.format,upload.tags.join(',')]
           datas.push(data)
           next()

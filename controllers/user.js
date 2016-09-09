@@ -5,6 +5,8 @@ var gm = require('gm')
 var User = require('../models/user')
 
 
+//该模块包含了对用户功能进行业务处理的各项函数
+
 module.exports.create = function(req, res) {
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({ error: '注册信息不完整' })

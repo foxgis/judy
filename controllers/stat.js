@@ -2,6 +2,7 @@ var Upload = require('../models/upload')
 var User = require('../models/user')
 
 
+//统计系统中各地区总共上传了多少文件
 module.exports.uploads = function(req, res) {
   var pipeline = [{
     $match: { is_deleted: false }
@@ -39,6 +40,8 @@ module.exports.uploads = function(req, res) {
   })
 }
 
+
+//统计用户下载信息
 module.exports.userdownloads = function(req, res) {
   User.find({ downloadNum: { $gt: 0}}, 'name username location organization downloadNum -_id',function(err, users) {
     if (err) {
@@ -50,6 +53,8 @@ module.exports.userdownloads = function(req, res) {
   }).sort({ downloadNum: -1 }).limit(100)
 }
 
+
+//统计文件下载信息
 module.exports.filedownloads = function(req, res) {
   Upload.find({ 
     is_deleted: false,
@@ -64,6 +69,8 @@ module.exports.filedownloads = function(req, res) {
   }).sort({ downloadNum: -1 }).limit(100)
 }
 
+
+//统计各地区文件上传数量
 module.exports.location = function(req, res) {
   var match = {}
   if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
@@ -93,6 +100,8 @@ module.exports.location = function(req, res) {
   })
 }
 
+
+//统计各制图年份文件上传数量
 module.exports.year = function(req, res) {
   var match = {}
   if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {

@@ -3,6 +3,7 @@ var select = require('mongoose-json-select')
 var shortid = require('shortid')
 
 
+//该模块定义了一个schema，对应Mongodb数据库中的uploads集合，并导出模型，使其执行数据库CURD操作
 var UploadSchema = new mongoose.Schema({
   upload_id: { type: String, default: shortid.generate, index: true },
   file_id: mongoose.Schema.Types.ObjectId,
