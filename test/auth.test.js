@@ -199,26 +199,26 @@ describe('权限模块', function() {
     })
 
     describe('获取上传文件', function() {
-      it('获取失败', function(done) {
+      it('获取成功', function(done) {
         request(app)
           .get('/api/v1/uploads/nick')
           .set('x-access-token', judy_access_token)
-          .expect(401, done)
+          .expect(200, done)
       })
     })
 
     describe('获取样式', function() {
-      it('获取样式列表失败', function(done) {
+      it('获取样式列表成功', function(done) {
         request(app)
           .get('/api/v1/styles/nick')
           .set('x-access-token', judy_access_token)
-          .expect(401)
+          .expect(200)
           .end(function(err, res) {
             if (err) {
               return done(err)
             }
 
-            res.body.should.be.empty
+            //res.body.should.be.empty
 
             done()
           })
@@ -295,17 +295,17 @@ describe('权限模块', function() {
     })
 
     describe('获取符号库', function() {
-      it('获取符号库列表失败', function(done) {
+      it('获取符号库列表成功', function(done) {
         request(app)
           .get('/api/v1/sprites/nick')
           .set('x-access-token', judy_access_token)
-          .expect(401)
+          .expect(200)
           .end(function(err, res) {
             if (err) {
               return done(err)
             }
 
-            res.body.should.be.empty
+            //res.body.should.be.empty
 
             done()
           })

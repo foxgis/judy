@@ -14,10 +14,16 @@ var XLSX = require('xlsx')
 //该模块包含了对上传图片功能进行业务处理的各项函数
 
 module.exports.list = function(req, res) {
-  Upload.find({
+  var query = {
     owner: req.params.username,
-    is_deleted: false
-  }, '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail', function(err, uploads) {
+    is_deleted: false 
+  }
+
+  if (req.user.username !== req.params.username && req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.scope = 'public'
+  }
+
+  Upload.find(query, '-_id -__v -file_id -is_deleted -thumbnail -mini_thumbnail', function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }

@@ -15,10 +15,16 @@ var render = require('./render')
 //该模块包含了对样式功能进行业务处理的各项函数
 
 module.exports.list = function(req, res) {
-  Style.find({
+  var query = {
     owner: req.params.username,
     is_deleted: false
-  }, 'style_id owner scope tags description version name createdAt updatedAt', function(err, styles) {
+  }
+
+  if (req.user.username !== req.params.username && req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.scope = 'public'
+  }
+
+  Style.find(query, 'style_id owner scope tags description version name createdAt updatedAt', function(err, styles) {
     if (err) {
       return res.status(500).json({ error: err })
     }

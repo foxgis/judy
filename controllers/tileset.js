@@ -17,10 +17,16 @@ var Tileset = require('../models/tileset')
 //该模块包含了对瓦片集功能进行业务处理的各项函数
 
 module.exports.list = function(req, res) {
-  Tileset.find({
+  var query = {
     owner: req.params.username,
     is_deleted: false
-  }, 'tileset_id owner scope tags filename filesize name description \
+  }
+
+  if (req.user.username !== req.params.username && req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.scope = 'public'
+  }
+
+  Tileset.find(query, 'tileset_id owner scope tags filename filesize name description \
   createdAt updatedAt', function(err, tilesets) {
     if (err) {
       return res.status(500).json({ error: err })

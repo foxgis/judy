@@ -14,10 +14,16 @@ var Sprite = require('../models/sprite')
 //该模块包含了对符号库功能进行业务处理的各项函数
 
 module.exports.list = function(req, res) {
-  Sprite.find({
+  var query = {
     owner: req.params.username,
-    is_deleted: false
-  }, '-_id -__v -is_deleted', function(err, sprites) {
+    is_deleted: false 
+  }
+
+  if (req.user.username !== req.params.username && req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.scope = 'public'
+  }
+
+  Sprite.find(query, '-_id -__v -is_deleted', function(err, sprites) {
     if (err) {
       return res.status(500).json({ error: err })
     }

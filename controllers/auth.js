@@ -145,12 +145,7 @@ var authUser = function(req, res, next) {
 var authStyle = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /styles/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin' ||
-        req.user.role === 'superadmin') {
-        return next()
-      } else {
-        return res.sendStatus(401)
-      }
+      return next()
 
     case 'GET /styles/:username/:style_id':
     case 'GET /styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)':
@@ -197,12 +192,7 @@ var authStyle = function(req, res, next) {
 var authTileset = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /tilesets/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin' ||
-        req.user.role === 'superadmin') {
-        return next()
-      } else {
-        return res.sendStatus(401)
-      }
+      return next()
 
     case 'GET /tilesets/:username/:tileset_id':
     case 'GET /tilesets/:username/:tileset_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x)?\.:format([\\w\\.]+)':
@@ -297,12 +287,7 @@ var authFont = function(req, res, next) {
 var authSprite = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /sprites/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin' ||
-        req.user.role === 'superadmin') {
-        return next()
-      } else {
-        return res.sendStatus(401)
-      }
+      return next()
 
     case 'GET /sprites/:username/:sprite_id':
     case 'GET /sprites/:username/:sprite_id/sprite:scale(@[1-4]x)?.:format([\\w\\.]+)?':
@@ -434,12 +419,7 @@ var authFile = function(req, res, next) {
 var authUpload = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
     case 'GET /uploads/:username':
-      if (req.user.username === req.params.username || req.user.role === 'admin' ||
-        req.user.role === 'superadmin') {
-        return next()
-      } else {
-        return res.sendStatus(401)
-      }
+      return next()
 
     case 'GET /uploads/:username/:upload_id':
     case 'GET /uploads/:username/:upload_id/file':
