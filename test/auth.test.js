@@ -212,16 +212,7 @@ describe('权限模块', function() {
         request(app)
           .get('/api/v1/styles/nick')
           .set('x-access-token', judy_access_token)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            //res.body.should.be.empty
-
-            done()
-          })
+          .expect(200,done)
       })
 
       it('获取私密样式失败', function(done) {
@@ -299,16 +290,7 @@ describe('权限模块', function() {
         request(app)
           .get('/api/v1/sprites/nick')
           .set('x-access-token', judy_access_token)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(err)
-            }
-
-            //res.body.should.be.empty
-
-            done()
-          })
+          .expect(200,done)
       })
 
       it('获取私密符号库失败', function(done) {
