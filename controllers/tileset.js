@@ -37,6 +37,30 @@ module.exports.list = function(req, res) {
 }
 
 
+module.exports.listAll = function(req, res) {
+  var query = {
+    is_deleted: false
+  }
+
+  if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.$or = 
+    [
+        {owner: req.user.username},
+        {scope: 'public'}
+    ]
+  }
+
+  Tileset.find(query, 'tileset_id owner scope tags filename filesize name description \
+  createdAt updatedAt', function(err, tilesets) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.json(tilesets)
+  }).sort({ createdAt: -1 })
+}
+
+
 module.exports.retrieve = function(req, res) {
   Tileset.findOne({
     tileset_id: req.params.tileset_id,

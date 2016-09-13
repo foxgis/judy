@@ -33,6 +33,29 @@ module.exports.list = function(req, res) {
 }
 
 
+module.exports.listAll = function(req, res) {
+  var query = {
+    is_deleted: false 
+  }
+
+  if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    query.$or = 
+    [
+        {owner: req.user.username},
+        {scope: 'public'}
+    ]
+  }
+
+  Sprite.find(query, '-_id -__v -is_deleted', function(err, sprites) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.json(sprites)
+  }).sort({ createdAt: -1 })
+}
+
+
 module.exports.retrieve = function(req, res) {
   Sprite.findOne({
     sprite_id: req.params.sprite_id,

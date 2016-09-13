@@ -38,6 +38,7 @@ router.get('/styles/:username/:style_id/:z(\\d+)/:x(\\d+)/:y(\\d+):scale(@[1-4]x
 router.get('/styles/:username/:style_id/thumbnail', auth, styles.preview)
 
 // 瓦片集
+router.get('/tilesets', auth, tilesets.listAll)
 router.get('/tilesets/:username', auth, tilesets.list)
 router.get('/tilesets/:username/:tileset_id', tilesets.retrieve)
 router.post('/tilesets/:username', auth, upload.any(), tilesets.upload)
@@ -57,6 +58,7 @@ router.get('/fonts/:username/:fontname/raw', auth, fonts.downloadRaw)
 router.get('/fonts/:username/:fontname/thumbnail', auth, fonts.preview)
 
 // 符号库
+router.get('/sprites', auth, sprites.listAll)
 router.get('/sprites/:username', auth, sprites.list)
 router.get('/sprites/:username/:sprite_id', auth, sprites.retrieve)
 router.post('/sprites/:username', auth, upload.any(), sprites.upload)

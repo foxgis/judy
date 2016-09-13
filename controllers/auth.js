@@ -191,6 +191,7 @@ var authStyle = function(req, res, next) {
 //验证瓦片集模块权限
 var authTileset = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
+    case 'GET /tilesets':
     case 'GET /tilesets/:username':
       return next()
 
@@ -286,6 +287,7 @@ var authFont = function(req, res, next) {
 //验证符号库模块权限
 var authSprite = function(req, res, next) {
   switch (req.method + ' ' + req.route.path) {
+    case 'GET /sprites':
     case 'GET /sprites/:username':
       return next()
 
