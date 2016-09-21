@@ -360,7 +360,7 @@ module.exports.search = function(req, res) {
   }
 
   if (req.query.tags) {
-    query.tags = { $all: req.query.tags.split(',')}
+    query.tags = { $in: req.query.tags.split(',')}
   }
 
   if (req.query.is_deleted) {

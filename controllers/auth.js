@@ -491,6 +491,7 @@ var authStat = function(req, res, next) {
     case 'GET /stats/filedownloads':
     case 'GET /stats/location':
     case 'GET /stats/year':
+    case 'GET /stats/tags':
       return next()
 
     default:

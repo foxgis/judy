@@ -130,3 +130,36 @@ module.exports.year = function(req, res) {
     res.status(200).json(results)
   })
 }
+
+
+//统计主题词
+module.exports.tags = function(req, res) {
+  var match = {}
+  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
+    match['is_deleted'] = false
+    match['scope'] = 'public'
+  }
+  var pipeline = [{
+    $match: match
+  },{
+    $unwind: '$tags'
+  },{
+    $group: { _id: '$tags', total: { $sum: 1 } }
+  },{
+    $project: {
+      _id: 0,
+      total: 1,
+      tag: '$_id'
+    }
+  },{
+    $sort: { total: -1 }
+  }]
+
+  Upload.aggregate(pipeline, function(err, results) {
+    if (err) {
+      return res.status(500).json({ error: err })
+    }
+
+    res.status(200).json(results)
+  })
+}

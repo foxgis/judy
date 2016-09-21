@@ -101,6 +101,7 @@ router.get('/stats/userdownloads', auth, stats.userdownloads)
 router.get('/stats/filedownloads', auth, stats.filedownloads)
 router.get('/stats/location', auth, stats.location)
 router.get('/stats/year', auth, stats.year)
+router.get('/stats/tags', auth, stats.tags)
 
 //模板
 router.get('/templates', auth, templates.list)
