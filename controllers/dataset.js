@@ -131,7 +131,7 @@ module.exports.updateRaw = function(req, res) {
       Dataset.findOneAndUpdate({
         dataset_id: dataset_id,
         owner: username
-      }, {bound: bounds, center: center}, { new: true }, callback)
+      }, {bounds: bounds, center: center}, { new: true }, callback)
     }
   }, function(err, results) {
 

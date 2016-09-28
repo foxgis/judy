@@ -12,7 +12,9 @@
       "fonts",
       "sprites",
       "files",
-      "uploads"
+      "uploads",
+      "datasets",
+      "templates"
     ],
     "env": {
       "NODE_ENV": "production",
