@@ -10,6 +10,7 @@ var files = require('./controllers/file')
 var uploads = require('./controllers/upload')
 var stats = require('./controllers/stat')
 var templates = require('./controllers/template')
+var datasets = require('./controllers/dataset')
 
 var router = express.Router()
 var upload = multer({
@@ -114,6 +115,14 @@ router.put('/templates/:username/:template_id', auth, upload.any(), templates.up
 router.post('/templates/:username/:template_id/image', auth, upload.any(), templates.postImage)
 router.get('/templates/:username/:template_id/image', auth, templates.getImage)
 
-
+// 数据集
+router.get('/datasets', auth, datasets.listAll)
+router.get('/datasets/:username', auth, datasets.list)
+router.get('/datasets/:username/:dataset_id', datasets.retrieve)
+router.post('/datasets/:username', auth, upload.any(), datasets.upload)
+router.patch('/datasets/:username/:dataset_id/raw', auth, datasets.updateRaw)
+router.patch('/datasets/:username/:dataset_id', auth, datasets.update)
+router.delete('/datasets/:username/:dataset_id', auth, datasets.delete)
+router.get('/datasets/:username/:dataset_id/raw', auth, datasets.getRaw)
 
 module.exports = router

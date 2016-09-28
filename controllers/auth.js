@@ -7,6 +7,7 @@ var Font = require('../models/font')
 var File = require('../models/file')
 var Upload = require('../models/upload')
 var Template = require('../models/template')
+var Dataset = require('../models/dataset')
 
 
 //该模块对用户权限进行验证
@@ -75,6 +76,8 @@ var authResource = function(req, res, next) {
       return authStat(req, res, next)
     case 'templates':
       return authTemplate(req, res,next)
+    case 'datasets':
+      return authDataset(req, res,next)
   }
 }
 
@@ -550,6 +553,55 @@ var authTemplate = function(req, res, next) {
       } else {
         return res.sendStatus(401)
       }
+
+    default:
+      return res.sendStatus(401)
+  }
+}
+
+
+//验证数据集模块权限
+var authDataset = function(req, res, next) {
+  switch (req.method + ' ' + req.route.path) {
+    case 'GET /datasets':
+    case 'GET /datasets/:username':
+      return next()
+
+    case 'GET /datasets/:username/:dataset_id':
+    case 'GET /datasets/:username/:dataset_id/raw':
+      if (req.user.username === req.params.username || req.user.role === 'admin' ||
+        req.user.role === 'superadmin') {
+        return next()
+      } else {
+        Dataset.findOne({
+          dataset_id: req.params.dataset_id,
+          owner: req.params.username,
+          scope: 'public'
+        }, function(err, dataset) {
+          if (err) {
+            return res.status(500).json({ error: err })
+          }
+
+          if (!dataset) {
+            return res.sendStatus(401)
+          }
+
+          return next()
+        })
+
+        return
+      }
+
+    case 'POST /datasets/:username':
+    case 'PATCH /datasets/:username/:dataset_id':
+    case 'PATCH /datasets/:username/:dataset_id/raw':
+    case 'DELETE /datasets/:username/:dataset_id':
+      if (req.user.username === req.params.username) {
+        return next()
+      } else {
+        return res.sendStatus(401)
+      }
+
 
     default:
       return res.sendStatus(401)

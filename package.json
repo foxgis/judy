@@ -24,6 +24,7 @@
     "express": "^4.13.1",
     "font-scope": "^1.2.0",
     "fontmachine": "^0.1.1",
+    "geojson-extent": "^0.3.2",
     "gm": "^1.22.0",
     "gridfs-stream": "^1.1.1",
     "helmet": "^2.0.0",
