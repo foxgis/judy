@@ -10,6 +10,7 @@ var DatasetSchema = new mongoose.Schema({
   scope: { type: String, default: 'public' },
   is_deleted: { type: Boolean, default: false },
 
+  tags: [String],
   filename: String,
   filesize: Number,
   bounds: { type: [Number], default: [-180, -90, 180, 90] },

@@ -208,7 +208,7 @@ module.exports.getRaw = function(req, res) {
 
 
 module.exports.update = function(req, res) {
-  var filter = ['scope', 'bounds', 'center']
+  var filter = ['scope', 'tags', 'filename']
 
   Dataset.findOneAndUpdate({
     dataset_id: req.params.dataset_id,

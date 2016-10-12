@@ -11,6 +11,7 @@ var uploads = require('./controllers/upload')
 var stats = require('./controllers/stat')
 var templates = require('./controllers/template')
 var datasets = require('./controllers/dataset')
+var ngccs = require('./controllers/ngcc')
 
 var router = express.Router()
 var upload = multer({
@@ -124,5 +125,7 @@ router.patch('/datasets/:username/:dataset_id/raw', auth, datasets.updateRaw)
 router.patch('/datasets/:username/:dataset_id', auth, datasets.update)
 router.delete('/datasets/:username/:dataset_id', auth, datasets.delete)
 router.get('/datasets/:username/:dataset_id/raw', auth, datasets.getRaw)
+
+router.get('/ngccs', ngccs.list)
 
 module.exports = router
