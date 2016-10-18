@@ -1,0 +1,180 @@
+#!/usr/bin/env node --max_old_space_size=4096 --optimize_for_size --max_executable_size=4096 --stack_size=4096
+
+var mongoose = require('mongoose');
+var config = require('../config');
+var async = require('async');
+var pg = require('pg');
+var _ = require('lodash');
+var fs = require('fs');
+var conString = "postgres://ngcc:123456@192.9.105.123:5432/ngcc-storage";
+
+var conn = mongoose.createConnection(config.DB);
+var NgccSchema = new mongoose.Schema({
+  field_name: String,
+  field_data: mongoose.Schema.Types.Mixed,
+  description: String,
+  type: String
+}, { timestamps: true });
+
+fs.readFile('layers.json','utf-8',function(err, json) {
+  //fs.unlink(collectionName+'_name.json');
+  if (err) {
+    return JSON.stringify({ error: err });
+  }
+  var data = JSON.parse(json)
+  var gbs = data.gb;
+  var layerNames = data.layerNames;
+  var classs = data.classToName;
+  var fieldTables = data.field;
+
+  var NUM = 7; 
+  var tableName = 'admin_map_'+layerNames[NUM].name;
+  var collectionName = 'ngcc_'+tableName;
+  var Ngcc = conn.model(collectionName, NgccSchema, collectionName);
+
+  pg.connect(conString, function(err, client, done) {  
+    if(err) {    
+      return console.error('error fetching client from pool', err);
+    }
+
+    async.autoInject({
+      fields: function(callback) {
+        client.query('select column_name from information_schema.columns where table_schema=$1 and table_name=$2 GROUP BY column_name,data_type,character_maximum_length,numeric_precision,numeric_scale ', ['data',tableName], function(err, result) {
+          if(err) {      
+              return callback(err);
+          }
+          var fields = [];
+          for(var i = 0; i < result.rowCount; i++){
+            fields.push(result.rows[i]['column_name']);
+          } 
+          return callback(null, fields);
+        });
+      },
+      data: function(fields, callback) {
+        async.each(fields, function(field, next) {
+          if(_.indexOf(layerNames[NUM].exportName,field) !== -1) {
+            var queryString = 'select distinct '+ field +' from  data.' + tableName;
+            client.query(queryString, function(err, result) {
+              if(err) {      
+                return callback(err);
+              } 
+              var fieldToName = "";
+              if(_.filter(fieldTables,["value",field]).length !== 0){
+                fieldToName = _.filter(fieldTables,["value",field])[0].description;
+              }
+              var fieldType = "";
+              var data = [];
+              for(var i = 0; i < result.rowCount; i++) {
+                if(result.rows[i][field]){
+                  if(field === 'class'){
+                    var tempClass = _.filter(classs,["value",result.rows[i][field]]);
+                    if(tempClass.length === 0){
+                      tempClass = [{
+                        "value":result.rows[i][field],
+                        "description":""
+                      }]
+                    }
+                    data.push(tempClass[0]);
+                  }else if(field === 'gb'){
+                    var tempGB = _.filter(gbs,["value",result.rows[i][field]]);
+                    if(tempGB.length === 0){
+                      tempGB = [{
+                        "value":result.rows[i][field],
+                        "description":""
+                      }]
+                    }
+                    data.push(tempGB[0]);
+                  }else{
+                    data.push(result.rows[i][field]);
+                  }
+                  
+                  fieldType = typeof(result.rows[i][field])+"";
+                }
+              }
+
+              Ngcc.findOneAndUpdate({
+                field_name: field
+              }, {
+                field_name: field, 
+                field_data: data,
+                description: fieldToName,
+                type: fieldType
+              }, { upsert: true, new: true, setDefaultsOnInsert: true }, function(err1){
+                if(err1) {
+                  if(err1.message === 'attempt to write outside buffer bounds') {
+                    next();
+                  } else {
+                    console.log(err1.message);
+                    return callback(err1);
+                  }
+                } else {
+                  next();
+                }
+              })
+
+              //next();
+            });
+          } else {
+           next()
+          }  
+        }, callback)
+      }
+    }, function(err, results) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('done');
+        process.exit();
+      }
+    })
+
+
+
+
+
+
+
+      //查询所有表的名字
+      // client.query('SELECT layer_id FROM map.map_data WHERE layer_id = $1', ['admin_map_asia_a'], function(err, result) {
+      //     done();    
+      //     console.log(JSON.stringify(result,null,2));
+      //     if(err) {      
+      //         return console.error('error running query', err);
+      // }    
+      // console.log(result.rowCount);  
+
+      //查询所有字段的名字
+      // client.query('select column_name from information_schema.columns where table_schema=$1 and table_name=$2 GROUP BY column_name,data_type,character_maximum_length,numeric_precision,numeric_scale ', ['data','admin_map_asia_a'], function(err, result) {
+      //     done(); 
+      //     console.log(JSON.stringify(result.rows,null,2));
+      //     if(err) {      
+      //         return console.error('error running query', err);
+      //     }    
+      // });
+
+      //查询字段的非重复的值并存入mongodb数据库中
+      // client.query('select distinct gid from data.admin_map_asia_a', function(err, result) {
+      //     done(); 
+      //     if(err) {      
+      //         return console.error('error running query', err);
+      //     } 
+      //     var data = [];
+      //     for(var i = 0; i < result.rowCount; i++) {
+      //       data.push(result.rows[i]['gid'])
+      //     }
+
+      //     var newFileld = {gid:data}
+
+      //     Ngcc.findOneAndUpdate({
+      //       table_name: 'admin_map_asia_a'
+      //     }, {table_name: 'admin_map_asia_a',fields: newFileld}, { upsert: true, new: true, setDefaultsOnInsert: true }, function(err){
+      //      if(err) {
+      //        console.log(err)
+      //      }
+      //      return console.log('done')
+      //     })
+
+      // });
+  });
+});
+
