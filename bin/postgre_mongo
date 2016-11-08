@@ -27,7 +27,7 @@ fs.readFile('layers.json','utf-8',function(err, json) {
   var classs = data.classToName;
   var fieldTables = data.field;
 
-  var NUM = 7; 
+  var NUM = 8; 
   var tableName = 'admin_map_'+layerNames[NUM].name;
   var collectionName = 'ngcc_'+tableName;
   var Ngcc = conn.model(collectionName, NgccSchema, collectionName);
@@ -76,10 +76,17 @@ fs.readFile('layers.json','utf-8',function(err, json) {
                     }
                     data.push(tempClass[0]);
                   }else if(field === 'gb'){
-                    var tempGB = _.filter(gbs,["value",result.rows[i][field]]);
+                    var tempValue;
+                    var tempfieldType = typeof(result.rows[i][field])+"";
+                    if(tempfieldType === "string"){
+                      tempValue = parseInt(result.rows[i][field]);
+                    }else{
+                      tempValue = result.rows[i][field];
+                    }
+                    var tempGB = _.filter(gbs,["value",tempValue]);
                     if(tempGB.length === 0){
                       tempGB = [{
-                        "value":result.rows[i][field],
+                        "value":tempValue,
                         "description":""
                       }]
                     }
@@ -90,6 +97,12 @@ fs.readFile('layers.json','utf-8',function(err, json) {
                   
                   fieldType = typeof(result.rows[i][field])+"";
                 }
+              }
+              if(data.length === 0){
+                fieldType = "string";
+              }
+              if(field === 'gb'){
+                fieldType = "number";
               }
 
               Ngcc.findOneAndUpdate({
