@@ -225,6 +225,7 @@ var authTileset = function(req, res, next) {
       }
 
     case 'POST /tilesets/:username':
+    case 'GET /tilesets/:username/:tileset_id/status':
     case 'PATCH /tilesets/:username/:tileset_id':
     case 'DELETE /tilesets/:username/:tileset_id':
       if (req.user.username === req.params.username) {
