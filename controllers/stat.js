@@ -43,7 +43,9 @@ module.exports.uploads = function(req, res) {
 
 //统计用户下载信息
 module.exports.userdownloads = function(req, res) {
-  User.find({ downloadNum: { $gt: 0}}, 'name username location organization downloadNum -_id',function(err, users) {
+  User.find({ downloadNum: { $gt: 0}}, 
+    'name username location organization downloadNum statYears statTags statMaplands -_id',
+    function(err, users) {
     if (err) {
       return res.status(500).json({ error: err })
     }
