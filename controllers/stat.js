@@ -61,7 +61,7 @@ module.exports.filedownloads = function(req, res) {
   Upload.find({ 
     is_deleted: false,
     downloadNum: { $gt: 0}
-  }, 'name location year downloadNum -_id', function(err, uploads) {
+  }, 'owner upload_id name location year downloadNum -_id', function(err, uploads) {
     if (err) {
       return res.status(500).json({ error: err })
     }
