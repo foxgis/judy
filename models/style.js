@@ -28,7 +28,7 @@ var StyleSchema = new mongoose.Schema({
     delay: Number
   },
   layers: [mongoose.Schema.Types.Mixed]
-}, { timestamps: true })
+}, { timestamps: true, minimize: false })
 
 
 StyleSchema.plugin(select, '-_id -__v -is_deleted')
