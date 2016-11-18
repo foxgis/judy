@@ -12,7 +12,7 @@ var mkdirp = require('mkdirp')
 var config = require('../config')
 var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
-var uploadResults = [];
+var uploadResults = []
 
 
 //该模块包含了对瓦片集功能进行业务处理的各项函数
@@ -122,7 +122,7 @@ module.exports.upload = function(req, res) {
         if(err){
           res.status(500).json({ error: err })
         }else{
-          res.json({tileset_id:tileset_id,success:true});
+          res.json({tileset_id:tileset_id,success:true})
         }
         return callback(err, info)
       })
@@ -171,9 +171,9 @@ module.exports.upload = function(req, res) {
 
     var tileset = JSON.parse(JSON.stringify(results.writeDB))
     var uploadStatus = {
-      "owner": tileset.owner,
-      "tileset_id": tileset.tileset_id,
-      "complete":true
+      owner: tileset.owner,
+      tileset_id: tileset.tileset_id,
+      complete:true
     }
     uploadResults.push(uploadStatus)
     //res.json(results.writeDB)
@@ -188,10 +188,10 @@ module.exports.getCopyStatus = function (req,res) {
   }else{
     res.json({tileset_id:req.params.tileset_id,complete:false})
   }*/
-  var flag = 0;
+  var flag = 0
   for(var i=0;i<uploadResults.length;i++){
     if(uploadResults[i].tileset_id==req.params.tileset_id&&uploadResults[i].owner==req.params.username){
-      flag=1;
+      flag=1
       Tileset.findOne({
         tileset_id: req.params.tileset_id,
         owner: req.params.username
@@ -201,13 +201,13 @@ module.exports.getCopyStatus = function (req,res) {
         }
 
         if (!tileset) {
-          return res.status(500).json({ error: "未知错误" })
+          return res.status(500).json({ error: '未知错误' })
         }
         
         res.json({tileset:tileset,complete:true,uploadResults:uploadResults})
       })
       uploadResults.splice(i,1)
-      break;
+      break
     }
   }
   if(flag===0){
