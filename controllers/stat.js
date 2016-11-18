@@ -45,12 +45,12 @@ module.exports.uploads = function(req, res) {
 module.exports.userdownloads = function(req, res) {
   User.find({ downloadNum: { $gt: 0}}, 
     'name username location organization downloadNum statYears statTags statMaplands -_id',
-    function(err, users) {
-    if (err) {
-      return res.status(500).json({ error: err })
-    }
+      function(err, users) {
+      if (err) {
+        return res.status(500).json({ error: err })
+      }
 
-    res.status(200).json(users)
+      res.status(200).json(users)
 
   }).sort({ downloadNum: -1 }).limit(100)
 }
