@@ -163,6 +163,21 @@ module.exports.update = function(req, res) {
   })
 }
 
+module.exports.updateDownload = function(req, res) {
+
+  Upload.find({is_deleted:false},function(err,uploads){
+    uploads.forEach(function(upload) {
+      var random = parseInt(Math.random()*100+1,10)
+      User.findOneAndUpdate({
+        upload_id: upload.upload_id
+      }, {$set:{downloadNum:random}}, function(err) {
+        if (err) {
+          return
+        }
+      })
+    })
+  })
+}
 
 module.exports.delete = function(req, res) {
   Upload.findOneAndUpdate({
