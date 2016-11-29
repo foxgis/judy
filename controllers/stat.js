@@ -1,5 +1,4 @@
 var Upload = require('../models/upload')
-var User = require('../models/user')
 
 
 //统计系统中各地区总共上传了多少文件
@@ -74,7 +73,7 @@ module.exports.userdownloads = function(req, res) {
   var pipeline = [{
     $match: query
   }, {
-    $group: { _id: '$owner', total: { $sum:"$downloadNum" } }
+    $group: { _id: '$owner', total: { $sum:'$downloadNum' } }
   }, {
     $lookup: { from: 'users', localField: '_id', foreignField: 'username', as: 'users' }
   }, {
@@ -97,7 +96,7 @@ module.exports.userdownloads = function(req, res) {
   }, {
     $sort: { total: -1 }
   }]
-  
+
   Upload.aggregate(pipeline, function(err, results) {
     if (err) {
       return res.status(500).json({ error: err })
