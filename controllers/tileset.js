@@ -122,7 +122,7 @@ module.exports.upload = function(req, res) {
         if(err){
           res.status(500).json({ error: err })
         }else{
-          res.json({tileset_id:tileset_id,success:true})
+          res.json({tileset_id:tileset_id,owner: username,success:true})
         }
         return callback(err, info)
       })
@@ -176,18 +176,10 @@ module.exports.upload = function(req, res) {
       complete:true
     }
     uploadResults.push(uploadStatus)
-    //res.json(results.writeDB)
   })
 }
 
 module.exports.getCopyStatus = function (req,res) {
-  /*var tileset = JSON.parse(JSON.stringify(uploadResults))
-  if(tileset.tileset_id==req.params.tileset_id&&tileset.owner==req.params.username){
-    res.json({tileset:tileset,complete:true})
-    uploadResults = {}
-  }else{
-    res.json({tileset_id:req.params.tileset_id,complete:false})
-  }*/
   var flag = 0
   for(var i=0;i<uploadResults.length;i++){
     if(uploadResults[i].tileset_id==req.params.tileset_id&&uploadResults[i].owner==req.params.username){
