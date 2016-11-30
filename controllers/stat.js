@@ -91,7 +91,7 @@ module.exports.userdownloads = function(req, res) {
     $project: {
       _id: 0,
       total: 1,
-      location: '$_id'
+      organization: '$_id'
     }
   }, {
     $sort: { total: -1 }
@@ -140,7 +140,9 @@ module.exports.filedownloads = function(req, res) {
 //统计各地区文件上传数量
 module.exports.location = function(req, res) {
   var match = {}
-  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
+  if(req.query.for==='stats'){
+    match['is_deleted'] = false
+  }else if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     match['is_deleted'] = false
     match['scope'] = 'public'
   }
@@ -171,7 +173,9 @@ module.exports.location = function(req, res) {
 //统计各制图年份文件上传数量
 module.exports.year = function(req, res) {
   var match = {}
-  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
+  if(req.query.for==='stats'){
+    match['is_deleted'] = false
+  }else if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     match['is_deleted'] = false
     match['scope'] = 'public'
   }
@@ -202,7 +206,9 @@ module.exports.year = function(req, res) {
 //统计主题词
 module.exports.tags = function(req, res) {
   var match = {}
-  if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
+  if(req.query.for==='stats'){
+    match['is_deleted'] = false
+  }else if (!req.user.role || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
     match['is_deleted'] = false
     match['scope'] = 'public'
   }
