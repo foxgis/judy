@@ -13,18 +13,6 @@ var UserSchema = new mongoose.Schema({
   scope: { type: String, default: 'public'},
   is_verified: { type: Boolean, default: false },
   downloadNum: { type: Number, default: 0 },
-  statYears: [{
-    name: String,
-    count: Number, default: 0 
-  }],
-  statTags: [{
-    name: String,
-    count: Number, default: 0 
-  }],
-  statMaplands:[{
-    name: String,
-    count: Number, default: 0 
-  }],
 
   // 用户资料
   name: String,

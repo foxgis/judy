@@ -122,7 +122,7 @@ module.exports.upload = function(req, res) {
         if(err){
           res.status(500).json({ error: err })
         }else{
-          res.json({tileset_id:tileset_id,success:true})
+          res.json({tileset_id:tileset_id,owner: username,success:true})
         }
         return callback(err, info)
       })

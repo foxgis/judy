@@ -279,6 +279,7 @@ function convert2xy(feat) {
 }
 
 function isNative(sourceUrl, zoom) {
+  zoom = Math.min(zoom,12)
   if (isNativeRoute(url.parse(sourceUrl).host)) {
     var urlPath = url.parse(sourceUrl).pathname.split('/')
     var dirNative = fs.readdirSync('./metadata/')
