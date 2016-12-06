@@ -164,30 +164,27 @@ module.exports.upload = function(req, res) {
     }
   }, function(err, results) {
     fs.unlink(filePath, function() {})
-
+    var uploadStatus = {}
     if (err) {
-      return res.status(500).json({ error: err })
-    }
-
-    var tileset = JSON.parse(JSON.stringify(results.writeDB))
-    var uploadStatus = {
-      owner: tileset.owner,
-      tileset_id: tileset.tileset_id,
-      complete:true
+      uploadStatus = {
+        owner: username,
+        tileset_id: tileset_id,
+        error:err,
+        complete:'error'
+      }
+    }else{
+      var tileset = JSON.parse(JSON.stringify(results.writeDB))
+      uploadStatus = {
+        owner: tileset.owner,
+        tileset_id: tileset.tileset_id,
+        complete:true
+      }
     }
     uploadResults.push(uploadStatus)
-    //res.json(results.writeDB)
   })
 }
 
 module.exports.getCopyStatus = function (req,res) {
-  /*var tileset = JSON.parse(JSON.stringify(uploadResults))
-  if(tileset.tileset_id==req.params.tileset_id&&tileset.owner==req.params.username){
-    res.json({tileset:tileset,complete:true})
-    uploadResults = {}
-  }else{
-    res.json({tileset_id:req.params.tileset_id,complete:false})
-  }*/
   var flag = 0
   for(var i=0;i<uploadResults.length;i++){
     if(uploadResults[i].tileset_id==req.params.tileset_id&&uploadResults[i].owner==req.params.username){
