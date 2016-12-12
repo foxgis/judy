@@ -10,7 +10,7 @@
     <link href='css/railscasts.css' rel='stylesheet' />
   </head>
   <body>
-    <!--START--><div id='app'><div class="container unlimiter" data-reactroot="" data-reactid="1" data-react-checksum="1535337902"><div class="fixed-top fixed-right space-left16" data-reactid="2"><div class="fill-light col6 pin-right" data-reactid="3"></div></div><div class="space-top5 scroll-styled overflow-auto pad1 width16 sidebar fixed-left fill-dark dark" data-reactid="4"><div class="pad0x small" data-reactid="5"><div class="small pad0x quiet space-top1" data-reactid="6">API</div><a href="#路径" class="line-height15 pad0x pad00y quiet block " data-reactid="7">路径</a><a href="#access_token" class="line-height15 pad0x pad00y quiet block " data-reactid="8">access_token</a><a href="#用户模块" class="line-height15 pad0x pad00y quiet block " data-reactid="9">用户模块</a><a href="#地图样式模块" class="line-height15 pad0x pad00y quiet block " data-reactid="10">地图样式模块</a><a href="#瓦片集模块" class="line-height15 pad0x pad00y quiet block " data-reactid="11">瓦片集模块</a><a href="#字体模块" class="line-height15 pad0x pad00y quiet block " data-reactid="12">字体模块</a><a href="#符号库模块" class="line-height15 pad0x pad00y quiet block " data-reactid="13">符号库模块</a><a href="#文件模块" class="line-height15 pad0x pad00y quiet block " data-reactid="14">文件模块</a><a href="#统计模块" class="line-height15 pad0x pad00y quiet block " data-reactid="15">统计模块</a><a href="#模板模块" class="line-height15 pad0x pad00y quiet block " data-reactid="16">模板模块</a><a href="#数据集模块" class="line-height15 pad0x pad00y quiet block " data-reactid="17">数据集模块</a></div></div><div class="space-left16" data-reactid="18"><div class="" data-reactid="19"><div class="clearfix" data-reactid="20"><div data-title="路径" class="keyline-top section contain clearfix " data-reactid="21"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="22"><h2 id="&#x8DEF;&#x5F84;">&#x8DEF;&#x5F84;</h2>
+    <!--START--><div id='app'><div class="container unlimiter" data-reactroot="" data-reactid="1" data-react-checksum="-1904378264"><div class="fixed-top fixed-right space-left16" data-reactid="2"><div class="fill-light col6 pin-right" data-reactid="3"></div></div><div class="space-top5 scroll-styled overflow-auto pad1 width16 sidebar fixed-left fill-dark dark" data-reactid="4"><div class="pad0x small" data-reactid="5"><div class="small pad0x quiet space-top1" data-reactid="6">API</div><a href="#路径" class="line-height15 pad0x pad00y quiet block " data-reactid="7">路径</a><a href="#access_token" class="line-height15 pad0x pad00y quiet block " data-reactid="8">access_token</a><a href="#用户模块" class="line-height15 pad0x pad00y quiet block " data-reactid="9">用户模块</a><a href="#地图样式模块" class="line-height15 pad0x pad00y quiet block " data-reactid="10">地图样式模块</a><a href="#瓦片集模块" class="line-height15 pad0x pad00y quiet block " data-reactid="11">瓦片集模块</a><a href="#字体模块" class="line-height15 pad0x pad00y quiet block " data-reactid="12">字体模块</a><a href="#符号库模块" class="line-height15 pad0x pad00y quiet block " data-reactid="13">符号库模块</a><a href="#文件模块" class="line-height15 pad0x pad00y quiet block " data-reactid="14">文件模块</a><a href="#统计模块" class="line-height15 pad0x pad00y quiet block " data-reactid="15">统计模块</a><a href="#模板模块" class="line-height15 pad0x pad00y quiet block " data-reactid="16">模板模块</a><a href="#数据集模块" class="line-height15 pad0x pad00y quiet block " data-reactid="17">数据集模块</a></div></div><div class="space-left16" data-reactid="18"><div class="" data-reactid="19"><div class="clearfix" data-reactid="20"><div data-title="路径" class="keyline-top section contain clearfix " data-reactid="21"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="22"><h2 id="&#x8DEF;&#x5F84;">&#x8DEF;&#x5F84;</h2>
 <p>&#x6240;&#x6709;API&#x90E8;&#x7F72;&#x5230;&#x4EE5;&#x4E0B;&#x57FA;&#x7840;&#x8DEF;&#x5F84;&#xFF1A;</p>
 <pre><code>http://foxgis.com/api/v1
 </code></pre>
@@ -815,13 +815,45 @@
 }</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-13">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="上传数据" class="keyline-top section contain clearfix " data-reactid="88"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="89"><h3 id="&#x4E0A;&#x4F20;&#x6570;&#x636E;">&#x4E0A;&#x4F20;&#x6570;&#x636E;</h3>
-<p>&#x4E0A;&#x4F20;&#x6570;&#x636E;&#xFF0C;&#x7CFB;&#x7EDF;&#x6839;&#x636E;&#x4E0A;&#x4F20;&#x7684;&#x6570;&#x636E;&#x81EA;&#x52A8;&#x5730;&#x8F6C;&#x6362;&#x4E3A;&#x74E6;&#x7247;&#x6570;&#x636E;&#xFF0C;&#x652F;&#x6301;&#x7684;&#x683C;&#x5F0F;&#x6709;<code>mbtiles</code>&#x3001;<code>geojson</code>&#x3001;<code>topojson</code>&#x3001;<code>shapefile</code>&#x3001;<code>tif</code>&#x3002;</p>
+</div></div><div data-title="获取切片状态" class="keyline-top section contain clearfix " data-reactid="88"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="89"><h3 id="&#x83B7;&#x53D6;&#x5207;&#x7247;&#x72B6;&#x6001;">&#x83B7;&#x53D6;&#x5207;&#x7247;&#x72B6;&#x6001;</h3>
+<p>&#x83B7;&#x53D6;&#x74E6;&#x7247;&#x96C6;&#x5207;&#x7247;&#x65F6;&#x7684;&#x72B6;&#x6001;&#x3002;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="90"><div class='endpoint dark fill-dark round '>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
+      <div class='pad0 code small endpoint-url'>/tilesets/<span class="strong">{username}</span>/<span class="strong">{tileset_id}</span>/status</div>
+    </div>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-15">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<pre><code class="hljs">{
+  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-23T05:51:34.710Z"</span>,
+  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-23T05:51:33.199Z"</span>,
+  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
+  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"SD.json"</span>,
+  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">909466</span>,
+  <span class="hljs-attr">"format"</span>: <span class="hljs-string">"pbf"</span>,
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"SD"</span>,
+  <span class="hljs-attr">"center"</span>: [ <span class="hljs-number">116.3400305</span>, <span class="hljs-number">39.9589555</span>, <span class="hljs-number">10</span> ],
+  <span class="hljs-attr">"bounds"</span>: [ <span class="hljs-number">116.04142</span>, <span class="hljs-number">39.75872</span>, <span class="hljs-number">116.638641</span>, <span class="hljs-number">40.159191</span> ],
+  <span class="hljs-attr">"maxzoom"</span>: <span class="hljs-number">11</span>,
+  <span class="hljs-attr">"minzoom"</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attr">"data"</span>: [],
+  <span class="hljs-attr">"grids"</span>: [],
+  <span class="hljs-attr">"tiles"</span>: [],
+  <span class="hljs-attr">"scheme"</span>: <span class="hljs-string">"xyz"</span>,
+  <span class="hljs-attr">"version"</span>: <span class="hljs-string">"1.0.0"</span>,
+  <span class="hljs-attr">"tilejson"</span>: <span class="hljs-string">"2.1.0"</span>,
+  <span class="hljs-attr">"tags"</span>: [],
+  <span class="hljs-attr">"vector_layers"</span>: [],
+  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
+  <span class="hljs-attr">"tileset_id"</span>: <span class="hljs-string">"rJ6P9GlQ"</span>
+}</code></pre>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-14">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<pre><code class="hljs">HTTP 404</code></pre>
+</div></div><div data-title="上传数据" class="keyline-top section contain clearfix " data-reactid="91"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="92"><h3 id="&#x4E0A;&#x4F20;&#x6570;&#x636E;">&#x4E0A;&#x4F20;&#x6570;&#x636E;</h3>
+<p>&#x4E0A;&#x4F20;&#x6570;&#x636E;&#xFF0C;&#x7CFB;&#x7EDF;&#x6839;&#x636E;&#x4E0A;&#x4F20;&#x7684;&#x6570;&#x636E;&#x81EA;&#x52A8;&#x5730;&#x8F6C;&#x6362;&#x4E3A;&#x74E6;&#x7247;&#x6570;&#x636E;&#xFF0C;&#x652F;&#x6301;&#x7684;&#x683C;&#x5F0F;&#x6709;<code>mbtiles</code>&#x3001;<code>geojson</code>&#x3001;<code>topojson</code>&#x3001;<code>shapefile</code>&#x3001;<code>tif</code>&#x3002;</p>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="93"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
       <div class='pad0 code small endpoint-url'>/tilesets/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-15">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-16">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-23T05:51:34.710Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-23T05:51:33.199Z"</span>,
@@ -837,11 +869,11 @@
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
   <span class="hljs-attr">"tileset_id"</span>: <span class="hljs-string">"rJ6P9GlQ"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-14">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-15">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="更新瓦片集信息" class="keyline-top section contain clearfix " data-reactid="91"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="92"><h3 id="&#x66F4;&#x65B0;&#x74E6;&#x7247;&#x96C6;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x74E6;&#x7247;&#x96C6;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="更新瓦片集信息" class="keyline-top section contain clearfix " data-reactid="94"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="95"><h3 id="&#x66F4;&#x65B0;&#x74E6;&#x7247;&#x96C6;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x74E6;&#x7247;&#x96C6;&#x4FE1;&#x606F;</h3>
 <p>&#x53EF;&#x66F4;&#x65B0;&#x7684;&#x5B57;&#x6BB5;&#x6709;<code>scope</code>&#x3001;<code>tags</code>&#x3001;<code>name</code>&#x3001;<code>description</code>&#x3001;<code>vector_layers</code>&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="93"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="96"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/tilesets/<span class="strong">{username}</span>/<span class="strong">{tileset_id}</span></div>
     </div>
@@ -849,7 +881,7 @@
 <pre><code class="hljs">{
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-16">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-17">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-23T05:51:34.710Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-23T05:51:33.199Z"</span>,
@@ -874,28 +906,28 @@
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
   <span class="hljs-attr">"tileset_id"</span>: <span class="hljs-string">"rJ6P9GlQ"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-15">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-16">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="删除瓦片集" class="keyline-top section contain clearfix " data-reactid="94"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="95"><h3 id="&#x5220;&#x9664;&#x74E6;&#x7247;&#x96C6;">&#x5220;&#x9664;&#x74E6;&#x7247;&#x96C6;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="96"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="删除瓦片集" class="keyline-top section contain clearfix " data-reactid="97"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="98"><h3 id="&#x5220;&#x9664;&#x74E6;&#x7247;&#x96C6;">&#x5220;&#x9664;&#x74E6;&#x7247;&#x96C6;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="99"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
       <div class='pad0 code small endpoint-url'>/tilesets/<span class="strong">{username}</span>/<span class="strong">{tileset_id}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-17">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-18">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 204</code></pre>
-</div></div><div data-title="获取瓦片" class="keyline-top section contain clearfix " data-reactid="97"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="98"><h3 id="&#x83B7;&#x53D6;&#x74E6;&#x7247;">&#x83B7;&#x53D6;&#x74E6;&#x7247;</h3>
+</div></div><div data-title="获取瓦片" class="keyline-top section contain clearfix " data-reactid="100"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="101"><h3 id="&#x83B7;&#x53D6;&#x74E6;&#x7247;">&#x83B7;&#x53D6;&#x74E6;&#x7247;</h3>
 <p>&#x6839;&#x636E;<code>z</code>&#x3001;<code>x</code>&#x3001;<code>y</code>&#x83B7;&#x53D6;&#x5355;&#x5F20;&#x74E6;&#x7247;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="99"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="102"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/tilesets/<span class="strong">{username}</span>/<span class="strong">{tileset_id}</span>/<span class="strong">{z}</span>/<span class="strong">{x}</span>/<span class="strong">{y}</span>{@2x}.<span class="strong">{format}</span></div>
     </div>
-</div></div><div data-title="下载源文件" class="keyline-top section contain clearfix " data-reactid="100"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="101"><h3 id="&#x4E0B;&#x8F7D;&#x6E90;&#x6587;&#x4EF6;">&#x4E0B;&#x8F7D;&#x6E90;&#x6587;&#x4EF6;</h3>
+</div></div><div data-title="下载源文件" class="keyline-top section contain clearfix " data-reactid="103"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="104"><h3 id="&#x4E0B;&#x8F7D;&#x6E90;&#x6587;&#x4EF6;">&#x4E0B;&#x8F7D;&#x6E90;&#x6587;&#x4EF6;</h3>
 <p>&#x4E0B;&#x8F7D;&#x751F;&#x6210;&#x74E6;&#x7247;&#x7684;&#x539F;&#x59CB;&#x6570;&#x636E;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="102"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="105"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/tilesets/<span class="strong">{username}</span>/<span class="strong">{tileset_id}</span>/raw</div>
     </div>
-</div></div><div data-title="字体模块" class="keyline-top section contain clearfix " data-reactid="103"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="104"><h2 id="&#x5B57;&#x4F53;&#x6A21;&#x5757;">&#x5B57;&#x4F53;&#x6A21;&#x5757;</h2>
+</div></div><div data-title="字体模块" class="keyline-top section contain clearfix " data-reactid="106"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="107"><h2 id="&#x5B57;&#x4F53;&#x6A21;&#x5757;">&#x5B57;&#x4F53;&#x6A21;&#x5757;</h2>
 <p>&#x5236;&#x56FE;&#x6A21;&#x5757;&#x7BA1;&#x7406;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x7684;&#x5B57;&#x4F53;&#x3002;</p>
 <p>&#x5B57;&#x6BB5;&#x4FE1;&#x606F;&#xFF1A;</p>
 <table>
@@ -960,12 +992,12 @@
 </tr>
 </tbody>
 </table>
-</div></div><div data-title="获取用户字体列表" class="keyline-top section contain clearfix " data-reactid="105"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="106"><h3 id="&#x83B7;&#x53D6;&#x7528;&#x6237;&#x5B57;&#x4F53;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x7528;&#x6237;&#x5B57;&#x4F53;&#x5217;&#x8868;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="107"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取用户字体列表" class="keyline-top section contain clearfix " data-reactid="108"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="109"><h3 id="&#x83B7;&#x53D6;&#x7528;&#x6237;&#x5B57;&#x4F53;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x7528;&#x6237;&#x5B57;&#x4F53;&#x5217;&#x8868;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="110"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-18">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-19">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
   <span class="hljs-attr">"fontname"</span>: <span class="hljs-string">"STKaiti Regular"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
@@ -993,14 +1025,14 @@
       <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Arabic"</span>
   }]
 }]</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-16">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-17">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="获取字体信息" class="keyline-top section contain clearfix " data-reactid="108"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="109"><h3 id="&#x83B7;&#x53D6;&#x5B57;&#x4F53;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x5B57;&#x4F53;&#x4FE1;&#x606F;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="110"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取字体信息" class="keyline-top section contain clearfix " data-reactid="111"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="112"><h3 id="&#x83B7;&#x53D6;&#x5B57;&#x4F53;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x5B57;&#x4F53;&#x4FE1;&#x606F;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="113"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span>/<span class="strong">{fontname}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-19">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-20">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"fontname"</span>: <span class="hljs-string">"STKaiti Regular"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
@@ -1025,17 +1057,17 @@
     <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Czech"</span>
   }]
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-17">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-18">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"字体不存在"</span>
 }</code></pre>
-</div></div><div data-title="上传字体" class="keyline-top section contain clearfix " data-reactid="111"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="112"><h3 id="&#x4E0A;&#x4F20;&#x5B57;&#x4F53;">&#x4E0A;&#x4F20;&#x5B57;&#x4F53;</h3>
+</div></div><div data-title="上传字体" class="keyline-top section contain clearfix " data-reactid="114"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="115"><h3 id="&#x4E0A;&#x4F20;&#x5B57;&#x4F53;">&#x4E0A;&#x4F20;&#x5B57;&#x4F53;</h3>
 <p>&#x4EC5;&#x652F;&#x6301;ttf&#x3001;otf&#x5B57;&#x4F53;&#x6587;&#x4EF6;&#x7684;&#x4E0A;&#x4F20;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="113"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="116"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-20">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-21">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"fontname"</span>: <span class="hljs-string">"STKaiti Regular"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
@@ -1050,11 +1082,11 @@
       <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Arabic"</span>
   }]
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-18">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-19">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="更新字体信息" class="keyline-top section contain clearfix " data-reactid="114"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="115"><h3 id="&#x66F4;&#x65B0;&#x5B57;&#x4F53;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x5B57;&#x4F53;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="更新字体信息" class="keyline-top section contain clearfix " data-reactid="117"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="118"><h3 id="&#x66F4;&#x65B0;&#x5B57;&#x4F53;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x5B57;&#x4F53;&#x4FE1;&#x606F;</h3>
 <p>&#x5141;&#x8BB8;&#x4FEE;&#x6539;&#x5B57;&#x6BB5;&#x6709;<code>scope</code>&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="116"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="119"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span>/<span class="strong">{fontname}</span></div>
     </div>
@@ -1062,7 +1094,7 @@
 <pre><code class="hljs">{
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-21">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-22">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"fontname"</span>: <span class="hljs-string">"STKaiti Regular"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
@@ -1078,45 +1110,45 @@
       <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Arabic"</span>
   }]
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-19">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-20">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"字体不存在"</span>
 }</code></pre>
-</div></div><div data-title="删除字体" class="keyline-top section contain clearfix " data-reactid="117"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="118"><h3 id="&#x5220;&#x9664;&#x5B57;&#x4F53;">&#x5220;&#x9664;&#x5B57;&#x4F53;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="119"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="删除字体" class="keyline-top section contain clearfix " data-reactid="120"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="121"><h3 id="&#x5220;&#x9664;&#x5B57;&#x4F53;">&#x5220;&#x9664;&#x5B57;&#x4F53;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="122"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span>/<span class="strong">{fontname}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-22">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-23">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 204</code></pre>
-</div></div><div data-title="获取字形" class="keyline-top section contain clearfix " data-reactid="120"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="121"><h3 id="&#x83B7;&#x53D6;&#x5B57;&#x5F62;">&#x83B7;&#x53D6;&#x5B57;&#x5F62;</h3>
+</div></div><div data-title="获取字形" class="keyline-top section contain clearfix " data-reactid="123"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="124"><h3 id="&#x83B7;&#x53D6;&#x5B57;&#x5F62;">&#x83B7;&#x53D6;&#x5B57;&#x5F62;</h3>
 <p>&#x6839;&#x636E;&#x652F;&#x4ED8;&#x7801;&#x70B9;&#x8303;&#x56F4;&#xFF0C;&#x83B7;&#x53D6;&#x8F6C;&#x6362;&#x540E;&#x7684;pbf&#x683C;&#x5F0F;&#x7684;&#x5B57;&#x5F62;&#x6587;&#x4EF6;</p>
 <p>&#x53C2;&#x6570; | &#x8BF4;&#x660E;
 start | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x8D77;&#x70B9;&#xFF0C;&#x53D6;&#x503C;&#x4E3A;256&#x7684;&#x500D;&#x6570;&#xFF0C;&#x8303;&#x56F4;&#x4E3A;[0, 65280]
 end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#x503C;&#x4E3A;<code>start</code> + 255</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="122"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="125"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span>/<span class="strong">{fontname}</span>/<span class="strong">{start}</span>-<span class="strong">{end}</span>.pbf</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-23">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-24">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 200</code></pre>
-</div></div><div data-title="下载字体源文件" class="keyline-top section contain clearfix " data-reactid="123"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="124"><h3 id="&#x4E0B;&#x8F7D;&#x5B57;&#x4F53;&#x6E90;&#x6587;&#x4EF6;">&#x4E0B;&#x8F7D;&#x5B57;&#x4F53;&#x6E90;&#x6587;&#x4EF6;</h3>
+</div></div><div data-title="下载字体源文件" class="keyline-top section contain clearfix " data-reactid="126"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="127"><h3 id="&#x4E0B;&#x8F7D;&#x5B57;&#x4F53;&#x6E90;&#x6587;&#x4EF6;">&#x4E0B;&#x8F7D;&#x5B57;&#x4F53;&#x6E90;&#x6587;&#x4EF6;</h3>
 <p>&#x4E0B;&#x8F7D;&#x5B57;&#x4F53;&#x6E90;&#x6587;&#x4EF6;&#xFF0C;&#x5982;<code>ttf</code>&#x6216;<code>otf</code>&#x5B57;&#x4F53;&#x6587;&#x4EF6;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="125"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="128"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span>/<span class="strong">{fontname}</span>/raw</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-24">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-25">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 200</code></pre>
-</div></div><div data-title="字体预览" class="keyline-top section contain clearfix " data-reactid="126"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="127"><h3 id="&#x5B57;&#x4F53;&#x9884;&#x89C8;">&#x5B57;&#x4F53;&#x9884;&#x89C8;</h3>
+</div></div><div data-title="字体预览" class="keyline-top section contain clearfix " data-reactid="129"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="130"><h3 id="&#x5B57;&#x4F53;&#x9884;&#x89C8;">&#x5B57;&#x4F53;&#x9884;&#x89C8;</h3>
 <p>&#x83B7;&#x53D6;&#x5B57;&#x4F53;&#x9884;&#x89C8;&#xFF0C;&#x683C;&#x5F0F;&#x4E3A;<code>png</code></p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="128"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="131"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/fonts/<span class="strong">{username}</span>/<span class="strong">{fontname}</span>/thumbnail</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-25">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-26">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 200</code></pre>
-</div></div><div data-title="符号库模块" class="keyline-top section contain clearfix " data-reactid="129"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="130"><h2 id="&#x7B26;&#x53F7;&#x5E93;&#x6A21;&#x5757;">&#x7B26;&#x53F7;&#x5E93;&#x6A21;&#x5757;</h2>
+</div></div><div data-title="符号库模块" class="keyline-top section contain clearfix " data-reactid="132"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="133"><h2 id="&#x7B26;&#x53F7;&#x5E93;&#x6A21;&#x5757;">&#x7B26;&#x53F7;&#x5E93;&#x6A21;&#x5757;</h2>
 <p>&#x7B26;&#x53F7;&#x5E93;&#x6A21;&#x5757;&#x7BA1;&#x7406;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x7684;&#x7B26;&#x53F7;&#x5E93;</p>
 <p>&#x5B57;&#x6BB5;&#x4FE1;&#x606F;&#xFF1A;</p>
 <table>
@@ -1170,43 +1202,11 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div></div><div data-title="获取符号库列表1" class="keyline-top section contain clearfix " data-reactid="131"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="132"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;1">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;1</h3>
+</div></div><div data-title="获取符号库列表1" class="keyline-top section contain clearfix " data-reactid="134"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="135"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;1">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;1</h3>
 <p>&#x83B7;&#x53D6;&#x7CFB;&#x7EDF;&#x4E2D;&#x6240;&#x6709;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;&#xFF0C;&#x666E;&#x901A;&#x7528;&#x6237;&#x53EA;&#x80FD;&#x83B7;&#x53D6;&#x4E2A;&#x4EBA;&#x6216;&#x5176;&#x4ED6;&#x7528;&#x6237;&#x516C;&#x5F00;&#x7684;&#x7B26;&#x53F7;&#x5E93;&#x5185;&#x5BB9;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="133"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
-      <div class='pad0 code small endpoint-url'>/sprites</div>
-    </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-26">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
-<pre><code class="hljs">[{
-  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
-  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
-  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
-  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"Sprite.zip"</span>,
-  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">101346</span>,
-  <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Sprite"</span>,
-  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
-  <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BkgH_lsub"</span>
-},{
-  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:00:00.845Z"</span>,
-  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:00:00.845Z"</span>,
-  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
-  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"Sprite.zip"</span>,
-  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">101346</span>,
-  <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Sprite"</span>,
-  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
-  <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BywXo5O-"</span>
-}]</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-20">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
-<pre><code class="hljs">{
-  <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"内部错误"</span>
-}</code></pre>
-</div></div><div data-title="获取符号库列表2" class="keyline-top section contain clearfix " data-reactid="134"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="135"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;2">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;2</h3>
-<p>&#x83B7;&#x53D6;&#x67D0;&#x4E2A;&#x7528;&#x6237;{username}&#x4E0A;&#x4F20;&#x7684;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="136"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
-      <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span></div>
+      <div class='pad0 code small endpoint-url'>/sprites</div>
     </div>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-27">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
@@ -1234,12 +1234,44 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 <pre><code class="hljs">{
   <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"内部错误"</span>
 }</code></pre>
-</div></div><div data-title="获取符号库信息" class="keyline-top section contain clearfix " data-reactid="137"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="138"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="获取符号库列表2" class="keyline-top section contain clearfix " data-reactid="137"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="138"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;2">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x5217;&#x8868;2</h3>
+<p>&#x83B7;&#x53D6;&#x67D0;&#x4E2A;&#x7528;&#x6237;{username}&#x4E0A;&#x4F20;&#x7684;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="139"><div class='endpoint dark fill-dark round '>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
+      <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span></div>
+    </div>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-28">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<pre><code class="hljs">[{
+  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
+  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
+  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
+  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"Sprite.zip"</span>,
+  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">101346</span>,
+  <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Sprite"</span>,
+  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
+  <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BkgH_lsub"</span>
+},{
+  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:00:00.845Z"</span>,
+  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:00:00.845Z"</span>,
+  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
+  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"Sprite.zip"</span>,
+  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">101346</span>,
+  <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Sprite"</span>,
+  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
+  <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BywXo5O-"</span>
+}]</code></pre>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-22">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<pre><code class="hljs">{
+  <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"内部错误"</span>
+}</code></pre>
+</div></div><div data-title="获取符号库信息" class="keyline-top section contain clearfix " data-reactid="140"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="141"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="142"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-28">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-29">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:37:17.182Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
@@ -1251,17 +1283,17 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
   <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BkgH_lsub"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-22">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-23">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"获取不存在的符号库"</span>
 }</code></pre>
-</div></div><div data-title="上传符号库" class="keyline-top section contain clearfix " data-reactid="140"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="141"><h3 id="&#x4E0A;&#x4F20;&#x7B26;&#x53F7;&#x5E93;">&#x4E0A;&#x4F20;&#x7B26;&#x53F7;&#x5E93;</h3>
+</div></div><div data-title="上传符号库" class="keyline-top section contain clearfix " data-reactid="143"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="144"><h3 id="&#x4E0A;&#x4F20;&#x7B26;&#x53F7;&#x5E93;">&#x4E0A;&#x4F20;&#x7B26;&#x53F7;&#x5E93;</h3>
 <p>&#x53EA;&#x5141;&#x8BB8;&#x4E0A;&#x4F20;&#x5305;&#x542B;<code>svg</code>&#x6587;&#x4EF6;&#x7684;<code>zip</code>&#x6587;&#x4EF6;&#xFF0C;&#x751F;&#x6210;&#x65B0;&#x7684;&#x7B26;&#x53F7;&#x5E93;&#x6587;&#x4EF6;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="142"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="145"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-29">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-30">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
@@ -1273,25 +1305,25 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BkgH_lsub"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-23">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-24">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"errors"</span>: <span class="hljs-string">"内部错误"</span>
 }</code></pre>
-</div></div><div data-title="添加图标" class="keyline-top section contain clearfix " data-reactid="143"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="144"><h3 id="&#x6DFB;&#x52A0;&#x56FE;&#x6807;">&#x6DFB;&#x52A0;&#x56FE;&#x6807;</h3>
+</div></div><div data-title="添加图标" class="keyline-top section contain clearfix " data-reactid="146"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="147"><h3 id="&#x6DFB;&#x52A0;&#x56FE;&#x6807;">&#x6DFB;&#x52A0;&#x56FE;&#x6807;</h3>
 <p>&#x4E3A;&#x7B26;&#x53F7;&#x5E93;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x56FE;&#x6807;&#xFF0C;&#x4E0A;&#x4F20;&#x7684;&#x56FE;&#x6807;&#x683C;&#x5F0F;&#x4E3A;<code>svg</code>&#x3002;&#x6CE8;&#x610F;&#xFF0C;&#x5982;&#x679C;&#x56FE;&#x6807;&#x5728;&#x7B26;&#x53F7;&#x5E93;&#x4E2D;&#x5DF2;&#x5B58;&#x5728;&#xFF0C;&#x5C06;&#x4F1A;&#x66FF;&#x6362;&#x7B26;&#x53F7;&#x5E93;&#x4E2D;&#x7684;&#x56FE;&#x6807;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="145"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="148"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PUT</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span>/<span class="strong">{icon}</span></div>
     </div>
 <h4 id="&#x76F8;&#x5E94;&#x6210;&#x529F;">&#x76F8;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 204</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-24">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-25">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"error"</span>: <span class="hljs-string">"仅支持svg格式的图标"</span>
 }</code></pre>
-</div></div><div data-title="更新符号库信息" class="keyline-top section contain clearfix " data-reactid="146"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="147"><h3 id="&#x66F4;&#x65B0;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="更新符号库信息" class="keyline-top section contain clearfix " data-reactid="149"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="150"><h3 id="&#x66F4;&#x65B0;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x7B26;&#x53F7;&#x5E93;&#x4FE1;&#x606F;</h3>
 <p>&#x5141;&#x8BB8;&#x66F4;&#x65B0;&#x7684;&#x5B57;&#x6BB5;&#x6709;<code>name</code>&#xFF0C;<code>scope</code>&#xFF0C;<code>description</code>&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="148"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="151"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span></div>
     </div>
@@ -1301,7 +1333,7 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
   <span class="hljs-attr">"description"</span>: <span class="hljs-string">"this is a description example"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-30">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-31">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:37:17.182Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T10:29:00.845Z"</span>,
@@ -1313,26 +1345,26 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"sprite_id"</span>: <span class="hljs-string">"BkgH_lsub"</span>
 }</code></pre>
-</div></div><div data-title="删除符号库" class="keyline-top section contain clearfix " data-reactid="149"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="150"><h3 id="&#x5220;&#x9664;&#x7B26;&#x53F7;&#x5E93;">&#x5220;&#x9664;&#x7B26;&#x53F7;&#x5E93;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="151"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
-      <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span></div>
-    </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-31">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
-<pre><code class="hljs">HTTP 204</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-25">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
-<pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="删除图标" class="keyline-top section contain clearfix " data-reactid="152"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="153"><h3 id="&#x5220;&#x9664;&#x56FE;&#x6807;">&#x5220;&#x9664;&#x56FE;&#x6807;</h3>
-<p>&#x5220;&#x9664;&#x7B26;&#x53F7;&#x5E93;&#x4E2D;&#x7684;&#x4E00;&#x4E2A;&#x56FE;&#x6807;</p>
+</div></div><div data-title="删除符号库" class="keyline-top section contain clearfix " data-reactid="152"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="153"><h3 id="&#x5220;&#x9664;&#x7B26;&#x53F7;&#x5E93;">&#x5220;&#x9664;&#x7B26;&#x53F7;&#x5E93;</h3>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="154"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
-      <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span>/<span class="strong">{icon}</span></div>
+      <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span></div>
     </div>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-32">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 204</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-26">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="获取符号库" class="keyline-top section contain clearfix " data-reactid="155"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="156"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;</h3>
+</div></div><div data-title="删除图标" class="keyline-top section contain clearfix " data-reactid="155"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="156"><h3 id="&#x5220;&#x9664;&#x56FE;&#x6807;">&#x5220;&#x9664;&#x56FE;&#x6807;</h3>
+<p>&#x5220;&#x9664;&#x7B26;&#x53F7;&#x5E93;&#x4E2D;&#x7684;&#x4E00;&#x4E2A;&#x56FE;&#x6807;</p>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="157"><div class='endpoint dark fill-dark round '>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
+      <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span>/<span class="strong">{icon}</span></div>
+    </div>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-33">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<pre><code class="hljs">HTTP 204</code></pre>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-27">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<pre><code class="hljs">HTTP 404</code></pre>
+</div></div><div data-title="获取符号库" class="keyline-top section contain clearfix " data-reactid="158"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="159"><h3 id="&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;">&#x83B7;&#x53D6;&#x7B26;&#x53F7;&#x5E93;</h3>
 <table>
 <thead>
 <tr>
@@ -1358,11 +1390,11 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="157"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="160"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span>/sprite@<span class="strong">{scale}</span>x.<span class="strong">{format}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-33">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-34">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"us-highway-alternate-3"</span>: {
     <span class="hljs-attr">"width"</span>: <span class="hljs-number">26</span>,
@@ -1379,21 +1411,21 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
     <span class="hljs-attr">"pixelRatio"</span>: <span class="hljs-number">1</span>
   }
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-27">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-28">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="打包符号库" class="keyline-top section contain clearfix " data-reactid="158"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="159"><h3 id="&#x6253;&#x5305;&#x7B26;&#x53F7;&#x5E93;">&#x6253;&#x5305;&#x7B26;&#x53F7;&#x5E93;</h3>
+</div></div><div data-title="打包符号库" class="keyline-top section contain clearfix " data-reactid="161"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="162"><h3 id="&#x6253;&#x5305;&#x7B26;&#x53F7;&#x5E93;">&#x6253;&#x5305;&#x7B26;&#x53F7;&#x5E93;</h3>
 <p>&#x5305;&#x62EC;&#x7B26;&#x53F7;&#x5E93;&#x4E2D;&#x7684;<code>svg</code>&#x6587;&#x4EF6;&#x5E76;&#x4E0B;&#x8F7D;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="160"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="163"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span>/raw</div>
     </div>
-</div></div><div data-title="下载图标" class="keyline-top section contain clearfix " data-reactid="161"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="162"><h3 id="&#x4E0B;&#x8F7D;&#x56FE;&#x6807;">&#x4E0B;&#x8F7D;&#x56FE;&#x6807;</h3>
+</div></div><div data-title="下载图标" class="keyline-top section contain clearfix " data-reactid="164"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="165"><h3 id="&#x4E0B;&#x8F7D;&#x56FE;&#x6807;">&#x4E0B;&#x8F7D;&#x56FE;&#x6807;</h3>
 <p>&#x4E0B;&#x8F7D;&#x7B26;&#x53F7;&#x5E93;&#x4E2D;&#x7684;&#x4E00;&#x4E2A;<code>svg</code>&#x56FE;&#x6807;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="163"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="166"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/sprites/<span class="strong">{username}</span>/<span class="strong">{sprite_id}</span>/<span class="strong">{icon}</span></div>
     </div>
-</div></div><div data-title="文件模块" class="keyline-top section contain clearfix " data-reactid="164"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="165"><h2 id="&#x6587;&#x4EF6;&#x6A21;&#x5757;">&#x6587;&#x4EF6;&#x6A21;&#x5757;</h2>
+</div></div><div data-title="文件模块" class="keyline-top section contain clearfix " data-reactid="167"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="168"><h2 id="&#x6587;&#x4EF6;&#x6A21;&#x5757;">&#x6587;&#x4EF6;&#x6A21;&#x5757;</h2>
 <p>&#x6587;&#x4EF6;&#x6A21;&#x5757;&#x7528;&#x4E8E;&#x7BA1;&#x7406;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x7684;&#x6587;&#x4EF6;&#xFF0C;&#x4E0A;&#x4F20;&#x7684;&#x6587;&#x4EF6;&#x5927;&#x5C0F;&#x9650;&#x5236;&#x5728;<code>200M</code>&#x3002;&#x5982;&#x679C;&#x4E0A;&#x4F20;&#x7684;&#x6587;&#x4EF6;&#x4E3A;&#x56FE;&#x7247;&#xFF0C;&#x8FD8;&#x53EF;&#x83B7;&#x53D6;&#x7F29;&#x7565;&#x56FE;&#x3002;</p>
 <p>&#x5B57;&#x6BB5;&#x4FE1;&#x606F;&#xFF1A;</p>
 <table>
@@ -1471,13 +1503,13 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div></div><div data-title="获取文件统计信息" class="keyline-top section contain clearfix " data-reactid="166"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="167"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x7EDF;&#x8BA1;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x7EDF;&#x8BA1;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="获取文件统计信息" class="keyline-top section contain clearfix " data-reactid="169"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="170"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x7EDF;&#x8BA1;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x7EDF;&#x8BA1;&#x4FE1;&#x606F;</h3>
 <p>&#x7EDF;&#x8BA1;&#x7CFB;&#x7EDF;&#x4E2D;&#x5404;&#x5730;&#x533A;&#x603B;&#x5171;&#x4E0A;&#x4F20;&#x4E86;&#x591A;&#x5C11;&#x6587;&#x4EF6;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="168"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="171"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/files/stats</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-34">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-35">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">11</span>,
   <span class="hljs-attr">"location"</span>: <span class="hljs-string">"湖北"</span>
@@ -1485,7 +1517,7 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">5</span>,
   <span class="hljs-attr">"location"</span>: <span class="hljs-string">"北京"</span>
 }]</code></pre>
-</div></div><div data-title="搜索文件" class="keyline-top section contain clearfix " data-reactid="169"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="170"><h3 id="&#x641C;&#x7D22;&#x6587;&#x4EF6;">&#x641C;&#x7D22;&#x6587;&#x4EF6;</h3>
+</div></div><div data-title="搜索文件" class="keyline-top section contain clearfix " data-reactid="172"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="173"><h3 id="&#x641C;&#x7D22;&#x6587;&#x4EF6;">&#x641C;&#x7D22;&#x6587;&#x4EF6;</h3>
 <p>&#x641C;&#x7D22;&#x516C;&#x5F00;&#x5206;&#x4EAB;&#x7684;&#x6587;&#x4EF6;</p>
 <table>
 <thead>
@@ -1519,16 +1551,16 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="171"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="174"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/files/search?keywords=<span class="strong">{keyword1}</span>+<span class="strong">{keyword2}</span>&limit=10&skip=20&sort=-createdAt</div>
     </div>
-</div></div><div data-title="获取文件列表" class="keyline-top section contain clearfix " data-reactid="172"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="173"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5217;&#x8868;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="174"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取文件列表" class="keyline-top section contain clearfix " data-reactid="175"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="176"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5217;&#x8868;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="177"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-35">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-36">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
     <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:44:56.201Z"</span>,
     <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T09:44:56.101Z"</span>,
@@ -1552,14 +1584,14 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
     <span class="hljs-attr">"description"</span>: <span class="hljs-string">"a bigger file"</span>,
     <span class="hljs-attr">"file_id"</span>: <span class="hljs-string">"SygXI5OZ"</span>
 }]</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-28">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-29">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="获取文件信息" class="keyline-top section contain clearfix " data-reactid="175"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="176"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x4FE1;&#x606F;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="177"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取文件信息" class="keyline-top section contain clearfix " data-reactid="178"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="179"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x4FE1;&#x606F;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="180"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span>/<span class="strong">{file_id}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-36">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-37">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:44:56.201Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T09:44:56.101Z"</span>,
@@ -1572,17 +1604,17 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"description"</span>: <span class="hljs-string">"a big file"</span>,
   <span class="hljs-attr">"file_id"</span>: <span class="hljs-string">"SygXI5OZ"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-29">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-30">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"error"</span>: <span class="hljs-string">"文件不存在"</span>
 }</code></pre>
-</div></div><div data-title="上传文件" class="keyline-top section contain clearfix " data-reactid="178"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="179"><h3 id="&#x4E0A;&#x4F20;&#x6587;&#x4EF6;">&#x4E0A;&#x4F20;&#x6587;&#x4EF6;</h3>
+</div></div><div data-title="上传文件" class="keyline-top section contain clearfix " data-reactid="181"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="182"><h3 id="&#x4E0A;&#x4F20;&#x6587;&#x4EF6;">&#x4E0A;&#x4F20;&#x6587;&#x4EF6;</h3>
 <p>&#x4E00;&#x6B21;&#x53EA;&#x5141;&#x8BB8;&#x4E0A;&#x4F20;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;&#x4E14;&#x6587;&#x4EF6;&#x5927;&#x5C0F;&#x8981;&#x5C0F;&#x4E8E;200M&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="180"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="183"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-37">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-38">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:44:56.201Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T09:44:56.101Z"</span>,
@@ -1592,11 +1624,11 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"jingsam"</span>,
   <span class="hljs-attr">"upload_id"</span>: <span class="hljs-string">"BJ7Sgvd-"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-30">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-31">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="更新文件信息" class="keyline-top section contain clearfix " data-reactid="181"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="182"><h3 id="&#x66F4;&#x65B0;&#x6587;&#x4EF6;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x6587;&#x4EF6;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="更新文件信息" class="keyline-top section contain clearfix " data-reactid="184"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="185"><h3 id="&#x66F4;&#x65B0;&#x6587;&#x4EF6;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x6587;&#x4EF6;&#x4FE1;&#x606F;</h3>
 <p>&#x53EF;&#x66F4;&#x65B0;&#x7684;&#x5B57;&#x6BB5;&#x6709;<code>scope</code>&#xFF0C;<code>name</code>&#xFF0C;<code>year</code>&#xFF0C;<code>location</code>&#xFF0C;<code>tags</code>&#xFF0C;<code>description</code>&#xFF0C;<code>scale</code>&#xFF0C;<code>dimensions</code>&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="183"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="186"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span>/<span class="strong">{file_id}</span></div>
     </div>
@@ -1606,7 +1638,7 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"tags"</span>: [<span class="hljs-string">"new"</span>],
   <span class="hljs-attr">"description"</span>: <span class="hljs-string">"a new file"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-38">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-39">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-05-05T10:44:56.201Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-05-05T09:44:56.101Z"</span>,
@@ -1618,25 +1650,25 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"description"</span>: <span class="hljs-string">"a new file"</span>,
   <span class="hljs-attr">"file_id"</span>: <span class="hljs-string">"SygXI5OZ"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-31">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-32">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"error"</span>: <span class="hljs-string">"更新的文件不存在"</span>
 }</code></pre>
-</div></div><div data-title="删除文件" class="keyline-top section contain clearfix " data-reactid="184"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="185"><h3 id="&#x5220;&#x9664;&#x6587;&#x4EF6;">&#x5220;&#x9664;&#x6587;&#x4EF6;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="186"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="删除文件" class="keyline-top section contain clearfix " data-reactid="187"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="188"><h3 id="&#x5220;&#x9664;&#x6587;&#x4EF6;">&#x5220;&#x9664;&#x6587;&#x4EF6;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="189"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span>/<span class="strong">{file_id}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-39">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-40">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 204</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-32">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-33">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="下载文件" class="keyline-top section contain clearfix " data-reactid="187"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="188"><h3 id="&#x4E0B;&#x8F7D;&#x6587;&#x4EF6;">&#x4E0B;&#x8F7D;&#x6587;&#x4EF6;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="189"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="下载文件" class="keyline-top section contain clearfix " data-reactid="190"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="191"><h3 id="&#x4E0B;&#x8F7D;&#x6587;&#x4EF6;">&#x4E0B;&#x8F7D;&#x6587;&#x4EF6;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="192"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span>/<span class="strong">{file_id}</span>/raw</div>
     </div>
-</div></div><div data-title="获取概览图" class="keyline-top section contain clearfix " data-reactid="190"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="191"><h3 id="&#x83B7;&#x53D6;&#x6982;&#x89C8;&#x56FE;">&#x83B7;&#x53D6;&#x6982;&#x89C8;&#x56FE;</h3>
+</div></div><div data-title="获取概览图" class="keyline-top section contain clearfix " data-reactid="193"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="194"><h3 id="&#x83B7;&#x53D6;&#x6982;&#x89C8;&#x56FE;">&#x83B7;&#x53D6;&#x6982;&#x89C8;&#x56FE;</h3>
 <table>
 <thead>
 <tr>
@@ -1661,66 +1693,64 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="192"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="195"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/files/<span class="strong">{username}</span>/<span class="strong">{file_id}</span>/thumbnail?width=300&height=400&quality=50</div>
     </div>
-</div></div><div data-title="获取文件元数据信息" class="keyline-top section contain clearfix " data-reactid="193"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="194"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="获取文件元数据信息" class="keyline-top section contain clearfix " data-reactid="196"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="197"><h3 id="&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6587;&#x4EF6;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;</h3>
 <p>&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;excel&#x6587;&#x4EF6;&#xFF0C;&#x5305;&#x542B;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x6240;&#x6709;&#x6587;&#x4EF6;&#x7684;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="195"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="198"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/uploads/excel</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-40">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-41">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 200</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-33">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-34">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="统计模块" class="keyline-top section contain clearfix " data-reactid="196"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="197"><h2 id="&#x7EDF;&#x8BA1;&#x6A21;&#x5757;">&#x7EDF;&#x8BA1;&#x6A21;&#x5757;</h2>
-</div></div><div data-title="统计用户下载信息" class="keyline-top section contain clearfix " data-reactid="198"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="199"><h3 id="&#x7EDF;&#x8BA1;&#x7528;&#x6237;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;">&#x7EDF;&#x8BA1;&#x7528;&#x6237;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="统计模块" class="keyline-top section contain clearfix " data-reactid="199"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="200"><h2 id="&#x7EDF;&#x8BA1;&#x6A21;&#x5757;">&#x7EDF;&#x8BA1;&#x6A21;&#x5757;</h2>
+</div></div><div data-title="统计用户下载信息" class="keyline-top section contain clearfix " data-reactid="201"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="202"><h3 id="&#x7EDF;&#x8BA1;&#x7528;&#x6237;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;">&#x7EDF;&#x8BA1;&#x7528;&#x6237;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;</h3>
 <p>&#x7EDF;&#x8BA1;&#x7CFB;&#x7EDF;&#x4E2D;&#x5404;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x6587;&#x4EF6;&#x5171;&#x88AB;&#x4E0B;&#x8F7D;&#x4E86;&#x591A;&#x5C11;&#x6B21;&#xFF0C;&#x6309;&#x4E0B;&#x8F7D;&#x6B21;&#x6570;&#x4ECE;&#x9AD8;&#x5230;&#x4F4E;&#x8FDB;&#x884C;&#x6392;&#x5217;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="200"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="203"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/stats/userdownloads</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-41">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-42">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
-  <span class="hljs-attr">"organization"</span>: <span class="hljs-string">"foxgis"</span>,
-  <span class="hljs-attr">"location"</span>: <span class="hljs-string">"beijing"</span>,
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"foxgis"</span>,
-  <span class="hljs-attr">"username"</span>: <span class="hljs-string">"foxgis"</span>,
-  <span class="hljs-attr">"downloadNum"</span>: <span class="hljs-number">12</span>
+  <span class="hljs-attr">"total"</span>: <span class="hljs-number">2113</span>,
+  <span class="hljs-attr">"organization"</span>: <span class="hljs-string">"中国地图出版集团"</span>
 },{
-  <span class="hljs-attr">"organization"</span>: <span class="hljs-string">"foxgis"</span>,
-  <span class="hljs-attr">"location"</span>: <span class="hljs-string">"beijing"</span>,
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"jingsam"</span>,
-  <span class="hljs-attr">"username"</span>: <span class="hljs-string">"jingsam"</span>,
-  <span class="hljs-attr">"downloadNum"</span>: <span class="hljs-number">8</span>
+  <span class="hljs-attr">"total"</span>: <span class="hljs-number">1</span>,
+  <span class="hljs-attr">"organization"</span>: <span class="hljs-string">"国家基础地理信息中心"</span>
 }]</code></pre>
-</div></div><div data-title="统计文件下载信息" class="keyline-top section contain clearfix " data-reactid="201"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="202"><h3 id="&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;">&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="统计文件下载信息" class="keyline-top section contain clearfix " data-reactid="204"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="205"><h3 id="&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;">&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E0B;&#x8F7D;&#x4FE1;&#x606F;</h3>
 <p>&#x7EDF;&#x8BA1;&#x7CFB;&#x7EDF;&#x4E2D;&#x6587;&#x4EF6;&#x5404;&#x88AB;&#x4E0B;&#x8F7D;&#x4E86;&#x591A;&#x5C11;&#x6B21;&#xFF0C;&#x6309;&#x4E0B;&#x8F7D;&#x6B21;&#x6570;&#x4ECE;&#x9AD8;&#x5230;&#x4F4E;&#x8FDB;&#x884C;&#x6392;&#x5217;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="203"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="206"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/stats/filedownloads</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-42">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-43">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"武汉交通游览图2016"</span>,
-  <span class="hljs-attr">"location"</span>: <span class="hljs-string">"武汉市"</span>,
-  <span class="hljs-attr">"year"</span>: <span class="hljs-number">2015</span>,
-  <span class="hljs-attr">"downloadNum"</span>: <span class="hljs-number">12</span>
+    <span class="hljs-attr">"location"</span>: <span class="hljs-string">"海口市海南省"</span>,
+    <span class="hljs-attr">"year"</span>: <span class="hljs-string">"2016"</span>,
+    <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"Hainan46"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"海口市区图"</span>,
+    <span class="hljs-attr">"downloadNum"</span>: <span class="hljs-number">19</span>,
+    <span class="hljs-attr">"upload_id"</span>: <span class="hljs-string">"Hyesmkbw"</span>
 },{
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"辅助决策用图"</span>,
-  <span class="hljs-attr">"location"</span>: <span class="hljs-string">"北京市"</span>,
-  <span class="hljs-attr">"year"</span>: <span class="hljs-number">2016</span>,
-  <span class="hljs-attr">"downloadNum"</span>: <span class="hljs-number">8</span>
+    <span class="hljs-attr">"location"</span>: <span class="hljs-string">"湖北省"</span>,
+    <span class="hljs-attr">"year"</span>: <span class="hljs-string">"2016"</span>,
+    <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"Hubei42"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"武汉交通游览图2016"</span>,
+    <span class="hljs-attr">"downloadNum"</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">"upload_id"</span>: <span class="hljs-string">"BJ-XLSQ8"</span>
 }]</code></pre>
-</div></div><div data-title="统计各区域文件数量" class="keyline-top section contain clearfix " data-reactid="204"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="205"><h3 id="&#x7EDF;&#x8BA1;&#x5404;&#x533A;&#x57DF;&#x6587;&#x4EF6;&#x6570;&#x91CF;">&#x7EDF;&#x8BA1;&#x5404;&#x533A;&#x57DF;&#x6587;&#x4EF6;&#x6570;&#x91CF;</h3>
+</div></div><div data-title="统计各区域文件数量" class="keyline-top section contain clearfix " data-reactid="207"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="208"><h3 id="&#x7EDF;&#x8BA1;&#x5404;&#x533A;&#x57DF;&#x6587;&#x4EF6;&#x6570;&#x91CF;">&#x7EDF;&#x8BA1;&#x5404;&#x533A;&#x57DF;&#x6587;&#x4EF6;&#x6570;&#x91CF;</h3>
 <p>&#x6839;&#x636E;&#x5236;&#x56FE;&#x533A;&#x57DF;&#x5BF9;&#x7CFB;&#x7EDF;&#x4E2D;&#x4E0A;&#x4F20;&#x6587;&#x4EF6;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="206"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="209"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/stats/location</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-43">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-44">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">89</span>,
   <span class="hljs-attr">"location"</span>: <span class="hljs-string">"武汉"</span>
@@ -1734,13 +1764,13 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">3</span>,
   <span class="hljs-attr">"location"</span>: <span class="hljs-string">"南京"</span>
 }]</code></pre>
-</div></div><div data-title="统计各年份文件数量" class="keyline-top section contain clearfix " data-reactid="207"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="208"><h3 id="&#x7EDF;&#x8BA1;&#x5404;&#x5E74;&#x4EFD;&#x6587;&#x4EF6;&#x6570;&#x91CF;">&#x7EDF;&#x8BA1;&#x5404;&#x5E74;&#x4EFD;&#x6587;&#x4EF6;&#x6570;&#x91CF;</h3>
+</div></div><div data-title="统计各年份文件数量" class="keyline-top section contain clearfix " data-reactid="210"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="211"><h3 id="&#x7EDF;&#x8BA1;&#x5404;&#x5E74;&#x4EFD;&#x6587;&#x4EF6;&#x6570;&#x91CF;">&#x7EDF;&#x8BA1;&#x5404;&#x5E74;&#x4EFD;&#x6587;&#x4EF6;&#x6570;&#x91CF;</h3>
 <p>&#x6839;&#x636E;&#x5E74;&#x4EFD;&#x5BF9;&#x7CFB;&#x7EDF;&#x4E2D;&#x4E0A;&#x4F20;&#x6587;&#x4EF6;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="209"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="212"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/stats/year</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-44">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-45">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">108</span>,
   <span class="hljs-attr">"year"</span>: <span class="hljs-string">"2016"</span>
@@ -1751,13 +1781,13 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">25</span>,
   <span class="hljs-attr">"year"</span>: <span class="hljs-string">"2013"</span>
 }]</code></pre>
-</div></div><div data-title="统计文件主题词" class="keyline-top section contain clearfix " data-reactid="210"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="211"><h3 id="&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E3B;&#x9898;&#x8BCD;">&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E3B;&#x9898;&#x8BCD;</h3>
+</div></div><div data-title="统计文件主题词" class="keyline-top section contain clearfix " data-reactid="213"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="214"><h3 id="&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E3B;&#x9898;&#x8BCD;">&#x7EDF;&#x8BA1;&#x6587;&#x4EF6;&#x4E3B;&#x9898;&#x8BCD;</h3>
 <p>&#x6309;&#x7167;&#x4E3B;&#x9898;&#x8BCD;&#x51FA;&#x73B0;&#x6B21;&#x6570;&#x4ECE;&#x5927;&#x5230;&#x5C0F;&#x6392;&#x5217;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="212"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="215"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/stats/tags</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-45">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-46">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">10</span>,
   <span class="hljs-attr">"tag"</span>: <span class="hljs-string">"旅游"</span>
@@ -1768,7 +1798,7 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"total"</span>: <span class="hljs-number">2</span>,
   <span class="hljs-attr">"tag"</span>: <span class="hljs-string">"水利工程"</span>
 }]</code></pre>
-</div></div><div data-title="模板模块" class="keyline-top section contain clearfix " data-reactid="213"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="214"><h2 id="&#x6A21;&#x677F;&#x6A21;&#x5757;">&#x6A21;&#x677F;&#x6A21;&#x5757;</h2>
+</div></div><div data-title="模板模块" class="keyline-top section contain clearfix " data-reactid="216"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="217"><h2 id="&#x6A21;&#x677F;&#x6A21;&#x5757;">&#x6A21;&#x677F;&#x6A21;&#x5757;</h2>
 <p>&#x7BA1;&#x7406;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x7684;&#x6837;&#x5F0F;&#x6A21;&#x677F;&#x3002;</p>
 <p>&#x5B57;&#x6BB5;&#x4FE1;&#x606F;&#xFF1A;</p>
 <table>
@@ -1814,12 +1844,12 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div></div><div data-title="获取模板列表" class="keyline-top section contain clearfix " data-reactid="215"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="216"><h3 id="&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x5217;&#x8868;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="217"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取模板列表" class="keyline-top section contain clearfix " data-reactid="218"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="219"><h3 id="&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x5217;&#x8868;">&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x5217;&#x8868;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="220"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/templates</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-46">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-47">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-08-18T02:53:58.982Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-08-17T07:07:15.215Z"</span>,
@@ -1833,34 +1863,12 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }]</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-34">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-35">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="获取模板信息" class="keyline-top section contain clearfix " data-reactid="218"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="219"><h3 id="&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x4FE1;&#x606F;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="220"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取模板信息" class="keyline-top section contain clearfix " data-reactid="221"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="222"><h3 id="&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6A21;&#x677F;&#x4FE1;&#x606F;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="223"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span></div>
-    </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-47">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
-<pre><code class="hljs">{
-  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-08-18T02:53:58.982Z"</span>,
-  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-08-17T07:07:15.215Z"</span>,
-  <span class="hljs-attr">"replace"</span>: <span class="hljs-string">"四川省"</span>,
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"省级行政区划图"</span>,
-  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
-  <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
-  <span class="hljs-attr">"thumb"</span>: {
-    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
-  },
-  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
-  <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
-}</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-35">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
-<pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="创建模板" class="keyline-top section contain clearfix " data-reactid="221"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="222"><h3 id="&#x521B;&#x5EFA;&#x6A21;&#x677F;">&#x521B;&#x5EFA;&#x6A21;&#x677F;</h3>
-<p>&#x53EA;&#x6709;&#x7BA1;&#x7406;&#x5458;&#x8D26;&#x6237;&#x624D;&#x6709;&#x6743;&#x9650;&#x521B;&#x5EFA;&#x6A21;&#x677F;&#xFF0C;&#x6A21;&#x677F;&#x4EE5;json&#x6587;&#x4EF6;&#x7684;&#x5F62;&#x5F0F;&#x4E0A;&#x4F20;&#xFF0C;&#x5E76;&#x9700;&#x63D0;&#x4F9B;name&#x548C;replace&#x5C5E;&#x6027;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="223"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
-      <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span></div>
     </div>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-48">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
@@ -1877,25 +1885,19 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-36">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
-<pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="更新模板信息" class="keyline-top section contain clearfix " data-reactid="224"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="225"><h3 id="&#x66F4;&#x65B0;&#x6A21;&#x677F;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x6A21;&#x677F;&#x4FE1;&#x606F;</h3>
-<p>&#x5141;&#x8BB8;&#x4FEE;&#x6539;&#x5B57;&#x6BB5;&#x6709;<code>name</code>,<code>replace</code>&#x548C;<code>styleJSON</code>&#x3002;</p>
+<pre><code class="hljs">HTTP 404</code></pre>
+</div></div><div data-title="创建模板" class="keyline-top section contain clearfix " data-reactid="224"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="225"><h3 id="&#x521B;&#x5EFA;&#x6A21;&#x677F;">&#x521B;&#x5EFA;&#x6A21;&#x677F;</h3>
+<p>&#x53EA;&#x6709;&#x7BA1;&#x7406;&#x5458;&#x8D26;&#x6237;&#x624D;&#x6709;&#x6743;&#x9650;&#x521B;&#x5EFA;&#x6A21;&#x677F;&#xFF0C;&#x6A21;&#x677F;&#x4EE5;json&#x6587;&#x4EF6;&#x7684;&#x5F62;&#x5F0F;&#x4E0A;&#x4F20;&#xFF0C;&#x5E76;&#x9700;&#x63D0;&#x4F9B;name&#x548C;replace&#x5C5E;&#x6027;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="226"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
-      <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span></div>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
+      <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x8BF7;&#x6C42;&#x793A;&#x4F8B;-10">&#x8BF7;&#x6C42;&#x793A;&#x4F8B;</h4>
-<pre><code class="hljs">{
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
-  <span class="hljs-attr">"replace"</span>: <span class="hljs-string">"newreplace"</span>,
-  <span class="hljs-attr">"styleJSON"</span>: <span class="hljs-string">"some style string"</span>
-}</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-49">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-08-18T02:53:58.982Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-08-17T07:07:15.215Z"</span>,
-  <span class="hljs-attr">"replace"</span>: <span class="hljs-string">"newreplace"</span>,
-  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
+  <span class="hljs-attr">"replace"</span>: <span class="hljs-string">"四川省"</span>,
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"省级行政区划图"</span>,
   <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
   <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
   <span class="hljs-attr">"thumb"</span>: {
@@ -1906,12 +1908,18 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 }</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-37">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="更新模板JSON" class="keyline-top section contain clearfix " data-reactid="227"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="228"><h3 id="&#x66F4;&#x65B0;&#x6A21;&#x677F;json">&#x66F4;&#x65B0;&#x6A21;&#x677F;JSON</h3>
-<p>&#x652F;&#x6301;json&#x6587;&#x4EF6;&#x7684;&#x4E0A;&#x4F20;&#x66F4;&#x65B0;&#x3002;</p>
+</div></div><div data-title="更新模板信息" class="keyline-top section contain clearfix " data-reactid="227"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="228"><h3 id="&#x66F4;&#x65B0;&#x6A21;&#x677F;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x6A21;&#x677F;&#x4FE1;&#x606F;</h3>
+<p>&#x5141;&#x8BB8;&#x4FEE;&#x6539;&#x5B57;&#x6BB5;&#x6709;<code>name</code>,<code>replace</code>&#x548C;<code>styleJSON</code>&#x3002;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="229"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PUT</div>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span></div>
     </div>
+<h4 id="&#x8BF7;&#x6C42;&#x793A;&#x4F8B;-10">&#x8BF7;&#x6C42;&#x793A;&#x4F8B;</h4>
+<pre><code class="hljs">{
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
+  <span class="hljs-attr">"replace"</span>: <span class="hljs-string">"newreplace"</span>,
+  <span class="hljs-attr">"styleJSON"</span>: <span class="hljs-string">"some style string"</span>
+}</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-50">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-08-18T02:53:58.982Z"</span>,
@@ -1928,28 +1936,50 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 }</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-38">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="删除模板" class="keyline-top section contain clearfix " data-reactid="230"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="231"><h3 id="&#x5220;&#x9664;&#x6A21;&#x677F;">&#x5220;&#x9664;&#x6A21;&#x677F;</h3>
+</div></div><div data-title="更新模板JSON" class="keyline-top section contain clearfix " data-reactid="230"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="231"><h3 id="&#x66F4;&#x65B0;&#x6A21;&#x677F;json">&#x66F4;&#x65B0;&#x6A21;&#x677F;JSON</h3>
+<p>&#x652F;&#x6301;json&#x6587;&#x4EF6;&#x7684;&#x4E0A;&#x4F20;&#x66F4;&#x65B0;&#x3002;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="232"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PUT</div>
       <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span></div>
     </div>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-51">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
-<pre><code class="hljs">HTTP 204</code></pre>
-</div></div><div data-title="获取JSON" class="keyline-top section contain clearfix " data-reactid="233"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="234"><h3 id="&#x83B7;&#x53D6;json">&#x83B7;&#x53D6;JSON</h3>
-<p>&#x6839;&#x636E;&#x6A21;&#x677F;ID&#xFF0C;&#x83B7;&#x53D6;&#x7528;&#x6237;&#x6700;&#x8FD1;&#x4E00;&#x6B21;&#x66F4;&#x65B0;&#x7684;json&#x6587;&#x4EF6;&#x4FE1;&#x606F;</p>
+<pre><code class="hljs">{
+  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-08-18T02:53:58.982Z"</span>,
+  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-08-17T07:07:15.215Z"</span>,
+  <span class="hljs-attr">"replace"</span>: <span class="hljs-string">"newreplace"</span>,
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"newname"</span>,
+  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
+  <span class="hljs-attr">"style"</span>: <span class="hljs-string">"admin-prov-v8.json"</span>,
+  <span class="hljs-attr">"thumb"</span>: {
+    <span class="hljs-attr">"background-image"</span>: <span class="hljs-string">"url('http://192.9.105.205:8090/api/v1/templates/wanyanyan/rkXfofQc/image')"</span>
+  },
+  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
+  <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
+}</code></pre>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-39">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<pre><code class="hljs">HTTP 500</code></pre>
+</div></div><div data-title="删除模板" class="keyline-top section contain clearfix " data-reactid="233"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="234"><h3 id="&#x5220;&#x9664;&#x6A21;&#x677F;">&#x5220;&#x9664;&#x6A21;&#x677F;</h3>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="235"><div class='endpoint dark fill-dark round '>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
+      <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span></div>
+    </div>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-52">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<pre><code class="hljs">HTTP 204</code></pre>
+</div></div><div data-title="获取JSON" class="keyline-top section contain clearfix " data-reactid="236"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="237"><h3 id="&#x83B7;&#x53D6;json">&#x83B7;&#x53D6;JSON</h3>
+<p>&#x6839;&#x636E;&#x6A21;&#x677F;ID&#xFF0C;&#x83B7;&#x53D6;&#x7528;&#x6237;&#x6700;&#x8FD1;&#x4E00;&#x6B21;&#x66F4;&#x65B0;&#x7684;json&#x6587;&#x4EF6;&#x4FE1;&#x606F;</p>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="238"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span>/json</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-52">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-53">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 200</code></pre>
-</div></div><div data-title="修改图片信息" class="keyline-top section contain clearfix " data-reactid="236"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="237"><h3 id="&#x4FEE;&#x6539;&#x56FE;&#x7247;&#x4FE1;&#x606F;">&#x4FEE;&#x6539;&#x56FE;&#x7247;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="修改图片信息" class="keyline-top section contain clearfix " data-reactid="239"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="240"><h3 id="&#x4FEE;&#x6539;&#x56FE;&#x7247;&#x4FE1;&#x606F;">&#x4FEE;&#x6539;&#x56FE;&#x7247;&#x4FE1;&#x606F;</h3>
 <p>&#x652F;&#x6301;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x56FE;&#x7247;&#x4EE5;&#x65B0;&#x5EFA;&#x56FE;&#x7247;&#x6216;&#x66F4;&#x65B0;&#x5DF2;&#x6709;&#x7684;&#x56FE;&#x7247;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="238"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="241"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
       <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span>/image</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-53">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-54">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-08-18T02:53:58.982Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-08-17T07:07:15.215Z"</span>,
@@ -1963,18 +1993,18 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"template_id"</span>: <span class="hljs-string">"rJiXTF-9"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-39">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-40">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="获取图片信息" class="keyline-top section contain clearfix " data-reactid="239"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="240"><h3 id="&#x83B7;&#x53D6;&#x56FE;&#x7247;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x56FE;&#x7247;&#x4FE1;&#x606F;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="241"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取图片信息" class="keyline-top section contain clearfix " data-reactid="242"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="243"><h3 id="&#x83B7;&#x53D6;&#x56FE;&#x7247;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x56FE;&#x7247;&#x4FE1;&#x606F;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="244"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/templates/<span class="strong">{username}</span>/<span class="strong">{template_id}</span>/image</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-54">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-55">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 200</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-40">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-41">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="数据集模块" class="keyline-top section contain clearfix " data-reactid="242"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="243"><h2 id="&#x6570;&#x636E;&#x96C6;&#x6A21;&#x5757;">&#x6570;&#x636E;&#x96C6;&#x6A21;&#x5757;</h2>
+</div></div><div data-title="数据集模块" class="keyline-top section contain clearfix " data-reactid="245"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="246"><h2 id="&#x6570;&#x636E;&#x96C6;&#x6A21;&#x5757;">&#x6570;&#x636E;&#x96C6;&#x6A21;&#x5757;</h2>
 <p>&#x7BA1;&#x7406;&#x7528;&#x6237;&#x4E0A;&#x4F20;&#x7684;&#x6E90;&#x6570;&#x636E;&#x3002;</p>
 <p>&#x5B57;&#x6BB5;&#x4FE1;&#x606F;&#xFF1A;</p>
 <table>
@@ -2034,40 +2064,11 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 </tr>
 </tbody>
 </table>
-</div></div><div data-title="获取数据集列表1" class="keyline-top section contain clearfix " data-reactid="244"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="245"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;1">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;1</h3>
+</div></div><div data-title="获取数据集列表1" class="keyline-top section contain clearfix " data-reactid="247"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="248"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;1">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;1</h3>
 <p>&#x83B7;&#x53D6;&#x7CFB;&#x7EDF;&#x4E2D;&#x6240;&#x6709;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;&#xFF0C;&#x666E;&#x901A;&#x7528;&#x6237;&#x53EA;&#x80FD;&#x83B7;&#x53D6;&#x4E2A;&#x4EBA;&#x6216;&#x5176;&#x4ED6;&#x7528;&#x6237;&#x516C;&#x5F00;&#x7684;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="246"><div class='endpoint dark fill-dark round '>
-      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
-      <div class='pad0 code small endpoint-url'>/datasets</div>
-    </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-55">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
-<pre><code class="hljs">[{
-  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
-  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
-  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
-  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"wuhan"</span>,
-  <span class="hljs-attr">"format"</span>: <span class="hljs-string">".json"</span>,
-  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">3774</span>,
-  <span class="hljs-attr">"center"</span>: [
-    <span class="hljs-number">114.4384469476708</span>,
-    <span class="hljs-number">30.532440455939344</span>
-  ],
-  <span class="hljs-attr">"bounds"</span>: [
-    <span class="hljs-number">114.35352938210184</span>,
-    <span class="hljs-number">30.463123047818996</span>,
-    <span class="hljs-number">114.52336451323976</span>,
-    <span class="hljs-number">30.601757864059692</span>
-  ],
-  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
-  <span class="hljs-attr">"dataset_id"</span>: <span class="hljs-string">"Sk6US3dT"</span>
-}]</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-41">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
-<pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="获取数据集列表2" class="keyline-top section contain clearfix " data-reactid="247"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="248"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;2">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;2</h3>
-<p>&#x83B7;&#x53D6;&#x7CFB;&#x7EDF;&#x4E2D;&#x67D0;&#x4E2A;&#x7528;&#x6237;{username}&#x4E0A;&#x4F20;&#x7684;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;&#x3002;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="249"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
-      <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span></div>
+      <div class='pad0 code small endpoint-url'>/datasets</div>
     </div>
 <h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-56">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">[{
@@ -2092,13 +2093,42 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 }]</code></pre>
 <h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-42">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="获取数据集信息" class="keyline-top section contain clearfix " data-reactid="250"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="251"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;</h3>
-<p>&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;&#x3002;</p>
+</div></div><div data-title="获取数据集列表2" class="keyline-top section contain clearfix " data-reactid="250"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="251"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;2">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5217;&#x8868;2</h3>
+<p>&#x83B7;&#x53D6;&#x7CFB;&#x7EDF;&#x4E2D;&#x67D0;&#x4E2A;&#x7528;&#x6237;{username}&#x4E0A;&#x4F20;&#x7684;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;&#x3002;</p>
 </div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="252"><div class='endpoint dark fill-dark round '>
+      <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
+      <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span></div>
+    </div>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-57">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<pre><code class="hljs">[{
+  <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
+  <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
+  <span class="hljs-attr">"owner"</span>: <span class="hljs-string">"foxgis"</span>,
+  <span class="hljs-attr">"filename"</span>: <span class="hljs-string">"wuhan"</span>,
+  <span class="hljs-attr">"format"</span>: <span class="hljs-string">".json"</span>,
+  <span class="hljs-attr">"filesize"</span>: <span class="hljs-number">3774</span>,
+  <span class="hljs-attr">"center"</span>: [
+    <span class="hljs-number">114.4384469476708</span>,
+    <span class="hljs-number">30.532440455939344</span>
+  ],
+  <span class="hljs-attr">"bounds"</span>: [
+    <span class="hljs-number">114.35352938210184</span>,
+    <span class="hljs-number">30.463123047818996</span>,
+    <span class="hljs-number">114.52336451323976</span>,
+    <span class="hljs-number">30.601757864059692</span>
+  ],
+  <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
+  <span class="hljs-attr">"dataset_id"</span>: <span class="hljs-string">"Sk6US3dT"</span>
+}]</code></pre>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-43">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<pre><code class="hljs">HTTP 500</code></pre>
+</div></div><div data-title="获取数据集信息" class="keyline-top section contain clearfix " data-reactid="253"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="254"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;</h3>
+<p>&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5143;&#x6570;&#x636E;&#x4FE1;&#x606F;&#x3002;</p>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="255"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span>/<span class="strong">{dataset_id}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-57">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-58">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
@@ -2119,14 +2149,14 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"dataset_id"</span>: <span class="hljs-string">"Sk6US3dT"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-43">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-44">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="获取数据集内容" class="keyline-top section contain clearfix " data-reactid="253"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="254"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="255"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="获取数据集内容" class="keyline-top section contain clearfix " data-reactid="256"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="257"><h3 id="&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;">&#x83B7;&#x53D6;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="258"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>GET</div>
       <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span>/<span class="strong">{dataset_id}</span>/raw</div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-58">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-59">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"type"</span>:<span class="hljs-string">"FeatureCollection"</span>,
   <span class="hljs-attr">"features"</span>:[
@@ -2216,15 +2246,15 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
     }
   ]
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-44">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-45">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="上传数据集" class="keyline-top section contain clearfix " data-reactid="256"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="257"><h3 id="&#x4E0A;&#x4F20;&#x6570;&#x636E;&#x96C6;">&#x4E0A;&#x4F20;&#x6570;&#x636E;&#x96C6;</h3>
+</div></div><div data-title="上传数据集" class="keyline-top section contain clearfix " data-reactid="259"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="260"><h3 id="&#x4E0A;&#x4F20;&#x6570;&#x636E;&#x96C6;">&#x4E0A;&#x4F20;&#x6570;&#x636E;&#x96C6;</h3>
 <p>&#x4E0A;&#x4F20;&#x6570;&#x636E;&#x96C6;&#xFF0C;&#x652F;&#x6301;&#x7684;&#x683C;&#x5F0F;&#x6709;<code>geojson</code>&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="258"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="261"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>POST</div>
       <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-59">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-60">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
@@ -2245,18 +2275,18 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"dataset_id"</span>: <span class="hljs-string">"Sk6US3dT"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-45">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-46">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 500</code></pre>
-</div></div><div data-title="删除数据集" class="keyline-top section contain clearfix " data-reactid="259"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="260"><h3 id="&#x5220;&#x9664;&#x6570;&#x636E;&#x96C6;">&#x5220;&#x9664;&#x6570;&#x636E;&#x96C6;</h3>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="261"><div class='endpoint dark fill-dark round '>
+</div></div><div data-title="删除数据集" class="keyline-top section contain clearfix " data-reactid="262"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="263"><h3 id="&#x5220;&#x9664;&#x6570;&#x636E;&#x96C6;">&#x5220;&#x9664;&#x6570;&#x636E;&#x96C6;</h3>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="264"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>DELETE</div>
       <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span>/<span class="strong">{dataset_id}</span></div>
     </div>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-60">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-61">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">HTTP 204</code></pre>
-</div></div><div data-title="更新数据集信息" class="keyline-top section contain clearfix " data-reactid="262"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="263"><h3 id="&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;</h3>
+</div></div><div data-title="更新数据集信息" class="keyline-top section contain clearfix " data-reactid="265"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="266"><h3 id="&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;">&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x4FE1;&#x606F;</h3>
 <p>&#x53EF;&#x66F4;&#x65B0;&#x7684;&#x5B57;&#x6BB5;&#x6709;<code>scope</code>&#x3001;<code>filename</code>&#x3001;<code>tags</code>&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="264"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="267"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span>/<span class="strong">{dataset_id}</span></div>
     </div>
@@ -2264,7 +2294,7 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
 <pre><code class="hljs">{
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-61">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-62">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
@@ -2286,11 +2316,11 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"private"</span>,
   <span class="hljs-attr">"dataset_id"</span>: <span class="hljs-string">"Sk6US3dT"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-46">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-47">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div><div data-title="更新数据集内容" class="keyline-top section contain clearfix " data-reactid="265"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="266"><h3 id="&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;">&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;</h3>
+</div></div><div data-title="更新数据集内容" class="keyline-top section contain clearfix " data-reactid="268"><div class="space-bottom8 col6 pad2x prose clip" data-reactid="269"><h3 id="&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;">&#x66F4;&#x65B0;&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;</h3>
 <p>&#x6570;&#x636E;&#x96C6;&#x5185;&#x5BB9;&#x53EF;&#x901A;&#x8FC7;json&#x5F62;&#x5F0F;&#x3002;</p>
-</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="267"><div class='endpoint dark fill-dark round '>
+</div><div class="space-bottom4 col6 pad2 prose clip fill-light space-top5" data-reactid="270"><div class='endpoint dark fill-dark round '>
       <div class='round-left pad0y pad1x fill-lighten0 code small endpoint-method'>PATCH</div>
       <div class='pad0 code small endpoint-url'>/datasets/<span class="strong">{username}</span>/<span class="strong">{dataset_id}</span>/raw</div>
     </div>
@@ -2384,7 +2414,7 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
     }
   ]
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-62">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x6210;&#x529F;-63">&#x54CD;&#x5E94;&#x6210;&#x529F;</h4>
 <pre><code class="hljs">{
   <span class="hljs-attr">"updatedAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
   <span class="hljs-attr">"createdAt"</span>: <span class="hljs-string">"2016-09-28T03:13:24.892Z"</span>,
@@ -2405,11 +2435,11 @@ end | &#x5B57;&#x5F62;&#x7801;&#x70B9;&#x7684;&#x7EC8;&#x70B9;&#xFF0C;&#x53D6;&#
   <span class="hljs-attr">"scope"</span>: <span class="hljs-string">"public"</span>,
   <span class="hljs-attr">"dataset_id"</span>: <span class="hljs-string">"Sk6US3dT"</span>
 }</code></pre>
-<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-47">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
+<h4 id="&#x54CD;&#x5E94;&#x5931;&#x8D25;-48">&#x54CD;&#x5E94;&#x5931;&#x8D25;</h4>
 <pre><code class="hljs">HTTP 404</code></pre>
-</div></div></div></div></div><div class="fixed-top space-left16" data-reactid="268"><div class="events fill-light bottom-shadow pad1 col6 pin-topright  " data-reactid="269"><div class="space-right1 small quiet inline" data-reactid="270">Show examples in:</div><div class="rounded-toggle inline short" data-reactid="271"><a class="strong active" data-reactid="272">cURL</a><a class="strong " data-reactid="273">cli</a><a class="strong " data-reactid="274">Python</a><a class="strong " data-reactid="275">JS</a><a class="strong " data-reactid="276">Java</a><a class="strong " data-reactid="277">ObjC</a><a class="strong " data-reactid="278">Swift</a></div><div class="fr pad0" data-reactid="279"><a title="Display as 1 column" style="cursor:pointer;" class="icon quiet caret-left pad0 fill-darken0 round" data-reactid="280"></a></div></div></div><div class="fill-dark dark bottom-shadow fixed-top pad0 width16" data-reactid="281"><a href="/" class="active space-top1 space-left1 pin-topleft icon round dark pad0 fill-red" data-reactid="282"></a><div class="strong small pad0
+</div></div></div></div></div><div class="fixed-top space-left16" data-reactid="271"><div class="events fill-light bottom-shadow pad1 col6 pin-topright  " data-reactid="272"><div class="space-right1 small quiet inline" data-reactid="273">Show examples in:</div><div class="rounded-toggle inline short" data-reactid="274"><a class="strong active" data-reactid="275">cURL</a><a class="strong " data-reactid="276">cli</a><a class="strong " data-reactid="277">Python</a><a class="strong " data-reactid="278">JS</a><a class="strong " data-reactid="279">Java</a><a class="strong " data-reactid="280">ObjC</a><a class="strong " data-reactid="281">Swift</a></div><div class="fr pad0" data-reactid="282"><a title="Display as 1 column" style="cursor:pointer;" class="icon quiet caret-left pad0 fill-darken0 round" data-reactid="283"></a></div></div></div><div class="fill-dark dark bottom-shadow fixed-top pad0 width16" data-reactid="284"><a href="/" class="active space-top1 space-left1 pin-topleft icon round dark pad0 fill-red" data-reactid="285"></a><div class="strong small pad0
           
-          space-left4 line-height15" data-reactid="283">FoxGIS API Documentation</div></div></div></div><!--STOP-->
+          space-left4 line-height15" data-reactid="286">FoxGIS API Documentation</div></div></div></div><!--STOP-->
     <script src='bundle.js'></script>
   </body>
 </html>
