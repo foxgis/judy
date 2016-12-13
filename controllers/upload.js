@@ -58,6 +58,8 @@ module.exports.upload = function(req, res) {
     if (req.body.year) newUpload.year = req.body.year
     if (req.body.location) newUpload.location = req.body.location
     if (req.body.scale) newUpload.scale = req.body.scale
+    if (req.body.scope) newUpload.scope = req.body.scope
+    if (req.body.tags) newUpload.tags = req.body.tags
 
     if (['png', 'jpg', 'jpeg', 'gif', 'tiff', 'tif'].indexOf(newUpload.format) < 0) {
       newUpload.save(function(err) {
