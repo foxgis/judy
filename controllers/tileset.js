@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
 var shortid = require('shortid')
 var filesniffer = require('mapbox-file-sniff')
 var tilelive = require('tilelive')
+var Omnivore = require('tilelive-omnivore');
 var tiletype = require('tiletype')
 var shpFairy = require('shapefile-fairy')
 var mkdirp = require('mkdirp')
@@ -44,7 +45,7 @@ module.exports.listAll = function(req, res) {
   }
 
   if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
-    query.$or = 
+    query.$or =
     [
         {owner: req.user.username},
         {scope: 'public'}
@@ -118,14 +119,28 @@ module.exports.upload = function(req, res) {
       })
     },
     info: function(source, callback) {
-      tilelive.info(source, function(err, info) {
-        if(err){
-          res.status(500).json({ error: err })
-        }else{
-          res.json({tileset_id:tileset_id,owner: username,success:true})
-        }
-        return callback(err, info)
-      })
+      // 支持json格式
+      if(source.slice(0,8) === 'omnivore:'){
+        new Omnivore(source, function(err, source) {
+          source.getInfo(function(err, info) {
+            if(err){
+              res.status(500).json({ error: err })
+            }else{
+              res.json({tileset_id:tileset_id,owner: username,success:true})
+            }
+            return callback(err, info)
+          });
+        });
+      }else{
+        tilelive.info(source, function(err, info) {
+          if(err){
+            res.status(500).json({ error: err })
+          }else{
+            res.json({tileset_id:tileset_id,owner: username,success:true})
+          }
+          return callback(err, info)
+        })
+      }
     },
     copy: function(source, callback) {
       var dst = 'foxgis+' + config.DB + '?tileset_id=' + tileset_id + '&owner=' + username
@@ -135,7 +150,6 @@ module.exports.upload = function(req, res) {
         timeout: 3600000,
         close: true
       }
-
       tilelive.copy(source, dst, opts, callback)
     },
     writeDB: function(info, copy, callback) {
@@ -200,7 +214,7 @@ module.exports.getCopyStatus = function (req,res) {
         if (!tileset) {
           return res.status(500).json({ error: '未知错误' })
         }
-        
+
         res.json({tileset:tileset,complete:true,uploadResults:uploadResults})
       })
       uploadResults.splice(i,1)
@@ -210,7 +224,7 @@ module.exports.getCopyStatus = function (req,res) {
   if(flag===0){
     res.json({tileset_id:req.params.tileset_id,complete:false})
   }
-  
+
 }
 
 module.exports.update = function(req, res) {
