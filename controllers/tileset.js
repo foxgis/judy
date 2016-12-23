@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 var shortid = require('shortid')
 var filesniffer = require('mapbox-file-sniff')
 var tilelive = require('tilelive')
-var Omnivore = require('tilelive-omnivore');
+var Omnivore = require('tilelive-omnivore')
 var tiletype = require('tiletype')
 var shpFairy = require('shapefile-fairy')
 var mkdirp = require('mkdirp')
@@ -129,8 +129,8 @@ module.exports.upload = function(req, res) {
               res.json({tileset_id:tileset_id,owner: username,success:true})
             }
             return callback(err, info)
-          });
-        });
+          })
+        })
       }else{
         tilelive.info(source, function(err, info) {
           if(err){
