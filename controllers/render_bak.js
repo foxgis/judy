@@ -7,12 +7,8 @@ var mime = require('mime')
 var async = require('async')
 var http = require('http')
 var zlib = require('zlib')
-var lodash = require('lodash')
 var gl2xml = require('mapbox-gl-json-to-mapnik-xml')
 var turf = require('turf')
-var mongoose = require('mongoose')
-var SourceIndex = require('../models/source_index')
-var pgconfig = require('../pgconfig')
 turf.bboxClip = require('turf-bbox-clip')
 
 module.exports = function(style, params, callback) {
@@ -71,8 +67,8 @@ module.exports = function(style, params, callback) {
 function renderStaticImage(map, params, LayerInfo, pgSource, tileSource, callback) {
   map.layers().forEach(function(layer) {
     if (LayerInfo[0].layers.hasOwnProperty(layer.name)) {
-      if (pgSource[LayerInfo[0].layers[layer.name]].hasOwnProperty(layer.name)) {
-        layer.datasource = new mapnik.Datasource(pgSource[LayerInfo[0].layers[layer.name]][layer.name])
+      if (pgSource[LayerInfo[0].layers[layer.name][0]].hasOwnProperty(layer.name)) {
+        layer.datasource = new mapnik.Datasource(pgSource[LayerInfo[0].layers[layer.name][0]][layer.name])
       }   
     } else {
       if (tileSource[LayerInfo[1].layers[layer.name]].hasOwnProperty(layer.name)) {
@@ -191,50 +187,37 @@ function genTileSource(tileLayerInfo, coors, callback) {
 function genPgSource(pgLayerInfo, callback) {
   var source = {}
   for (var id in pgLayerInfo.source) {
-    var layers = pgLayerInfo.source[id].layers
-    for(var name in layers){
-      lodash.extend(layers[name],pgconfig)
-    }
-    source[id] = pgLayerInfo.source[id].layers
+    source[id] = JSON.parse(fs.readFileSync('./metadata/' + id + '/' + pgLayerInfo.source[id])).layer_config
   }
   return callback(null, source)
 }
 
 function getLayerInfo(map, zoom, callback) {
+  var pgConfigInfo = {}
+  var tileConfigInfo = {}
+  tileConfigInfo.layers = {}
+  tileConfigInfo.source = []
+  pgConfigInfo.source = {}
+  pgConfigInfo.layers = {}
   var styleSource = JSON.parse(map.parameters.source)
-  var layers = map.layers();
-  async.map(layers,function(layer,callback){
+  map.layers().forEach(function(layer) {
     var layerSource = styleSource[layer.name]
-    isNative(layerSource, zoom, layer.name,function(flag, id, name, data){
-      if(flag) {
-        callback(null,{type:'postgis', id:id, name:name, source: data})
-      }else {
-        callback(null, {type:'tile', id:id, name:name, source:data})
-      }
-    })
-  },function(err,results){
-    var pgConfigInfo = {}
-    var tileConfigInfo = {}
-    tileConfigInfo.layers = {}
-    tileConfigInfo.source = []
-    pgConfigInfo.source = {}
-    pgConfigInfo.layers = {}
-    for(var i = 0;i < results.length;i++) {
-      if(results[i].type === 'postgis'){
-        pgConfigInfo.layers[results[i].name] = results[i].id
-        if(!pgConfigInfo.source.hasOwnProperty(results[i].id)){
-          pgConfigInfo.source[results[i].id] = results[i].source
-        }
-      }
-      if(results[i].type === 'tile'){
-        tileConfigInfo.layers[results[i].name] = results[i].source
-        if(tileConfigInfo.source.indexOf(results[i].source) == -1){
-          tileConfigInfo.source.push(results[i].source)
-        }
+    var nativePg = isNative(layerSource, zoom)
+    if (nativePg[0]) {
+      pgConfigInfo.layers[layer.name] = [nativePg[1], nativePg[2]]
+      if (!pgConfigInfo.source.hasOwnProperty(nativePg[1])) {
+        pgConfigInfo.source[nativePg[1]] = nativePg[2]
       }
     }
-    return callback(null, pgConfigInfo, tileConfigInfo)
+    else {
+      tileConfigInfo.layers[layer.name] = layerSource
+      if (tileConfigInfo.source.indexOf(layerSource) == -1) {
+        tileConfigInfo.source.push(layerSource)
+      }
+    }
+
   })
+  return callback(null, pgConfigInfo, tileConfigInfo)
 }
 
 function convert2xy(feat) {
@@ -295,30 +278,26 @@ function convert2xy(feat) {
   return feat
 }
 
-function isNative(sourceUrl, zoom, layername, callback) {
+function isNative(sourceUrl, zoom) {
   zoom = Math.min(zoom,12)
   if (isNativeRoute(url.parse(sourceUrl).host)) {
     var urlPath = url.parse(sourceUrl).pathname.split('/')
-    var tileset_id = urlPath[urlPath.indexOf('tilesets') + 2]
-    var owner = urlPath[urlPath.indexOf('tilesets') + 1]
-    var Ngcc = mongoose.model('source_index', SourceIndex, 'source_index')
-    Ngcc.findOne({
-      tileset_id: tileset_id,
-      owner: owner,
-      is_deleted:false
-    }, function(err, sourceIndex) {
-      if(sourceIndex && sourceIndex.toJSON()) {
-        var json = sourceIndex.toJSON()
-        if(json.layers.hasOwnProperty(layername)){
-          callback(true, json.tileset_id, layername, json)
-        } else {
-          callback(false, tileset_id, layername, sourceUrl)
+    var dirNative = fs.readdirSync('./metadata/')
+    if (dirNative.indexOf(urlPath[urlPath.indexOf('tilesets') + 2]) > -1) {
+      var zoomConfig = fs.readdirSync('./metadata/' + urlPath[urlPath.indexOf('tilesets') + 2])
+        //zoom = ['z',zoom].join('')
+      for (var id in zoomConfig) {
+        var nameArr = zoomConfig[id].split('.')[0].split('_')
+        if (nameArr.length == 3 && zoom >= nameArr[0].slice(1, this.length) && zoom <= nameArr[1].slice(1, this.length)) {
+          return [true, urlPath[urlPath.indexOf('tilesets') + 2], zoomConfig[id]]
         }
-      } else {
-        callback(false, tileset_id, layername, sourceUrl)
-      } 
-    })
+        if (nameArr.length == 2 && zoom == nameArr[0].slice(1, this.length)) {
+          return [true, urlPath[urlPath.indexOf('tilesets') + 2], zoomConfig[id]]
+        }
+      }
+    }
   }
+  return [false, null, null]
 }
 
 function isNativeRoute() {

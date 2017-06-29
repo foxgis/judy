@@ -13,7 +13,26 @@ var mkdirp = require('mkdirp')
 var config = require('../config')
 var TileSchema = require('../models/tile')
 var Tileset = require('../models/tileset')
+var SphericalMercator = require('sphericalmercator')
+var SourceIndex = require('../models/source_index')
+var pgconfig = require('../pgconfig')
+var gdal = require("gdal")
 var uploadResults = []
+
+const Sequelize = require('sequelize');
+var sequelize = new Sequelize(pgconfig.dbname, pgconfig.user, pgconfig.password, {
+  host: pgconfig.host,
+  port: pgconfig.port,
+  dialect: 'postgres',
+  pool: {
+    max: pgconfig.max_size,
+    min: 0,
+    idle: 10000
+  },
+  logging: function(){
+
+  }
+});
 
 
 //该模块包含了对瓦片集功能进行业务处理的各项函数
@@ -120,7 +139,7 @@ module.exports.upload = function(req, res) {
     },
     info: function(source, callback) {
       // 支持json格式
-      if(source.slice(0,8) === 'omnivore:'){
+      if(source.slice(0,9) === 'omnivore:'){
         new Omnivore(source, function(err, source) {
           source.getInfo(function(err, info) {
             if(err){
@@ -152,7 +171,65 @@ module.exports.upload = function(req, res) {
       }
       tilelive.copy(source, dst, opts, callback)
     },
-    writeDB: function(info, copy, callback) {
+    writePostgis: function(protocol, source, info, callback) {
+      var path = source.replace(protocol + '//', '')
+      var dataset = gdal.open(path)
+      var layer = dataset.layers.get(0)
+      var fields = layer.fields.getNames()
+      var features = layer.features;
+      var options = {
+        geometry: Sequelize.GEOMETRY
+      }
+      for(var i in fields) {
+        var sequelizeType = Sequelize.STRING
+        var type = layer.fields.get(fields[i]).type
+        switch (type) {
+          case gdal.OFTBinary:
+            sequelizeType = Sequelize.STRING.BINARY
+            break;
+          case gdal.OFTInteger:
+            sequelizeType = Sequelize.INTEGER
+            break;
+          case gdal.OFTString:
+            sequelizeType = Sequelize.STRING
+            break;
+          default:
+            sequelizeType = Sequelize.STRING
+            break;
+        }
+        options[fields[i]] = sequelizeType
+      }
+      var DatasetModel = sequelize.define(username + '_' + tileset_id + '_' + layer.name, options, {
+        freezeTableName: true, // Model 对应的表名将与model名相同
+        timestamps: false
+      });
+      var feature
+      var total = features.count()
+      var n = 0
+      function feature2db(feature) {
+        if(!feature) {return}
+        var row = feature.fields.toObject()
+        var geometry = feature.getGeometry().toObject()
+        row.geometry = geometry
+        DatasetModel.create(row).then(function(){
+          n++
+          if(n === total) {
+            console.log('入库完毕!')
+          } else {
+            feature = features.next()
+            feature2db(feature)
+          }
+        })
+      }
+      
+      DatasetModel.sync({force: true}).then(function () {
+        feature = features.get(0)
+        feature2db(feature)
+        callback(null,layer.name)
+      });
+      
+    },
+    writeDB: function(info, copy, writePostgis, callback) {
       var newTileset = {
         tileset_id: tileset_id,
         owner: username,
@@ -175,6 +252,33 @@ module.exports.upload = function(req, res) {
         tileset_id: tileset_id,
         owner: username
       }, newTileset, { upsert: true, new: true, setDefaultsOnInsert: true }, callback)
+
+      var newSourceIndex = {
+        tileset_id: tileset_id,
+        owner: username,
+        is_deleted: false,
+        layers:{}
+      }
+      for(var i in info.vector_layers) {
+        var t = {
+          "type":"postgis",
+          "srid":"3857",
+          "extent":[],
+          "minzoom": info.minzoom,
+          "maxzoom": info.maxzoom,
+          "table":"",
+          "geometry_field":"geometry"
+        }
+        var sm = new SphericalMercator()
+        t.extent = sm.convert(info.bounds, '900913')
+        t.table = '(SELECT * FROM '+'public."'+username + '_' + tileset_id + '_' +writePostgis+'") as data'
+        newSourceIndex.layers[info.vector_layers[i].id] = t
+      }
+      var sourceIndex = mongoose.model('source_index', SourceIndex, 'source_index')
+      sourceIndex.findOneAndUpdate({
+        tileset_id: tileset_id,
+        owner: username
+      }, newSourceIndex, { upsert: true, new: true, setDefaultsOnInsert: true }, function(){})
     }
   }, function(err, results) {
     fs.unlink(filePath, function() {})
