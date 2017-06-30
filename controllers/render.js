@@ -34,7 +34,7 @@ module.exports = function(style, params, callback) {
           getLayerInfo(map, params.zoom, callback)
         },
         pgSource: function(LayerInfo, callback) {
-          genPgSource(LayerInfo[0], callback)
+          genPgSource(LayerInfo[0], params.zoom, callback)
         },
         tileSource: function(LayerInfo, callback) {
           var source = {}
@@ -188,14 +188,21 @@ function genTileSource(tileLayerInfo, coors, callback) {
 
 }
 
-function genPgSource(pgLayerInfo, callback) {
+function genPgSource(pgLayerInfo, zoom, callback) {
   var source = {}
   for (var id in pgLayerInfo.source) {
-    var layers = pgLayerInfo.source[id].layers
-    for(var name in layers){
-      lodash.extend(layers[name],pgconfig)
-    }
-    source[id] = pgLayerInfo.source[id].layers
+    var layers = {}
+    for(var zoomRange in pgLayerInfo.source[id].layers){
+      var minzoom = Number(zoomRange.split('_')[0])
+      var maxzoom = Number(zoomRange.split('_')[1]?zoomRange.split('_')[1]:minzoom)
+      if(zoom-1 >= minzoom && zoom-1 <= maxzoom){
+        for(var name in pgLayerInfo.source[id].layers[zoomRange]) {
+          lodash.extend(pgLayerInfo.source[id].layers[zoomRange][name],pgconfig)
+        }
+        source[id] = pgLayerInfo.source[id].layers[zoomRange]
+        break
+      }
+    } 
   }
   return callback(null, source)
 }
@@ -309,11 +316,7 @@ function isNative(sourceUrl, zoom, layername, callback) {
     }, function(err, sourceIndex) {
       if(sourceIndex && sourceIndex.toJSON()) {
         var json = sourceIndex.toJSON()
-        if(json.layers.hasOwnProperty(layername)){
-          callback(true, json.tileset_id, layername, json)
-        } else {
-          callback(false, tileset_id, layername, sourceUrl)
-        }
+        callback(true, json.tileset_id, layername, json)
       } else {
         callback(false, tileset_id, layername, sourceUrl)
       } 

@@ -171,7 +171,11 @@ module.exports.upload = function(req, res) {
       }
       tilelive.copy(source, dst, opts, callback)
     },
-    writePostgis: function(protocol, source, info, callback) {
+    writePostgis: function(protocol, source, filetype, callback) {
+      if(filetype !== 'geojson' && filetype !== 'zip') {
+        callback(null, null)
+        return
+      }
       var path = source.replace(protocol + '//', '')
       var dataset = gdal.open(path)
       var layer = dataset.layers.get(0)
@@ -184,14 +188,20 @@ module.exports.upload = function(req, res) {
         var sequelizeType = Sequelize.STRING
         var type = layer.fields.get(fields[i]).type
         switch (type) {
-          case gdal.OFTBinary:
+          case 'binary':
             sequelizeType = Sequelize.STRING.BINARY
             break;
-          case gdal.OFTInteger:
+          case 'integer':
             sequelizeType = Sequelize.INTEGER
             break;
-          case gdal.OFTString:
+          case 'integer64':
+            sequelizeType = Sequelize.BIGINT
+            break;
+          case 'string':
             sequelizeType = Sequelize.STRING
+            break;
+          case 'real':
+            sequelizeType = Sequelize.REAL
             break;
           default:
             sequelizeType = Sequelize.STRING
@@ -209,8 +219,11 @@ module.exports.upload = function(req, res) {
       function feature2db(feature) {
         if(!feature) {return}
         var row = feature.fields.toObject()
-        var geometry = feature.getGeometry().toObject()
-        row.geometry = geometry
+        var geometry = feature.getGeometry()
+        var webMercator = gdal.SpatialReference.fromEPSG(3857)
+        geometry.transformTo(webMercator)
+        row.geometry = geometry.toObject()
+        row.newfield = 3.141592748
         DatasetModel.create(row).then(function(){
           n++
           if(n === total) {
@@ -253,26 +266,28 @@ module.exports.upload = function(req, res) {
         owner: username
       }, newTileset, { upsert: true, new: true, setDefaultsOnInsert: true }, callback)
 
+      if(!writePostgis){
+        return
+      }
       var newSourceIndex = {
         tileset_id: tileset_id,
         owner: username,
         is_deleted: false,
         layers:{}
       }
+      newSourceIndex.layers[info.minzoom + '_' + info.maxzoom] = {}
       for(var i in info.vector_layers) {
         var t = {
           "type":"postgis",
-          "srid":"3857",
-          "extent":[],
-          "minzoom": info.minzoom,
-          "maxzoom": info.maxzoom,
+          "srid":3857,
+          "extent":[-20037508.3,-20037508.3,20037508.3,20037508.3],
           "table":"",
           "geometry_field":"geometry"
         }
         var sm = new SphericalMercator()
-        t.extent = sm.convert(info.bounds, '900913')
+        //t.extent = sm.convert(info.bounds, '900913')
         t.table = '(SELECT * FROM '+'public."'+username + '_' + tileset_id + '_' +writePostgis+'") as data'
-        newSourceIndex.layers[info.vector_layers[i].id] = t
+        newSourceIndex.layers[info.minzoom + '_' + info.maxzoom][info.vector_layers[i].id] = t
       }
       var sourceIndex = mongoose.model('source_index', SourceIndex, 'source_index')
       sourceIndex.findOneAndUpdate({
@@ -365,6 +380,15 @@ module.exports.delete = function(req, res) {
     }
 
     res.sendStatus(204)
+  })
+  var sourceIndex = mongoose.model('source_index', SourceIndex, 'source_index')
+  sourceIndex.findOneAndUpdate({
+    tileset_id: req.params.tileset_id,
+    owner: req.params.username
+  }, { is_deleted: true }, { new: true }, function(err, tileset) {
+    if (err) {
+      console.log(err)
+    }
   })
 }
 
